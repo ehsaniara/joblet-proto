@@ -30,3 +30,15 @@ go.work.sum
 # Editor/IDE
 # .idea/
 # .vscode/
+# Generated code - each language generates their own
+/gen/
+*.pb.go
+*.pb.gw.go
+*_pb2.py
+*_pb2_grpc.py
+*.pyc
+__pycache__/
+*.class
+*.jar
+/target/
+/build/
