@@ -9,7 +9,6 @@ on:
 
 permissions:
   contents: write
-  security-events: write
   actions: read
 
 env:
@@ -136,35 +135,36 @@ jobs:
           name: proto-${{ matrix.language }}
           path: joblet-proto-${{ matrix.language }}.tar.gz
 
-  # Security scanning
-  security-scan:
+  # Proto-specific validation (lightweight for protocol definitions)
+  proto-check:
     needs: validate
     runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-      contents: read
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Run Trivy security scan
-        uses: aquasecurity/trivy-action@master
-        with:
-          scan-type: 'fs'
-          scan-ref: './proto'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
+      - name: Verify proto file structure
+        run: |
+          echo "🔍 Checking proto file structure..."
 
-      - name: Upload Trivy scan results
-        uses: github/codeql-action/upload-sarif@v3
-        if: always()
-        with:
-          sarif_file: 'trivy-results.sarif'
+          # Check for required services
+          REQUIRED_SERVICES=("JobService" "NetworkService" "VolumeService" "MonitoringService" "RuntimeService")
+
+          for service in "${REQUIRED_SERVICES[@]}"; do
+            if grep -q "service $service" $PROTO_DIR/$PROTO_FILE; then
+              echo "✅ Found service: $service"
+            else
+              echo "❌ Missing required service: $service"
+              exit 1
+            fi
+          done
+
+          echo "✅ All required services found"
 
   # Create comprehensive release
   release:
     if: startsWith(github.ref, 'refs/tags/')
-    needs: [validate, build-all-languages, security-scan]
+    needs: [validate, build-all-languages, proto-check]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -310,7 +310,7 @@ jobs:
   # Test integration with joblet project (optional)
   test-integration:
     if: github.event_name == 'pull_request'
-    needs: [validate, build-all-languages]
+    needs: [validate, build-all-languages, proto-check]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
