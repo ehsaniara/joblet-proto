@@ -293,4 +293,3 @@ When contributing:
 ## Related Projects
 
 - [Joblet](https://github.com/ehsaniara/joblet) - Server implementation
-- [Joblet CLI](https://github.com/ehsaniara/joblet-cli) - CLI tool
