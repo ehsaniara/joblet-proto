@@ -1,0 +1,333 @@
+name: Proto CI and Release
+
+on:
+  push:
+    branches: [main, develop]
+    tags: ['v*.*.*']
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+  security-events: write
+  actions: read
+
+env:
+  PROTO_FILE: 'joblet.proto'
+  PROTO_DIR: 'proto'
+
+jobs:
+  # Validate proto files for syntax and compatibility
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Protocol Buffers compiler
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y protobuf-compiler
+          protoc --version
+
+      - name: Install buf for advanced validation
+        run: |
+          # Install buf for better proto validation and linting
+          BUF_VERSION="1.28.1"
+          curl -sSL "https://github.com/bufbuild/buf/releases/download/v${BUF_VERSION}/buf-$(uname -s)-$(uname -m)" \
+            -o "/usr/local/bin/buf"
+          chmod +x "/usr/local/bin/buf"
+          buf --version
+
+      - name: Validate proto syntax
+        run: |
+          echo "🔍 Validating proto file syntax..."
+          protoc --proto_path=$PROTO_DIR --descriptor_set_out=/dev/null $PROTO_DIR/$PROTO_FILE
+          echo "✅ Proto syntax validation passed"
+
+      - name: Run buf lint
+        run: |
+          echo "🔍 Running buf lint..."
+          cd $PROTO_DIR
+          buf lint $PROTO_FILE
+          echo "✅ Buf lint passed"
+
+      - name: Check for breaking changes (on PR)
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "🔍 Checking for breaking changes..."
+          # Compare against main branch
+          git fetch origin main:main
+          if git show main:$PROTO_DIR/$PROTO_FILE > /tmp/main-proto.proto 2>/dev/null; then
+            echo "Comparing against main branch..."
+            cd $PROTO_DIR
+            buf breaking $PROTO_FILE --against /tmp/main-proto.proto || {
+              echo "⚠️ Breaking changes detected. Please bump major version."
+              exit 1
+            }
+            echo "✅ No breaking changes detected"
+          else
+            echo "ℹ️ No previous version found, skipping breaking change check"
+          fi
+
+  # Build proto files for all supported languages
+  build-all-languages:
+    needs: validate
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        language: [go, python, java, node]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Protocol Buffers compiler
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y protobuf-compiler
+
+      - name: Install language-specific tools
+        run: |
+          case "${{ matrix.language }}" in
+            "go")
+              go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+              go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+              ;;
+            "python")
+              pip install grpcio-tools
+              ;;
+            "java")
+              # Java protoc plugin is included with protobuf-compiler
+              echo "Java support built into protoc"
+              ;;
+            "node")
+              npm install -g grpc-tools
+              ;;
+          esac
+
+      - name: Generate proto files for ${{ matrix.language }}
+        run: |
+          echo "🔨 Generating ${{ matrix.language }} proto files..."
+          chmod +x ./generate.sh
+          ./generate.sh ${{ matrix.language }}
+
+      - name: Create language archive
+        run: |
+          case "${{ matrix.language }}" in
+            "go")
+              tar -czf joblet-proto-go.tar.gz gen/
+              ;;
+            "python")
+              tar -czf joblet-proto-python.tar.gz python/
+              ;;
+            "java")
+              tar -czf joblet-proto-java.tar.gz java/
+              ;;
+            "node")
+              tar -czf joblet-proto-node.tar.gz node/
+              ;;
+          esac
+
+      - name: Upload language artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: proto-${{ matrix.language }}
+          path: joblet-proto-${{ matrix.language }}.tar.gz
+
+  # Security scanning
+  security-scan:
+    needs: validate
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy security scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: './proto'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  # Create comprehensive release
+  release:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: [validate, build-all-languages, security-scan]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get version from tag
+        id: version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "clean_version=${VERSION#v}" >> $GITHUB_OUTPUT
+
+      - name: Download all language artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts/
+
+      - name: Organize release assets
+        run: |
+          mkdir -p release/
+
+          # Copy proto source files
+          cp -r proto/ release/
+
+          # Copy generated language bindings
+          find artifacts/ -name "*.tar.gz" -exec cp {} release/ \;
+
+          # Create combined archive with all languages
+          tar -czf release/joblet-proto-all-languages-${{ steps.version.outputs.version }}.tar.gz \
+            -C artifacts/ \
+            proto-go proto-python proto-java proto-node
+
+      - name: Generate checksums
+        run: |
+          cd release/
+          sha256sum *.tar.gz > joblet-proto-${{ steps.version.outputs.version }}-checksums.txt
+          echo "📦 Release contents:"
+          ls -la
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          # Generate changelog from git commits since last tag
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+
+          if [ -n "$PREVIOUS_TAG" ]; then
+            echo "## Changes since $PREVIOUS_TAG" > changelog.md
+            git log --oneline --no-merges ${PREVIOUS_TAG}..HEAD >> changelog.md
+          else
+            echo "## Initial Release" > changelog.md
+            echo "First release of Joblet Protocol Buffer definitions" >> changelog.md
+          fi
+
+          # Read changelog content for release body
+          CHANGELOG_CONTENT=$(cat changelog.md)
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG_CONTENT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create comprehensive release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          name: "Joblet Proto ${{ steps.version.outputs.version }}"
+          files: |
+            release/*.tar.gz
+            release/*.txt
+            release/proto/*.proto
+          body: |
+            # 🚀 Joblet Protocol Definitions ${{ steps.version.outputs.version }}
+
+            Complete protocol buffer definitions for the Joblet job execution system.
+
+            ## 📋 What's Included
+
+            | Component | Description | File |
+            |-----------|-------------|------|
+            | **Proto Source** | Raw .proto files | `proto/joblet.proto` |
+            | **Go Bindings** | Generated Go code | `joblet-proto-go.tar.gz` |
+            | **Python Bindings** | Generated Python code | `joblet-proto-python.tar.gz` |
+            | **Java Bindings** | Generated Java code | `joblet-proto-java.tar.gz` |
+            | **Node.js Bindings** | Generated JavaScript/TypeScript | `joblet-proto-node.tar.gz` |
+            | **All Languages** | Combined package | `joblet-proto-all-languages-${{ steps.version.outputs.version }}.tar.gz` |
+
+            ## 🔧 Usage Examples
+
+            ### Go
+            ```bash
+            # Download and extract Go bindings
+            curl -L https://github.com/ehsaniara/joblet-proto/releases/download/${{ steps.version.outputs.version }}/joblet-proto-go.tar.gz | tar xz
+
+            # Use in your Go project
+            import pb "joblet/api/gen"
+            ```
+
+            ### Python
+            ```bash
+            # Download and extract Python bindings
+            curl -L https://github.com/ehsaniara/joblet-proto/releases/download/${{ steps.version.outputs.version }}/joblet-proto-python.tar.gz | tar xz
+
+            # Use in your Python project
+            import joblet_pb2
+            import joblet_pb2_grpc
+            ```
+
+            ### Java
+            ```bash
+            # Download and extract Java bindings
+            curl -L https://github.com/ehsaniara/joblet-proto/releases/download/${{ steps.version.outputs.version }}/joblet-proto-java.tar.gz | tar xz
+            ```
+
+            ### Node.js/TypeScript
+            ```bash
+            # Download and extract Node.js bindings
+            curl -L https://github.com/ehsaniara/joblet-proto/releases/download/${{ steps.version.outputs.version }}/joblet-proto-node.tar.gz | tar xz
+            ```
+
+            ## 🔐 Verification
+
+            ```bash
+            # Download checksums and verify integrity
+            curl -L https://github.com/ehsaniara/joblet-proto/releases/download/${{ steps.version.outputs.version }}/joblet-proto-${{ steps.version.outputs.version }}-checksums.txt
+            sha256sum -c joblet-proto-${{ steps.version.outputs.version }}-checksums.txt
+            ```
+
+            ## 📝 Changelog
+
+            ${{ steps.changelog.outputs.changelog }}
+
+            ---
+
+            **Compatibility:** This release is compatible with Joblet server ${{ steps.version.outputs.version }} and later.
+
+            **Documentation:** See [Protocol Documentation](https://github.com/ehsaniara/joblet-proto/blob/main/README.md) for detailed API reference.
+          generate_release_notes: false
+          draft: false
+          prerelease: ${{ contains(steps.version.outputs.version, 'rc') || contains(steps.version.outputs.version, 'beta') || contains(steps.version.outputs.version, 'alpha') }}
+          make_latest: true
+
+  # Test integration with joblet project (optional)
+  test-integration:
+    if: github.event_name == 'pull_request'
+    needs: [validate, build-all-languages]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download Go artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: proto-go
+          path: ./
+
+      - name: Test Go compilation
+        run: |
+          # Extract and test that generated Go code compiles
+          tar -xzf joblet-proto-go.tar.gz
+          cd gen
+          go mod init test-proto
+          go mod tidy
+          go build ./...
+          echo "✅ Generated Go code compiles successfully"

@@ -418,6 +418,8 @@ message ServerVersionInfo {
   string component = 5;      // Component ("joblet")
   string go_version = 6;     // Go version
   string platform = 7;       // OS/arch (e.g., "linux/amd64")
+  string proto_commit = 8;   // Proto repository commit hash
+  string proto_tag = 9;      // Proto repository tag
 }
 
 // Runtime management messages

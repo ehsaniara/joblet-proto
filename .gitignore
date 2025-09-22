@@ -32,13 +32,27 @@ go.work.sum
 # .vscode/
 # Generated code - each language generates their own
 /gen/
+/python/
+/java/
+/node/
 *.pb.go
 *.pb.gw.go
 *_pb2.py
 *_pb2_grpc.py
+*_pb2.pyi
 *.pyc
 __pycache__/
 *.class
 *.jar
 /target/
 /build/
+/release/
+
+# Language-specific artifacts
+node_modules/
+npm-debug.log*
+*.tgz
+
+# Release artifacts
+*.tar.gz
+*-checksums.txt

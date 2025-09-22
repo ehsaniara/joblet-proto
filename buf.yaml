@@ -1,0 +1,16 @@
+version: v1
+breaking:
+  use:
+    - FILE
+lint:
+  use:
+    - DEFAULT
+  except:
+    - PACKAGE_VERSION_SUFFIX
+    - PACKAGE_DIRECTORY_MATCH
+build:
+  excludes:
+    - gen/
+    - python/
+    - java/
+    - node/
