@@ -77,6 +77,11 @@ message Job{
   string runtime = 14;          // Runtime spec
   map<string, string> environment = 15;       // Environment variables
   map<string, string> secret_environment = 16; // Secret env vars (masked in logs)
+
+  // GPU fields
+  repeated int32 gpu_indices = 17;         // Which GPUs allocated
+  int32 gpu_count = 18;                    // Number of GPUs requested/allocated
+  int32 gpu_memory_mb = 19;                // GPU memory requirement (MB)
 }
 
 message EmptyRequest {}
@@ -114,6 +119,11 @@ message GetJobStatusRes{
   repeated string uploads = 20;            // Uploaded files/directories
   repeated string dependencies = 21;       // Job dependencies (for workflow jobs)
   string workflowUuid = 22;               // Workflow UUID (if part of workflow)
+
+  // GPU allocation info
+  repeated int32 gpu_indices = 23;         // Which GPUs allocated to this job
+  int32 gpu_count = 24;                    // Number of GPUs requested/allocated
+  int32 gpu_memory_mb = 25;                // GPU memory requirement (MB)
 }
 
 // StopJob
@@ -486,6 +496,10 @@ message RunJobRequest {
   string workflowUuid = 15;         // Workflow UUID
   string jobUuid = 16;              // Job UUID
   repeated JobRequirement requirements = 17;
+
+  // GPU fields (new GPU support)
+  int32 gpu_count = 19;             // How many GPUs requested
+  int32 gpu_memory_mb = 20;         // Minimum GPU memory needed (MB)
 }
 
 message RunJobResponse {
