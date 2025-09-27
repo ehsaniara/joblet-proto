@@ -10,6 +10,7 @@ service JobService {
   rpc RunJob(RunJobRequest) returns (RunJobResponse){}
   rpc GetJobStatus(GetJobStatusReq) returns (GetJobStatusRes){}
   rpc StopJob(StopJobReq) returns (StopJobRes){}
+  rpc CancelJob(CancelJobReq) returns (CancelJobRes){}
   rpc DeleteJob(DeleteJobReq) returns (DeleteJobRes){}
   rpc DeleteAllJobs(DeleteAllJobsReq) returns (DeleteAllJobsRes){}
   rpc GetJobLogs(GetJobLogsReq) returns (stream DataChunk);
@@ -136,6 +137,16 @@ message StopJobRes{
   string status = 2;
   string endTime = 3;
   int32 exitCode = 4;
+}
+
+// CancelJob - for canceling scheduled jobs only
+message CancelJobReq{
+  string uuid = 1;                         // Job UUID identifier
+}
+
+message CancelJobRes{
+  string uuid = 1;                         // Job UUID identifier
+  string status = 2;                       // Should be "CANCELED"
 }
 
 // DeleteJob
