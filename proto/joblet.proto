@@ -83,6 +83,9 @@ message Job{
   repeated int32 gpu_indices = 17;         // Which GPUs allocated
   int32 gpu_count = 18;                    // Number of GPUs requested/allocated
   int32 gpu_memory_mb = 19;                // GPU memory requirement (MB)
+
+  // Node identification
+  string nodeId = 20;                      // Unique identifier of the Joblet node that executed this job
 }
 
 message EmptyRequest {}
@@ -125,6 +128,9 @@ message GetJobStatusRes{
   repeated int32 gpu_indices = 23;         // Which GPUs allocated to this job
   int32 gpu_count = 24;                    // Number of GPUs requested/allocated
   int32 gpu_memory_mb = 25;                // GPU memory requirement (MB)
+
+  // Node identification
+  string nodeId = 26;                      // Unique identifier of the Joblet node that executed this job
 }
 
 // StopJob
