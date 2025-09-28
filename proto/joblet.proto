@@ -326,6 +326,9 @@ message HostInfo {
   int64 totalMemory = 10;
   string bootTime = 11;
   int64 uptime = 12;
+  string nodeId = 13;                  // Unique node identifier (UUID)
+  repeated string serverIPs = 14;      // Server IP addresses (can have multiple interfaces)
+  repeated string macAddresses = 15;   // MAC addresses for network interfaces
 }
 
 message CPUMetrics {
