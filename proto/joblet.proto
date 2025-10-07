@@ -587,16 +587,15 @@ message GetWorkflowJobsResponse {
 }
 message WorkflowInfo {
   string uuid = 1;                         // Workflow UUID identifier
-  string workflow = 2;
-  string status = 3;
-  int32 totalJobs = 4;
-  int32 completedJobs = 5;
-  int32 failedJobs = 6;
-  int32 canceledJobs = 7;
-  Timestamp createdAt = 8;
-  Timestamp startedAt = 9;
-  Timestamp completedAt = 10;
-  string yamlContent = 11;                 // Original YAML
+  string status = 2;
+  int32 totalJobs = 3;
+  int32 completedJobs = 4;
+  int32 failedJobs = 5;
+  int32 canceledJobs = 6;
+  Timestamp createdAt = 7;
+  Timestamp startedAt = 8;
+  Timestamp completedAt = 9;
+  string yamlContent = 10;                 // Original YAML
 }
 
 message WorkflowJob {
