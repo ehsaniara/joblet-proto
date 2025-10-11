@@ -8,10 +8,11 @@ PROTO_FILE="joblet.proto"
 generate_go() {
     echo "Generating Go code..."
     mkdir -p gen
+    # Generate all proto files
     protoc -I=$PROTO_DIR \
         --go_out=gen --go_opt=paths=source_relative \
         --go-grpc_out=gen --go-grpc_opt=paths=source_relative \
-        $PROTO_DIR/$PROTO_FILE
+        $PROTO_DIR/*.proto
 }
 
 # Python generation
