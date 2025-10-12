@@ -17,7 +17,7 @@ coverage.*
 *.coverprofile
 profile.cov
 
-# Dependency directories (remove the comment below to include it)
+# Dependency directories (remove doesthe comment below to include it)
 # vendor/
 
 # Go workspace file
@@ -56,3 +56,7 @@ npm-debug.log*
 # Release artifacts
 *.tar.gz
 *-checksums.txt
+.idea/
+RELEASE_COMMANDS.sh
+RELEASE_v*.md
+go.sum
