@@ -30,13 +30,13 @@ go.work.sum
 # Editor/IDE
 # .idea/
 # .vscode/
-# Generated code - each language generates their own
-/gen/
+# Generated code - Go files are committed for module consumption
+# /gen/  # Uncommented to allow Go generated files
 /python/
 /java/
 /node/
-*.pb.go
-*.pb.gw.go
+# *.pb.go  # Uncommented to allow Go generated files
+# *.pb.gw.go  # Uncommented to allow Go generated files
 *_pb2.py
 *_pb2_grpc.py
 *_pb2.pyi
