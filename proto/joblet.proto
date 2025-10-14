@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "github.com/ehsaniara/joblet/api/gen";
+option go_package = "github.com/ehsaniara/joblet-proto/gen";
 
 package joblet;
 

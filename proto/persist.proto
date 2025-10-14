@@ -13,6 +13,9 @@ service PersistService {
 
   // Query metrics for a job from disk storage
   rpc QueryMetrics(QueryMetricsRequest) returns (stream Metric);
+
+  // Delete all persisted data for a job (admin only)
+  rpc DeleteJob(DeleteJobRequest) returns (DeleteJobResponse);
 }
 
 // QueryLogsRequest specifies parameters for log queries
@@ -91,4 +94,15 @@ message NetworkIO {
   int64 tx_bytes = 2;
   int64 rx_packets = 3;
   int64 tx_packets = 4;
+}
+
+// DeleteJobRequest specifies the job to delete from persist storage
+message DeleteJobRequest {
+  string job_id = 1;
+}
+
+// DeleteJobResponse indicates the result of the deletion
+message DeleteJobResponse {
+  bool success = 1;
+  string message = 2;
 }
