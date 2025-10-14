@@ -29,6 +29,8 @@ const (
 	JobService_ListJobs_FullMethodName             = "/joblet.JobService/ListJobs"
 	JobService_StreamJobMetrics_FullMethodName     = "/joblet.JobService/StreamJobMetrics"
 	JobService_GetJobMetricsSummary_FullMethodName = "/joblet.JobService/GetJobMetricsSummary"
+	JobService_QueryLogs_FullMethodName            = "/joblet.JobService/QueryLogs"
+	JobService_QueryMetrics_FullMethodName         = "/joblet.JobService/QueryMetrics"
 	JobService_RunWorkflow_FullMethodName          = "/joblet.JobService/RunWorkflow"
 	JobService_GetWorkflowStatus_FullMethodName    = "/joblet.JobService/GetWorkflowStatus"
 	JobService_ListWorkflows_FullMethodName        = "/joblet.JobService/ListWorkflows"
@@ -50,9 +52,12 @@ type JobServiceClient interface {
 	DeleteAllJobs(ctx context.Context, in *DeleteAllJobsReq, opts ...grpc.CallOption) (*DeleteAllJobsRes, error)
 	GetJobLogs(ctx context.Context, in *GetJobLogsReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[DataChunk], error)
 	ListJobs(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*Jobs, error)
-	// Job metrics operations (live streaming only - historical metrics via persist.QueryMetrics)
+	// Job metrics operations
 	StreamJobMetrics(ctx context.Context, in *JobMetricsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[JobMetricsSample], error)
 	GetJobMetricsSummary(ctx context.Context, in *JobMetricsSummaryRequest, opts ...grpc.CallOption) (*JobMetricsSummaryResponse, error)
+	// Historical queries (proxied to joblet-persist via IPC)
+	QueryLogs(ctx context.Context, in *QueryLogsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[LogLine], error)
+	QueryMetrics(ctx context.Context, in *QueryMetricsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[Metric], error)
 	// Workflow operations
 	RunWorkflow(ctx context.Context, in *RunWorkflowRequest, opts ...grpc.CallOption) (*RunWorkflowResponse, error)
 	GetWorkflowStatus(ctx context.Context, in *GetWorkflowStatusRequest, opts ...grpc.CallOption) (*GetWorkflowStatusResponse, error)
@@ -186,6 +191,44 @@ func (c *jobServiceClient) GetJobMetricsSummary(ctx context.Context, in *JobMetr
 	return out, nil
 }
 
+func (c *jobServiceClient) QueryLogs(ctx context.Context, in *QueryLogsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[LogLine], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &JobService_ServiceDesc.Streams[2], JobService_QueryLogs_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[QueryLogsRequest, LogLine]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type JobService_QueryLogsClient = grpc.ServerStreamingClient[LogLine]
+
+func (c *jobServiceClient) QueryMetrics(ctx context.Context, in *QueryMetricsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[Metric], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &JobService_ServiceDesc.Streams[3], JobService_QueryMetrics_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[QueryMetricsRequest, Metric]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type JobService_QueryMetricsClient = grpc.ServerStreamingClient[Metric]
+
 func (c *jobServiceClient) RunWorkflow(ctx context.Context, in *RunWorkflowRequest, opts ...grpc.CallOption) (*RunWorkflowResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(RunWorkflowResponse)
@@ -241,9 +284,12 @@ type JobServiceServer interface {
 	DeleteAllJobs(context.Context, *DeleteAllJobsReq) (*DeleteAllJobsRes, error)
 	GetJobLogs(*GetJobLogsReq, grpc.ServerStreamingServer[DataChunk]) error
 	ListJobs(context.Context, *EmptyRequest) (*Jobs, error)
-	// Job metrics operations (live streaming only - historical metrics via persist.QueryMetrics)
+	// Job metrics operations
 	StreamJobMetrics(*JobMetricsRequest, grpc.ServerStreamingServer[JobMetricsSample]) error
 	GetJobMetricsSummary(context.Context, *JobMetricsSummaryRequest) (*JobMetricsSummaryResponse, error)
+	// Historical queries (proxied to joblet-persist via IPC)
+	QueryLogs(*QueryLogsRequest, grpc.ServerStreamingServer[LogLine]) error
+	QueryMetrics(*QueryMetricsRequest, grpc.ServerStreamingServer[Metric]) error
 	// Workflow operations
 	RunWorkflow(context.Context, *RunWorkflowRequest) (*RunWorkflowResponse, error)
 	GetWorkflowStatus(context.Context, *GetWorkflowStatusRequest) (*GetWorkflowStatusResponse, error)
@@ -288,6 +334,12 @@ func (UnimplementedJobServiceServer) StreamJobMetrics(*JobMetricsRequest, grpc.S
 }
 func (UnimplementedJobServiceServer) GetJobMetricsSummary(context.Context, *JobMetricsSummaryRequest) (*JobMetricsSummaryResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetJobMetricsSummary not implemented")
+}
+func (UnimplementedJobServiceServer) QueryLogs(*QueryLogsRequest, grpc.ServerStreamingServer[LogLine]) error {
+	return status.Errorf(codes.Unimplemented, "method QueryLogs not implemented")
+}
+func (UnimplementedJobServiceServer) QueryMetrics(*QueryMetricsRequest, grpc.ServerStreamingServer[Metric]) error {
+	return status.Errorf(codes.Unimplemented, "method QueryMetrics not implemented")
 }
 func (UnimplementedJobServiceServer) RunWorkflow(context.Context, *RunWorkflowRequest) (*RunWorkflowResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RunWorkflow not implemented")
@@ -488,6 +540,28 @@ func _JobService_GetJobMetricsSummary_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _JobService_QueryLogs_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(QueryLogsRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(JobServiceServer).QueryLogs(m, &grpc.GenericServerStream[QueryLogsRequest, LogLine]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type JobService_QueryLogsServer = grpc.ServerStreamingServer[LogLine]
+
+func _JobService_QueryMetrics_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(QueryMetricsRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(JobServiceServer).QueryMetrics(m, &grpc.GenericServerStream[QueryMetricsRequest, Metric]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type JobService_QueryMetricsServer = grpc.ServerStreamingServer[Metric]
+
 func _JobService_RunWorkflow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(RunWorkflowRequest)
 	if err := dec(in); err != nil {
@@ -625,6 +699,16 @@ var JobService_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "StreamJobMetrics",
 			Handler:       _JobService_StreamJobMetrics_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "QueryLogs",
+			Handler:       _JobService_QueryLogs_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "QueryMetrics",
+			Handler:       _JobService_QueryMetrics_Handler,
 			ServerStreams: true,
 		},
 	},

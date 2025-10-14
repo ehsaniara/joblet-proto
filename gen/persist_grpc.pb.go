@@ -28,9 +28,15 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// PersistService handles historical log and metrics queries from disk storage
-// This service is provided by joblet-persist (port 50052)
-// For live operations, use JobService on port 50051
+// PersistService is an INTERNAL service for joblet-core ←→ joblet-persist IPC communication.
+//
+// ⚠️  DO NOT USE DIRECTLY - This service is for internal communication only via Unix socket.
+//
+// Public API: Use JobService.QueryLogs() and JobService.QueryMetrics()
+//
+//	These methods proxy to this internal service automatically.
+//
+// This service is provided by joblet-persist subprocess and communicates via Unix socket IPC.
 type PersistServiceClient interface {
 	// Query logs for a job from disk storage
 	QueryLogs(ctx context.Context, in *QueryLogsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[LogLine], error)
@@ -100,9 +106,15 @@ func (c *persistServiceClient) DeleteJob(ctx context.Context, in *DeleteJobReque
 // All implementations must embed UnimplementedPersistServiceServer
 // for forward compatibility.
 //
-// PersistService handles historical log and metrics queries from disk storage
-// This service is provided by joblet-persist (port 50052)
-// For live operations, use JobService on port 50051
+// PersistService is an INTERNAL service for joblet-core ←→ joblet-persist IPC communication.
+//
+// ⚠️  DO NOT USE DIRECTLY - This service is for internal communication only via Unix socket.
+//
+// Public API: Use JobService.QueryLogs() and JobService.QueryMetrics()
+//
+//	These methods proxy to this internal service automatically.
+//
+// This service is provided by joblet-persist subprocess and communicates via Unix socket IPC.
 type PersistServiceServer interface {
 	// Query logs for a job from disk storage
 	QueryLogs(*QueryLogsRequest, grpc.ServerStreamingServer[LogLine]) error

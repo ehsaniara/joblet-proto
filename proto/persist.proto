@@ -4,9 +4,14 @@ option go_package = "github.com/ehsaniara/joblet-proto/v2/gen";
 
 package joblet.persist;
 
-// PersistService handles historical log and metrics queries from disk storage
-// This service is provided by joblet-persist (port 50052)
-// For live operations, use JobService on port 50051
+// PersistService is an INTERNAL service for joblet-core ←→ joblet-persist IPC communication.
+//
+// ⚠️  DO NOT USE DIRECTLY - This service is for internal communication only via Unix socket.
+//
+// Public API: Use JobService.QueryLogs() and JobService.QueryMetrics()
+//             These methods proxy to this internal service automatically.
+//
+// This service is provided by joblet-persist subprocess and communicates via Unix socket IPC.
 service PersistService {
   // Query logs for a job from disk storage
   rpc QueryLogs(QueryLogsRequest) returns (stream LogLine);
