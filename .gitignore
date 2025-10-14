@@ -28,8 +28,8 @@ go.work.sum
 .env
 
 # Editor/IDE
-# .idea/
-# .vscode/
+.idea/
+.vscode/
 # Generated code - Go files are committed for module consumption
 # /gen/  # Uncommented to allow Go generated files
 /python/

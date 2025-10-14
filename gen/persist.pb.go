@@ -4,7 +4,7 @@
 // 	protoc        v3.12.4
 // source: persist.proto
 
-package persist
+package gen
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -763,7 +763,7 @@ const file_persist_proto_rawDesc = "" +
 	"\x0ePersistService\x12H\n" +
 	"\tQueryLogs\x12 .joblet.persist.QueryLogsRequest\x1a\x17.joblet.persist.LogLine0\x01\x12M\n" +
 	"\fQueryMetrics\x12#.joblet.persist.QueryMetricsRequest\x1a\x16.joblet.persist.Metric0\x01\x12P\n" +
-	"\tDeleteJob\x12 .joblet.persist.DeleteJobRequest\x1a!.joblet.persist.DeleteJobResponseB2Z0github.com/ehsaniara/joblet-proto/v2/gen/persistb\x06proto3"
+	"\tDeleteJob\x12 .joblet.persist.DeleteJobRequest\x1a!.joblet.persist.DeleteJobResponseB*Z(github.com/ehsaniara/joblet-proto/v2/genb\x06proto3"
 
 var (
 	file_persist_proto_rawDescOnce sync.Once

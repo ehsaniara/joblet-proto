@@ -4,7 +4,7 @@
 // - protoc             v3.12.4
 // source: persist.proto
 
-package persist
+package gen
 
 import (
 	context "context"
