@@ -1,4 +1,4 @@
-module github.com/ehsaniara/joblet-proto
+module github.com/ehsaniara/joblet-proto/v2
 
 go 1.24.0
 
