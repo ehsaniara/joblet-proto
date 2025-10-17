@@ -19,6 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	PersistService_Ping_FullMethodName         = "/joblet.persist.PersistService/Ping"
 	PersistService_QueryLogs_FullMethodName    = "/joblet.persist.PersistService/QueryLogs"
 	PersistService_QueryMetrics_FullMethodName = "/joblet.persist.PersistService/QueryMetrics"
 	PersistService_DeleteJob_FullMethodName    = "/joblet.persist.PersistService/DeleteJob"
@@ -38,6 +39,8 @@ const (
 //
 // This service is provided by joblet-persist subprocess and communicates via Unix socket IPC.
 type PersistServiceClient interface {
+	// Health check - verify persist is running and responsive
+	Ping(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PingResponse, error)
 	// Query logs for a job from disk storage
 	QueryLogs(ctx context.Context, in *QueryLogsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[LogLine], error)
 	// Query metrics for a job from disk storage
@@ -52,6 +55,16 @@ type persistServiceClient struct {
 
 func NewPersistServiceClient(cc grpc.ClientConnInterface) PersistServiceClient {
 	return &persistServiceClient{cc}
+}
+
+func (c *persistServiceClient) Ping(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PingResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PingResponse)
+	err := c.cc.Invoke(ctx, PersistService_Ping_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *persistServiceClient) QueryLogs(ctx context.Context, in *QueryLogsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[LogLine], error) {
@@ -116,6 +129,8 @@ func (c *persistServiceClient) DeleteJob(ctx context.Context, in *DeleteJobReque
 //
 // This service is provided by joblet-persist subprocess and communicates via Unix socket IPC.
 type PersistServiceServer interface {
+	// Health check - verify persist is running and responsive
+	Ping(context.Context, *PingRequest) (*PingResponse, error)
 	// Query logs for a job from disk storage
 	QueryLogs(*QueryLogsRequest, grpc.ServerStreamingServer[LogLine]) error
 	// Query metrics for a job from disk storage
@@ -132,6 +147,9 @@ type PersistServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedPersistServiceServer struct{}
 
+func (UnimplementedPersistServiceServer) Ping(context.Context, *PingRequest) (*PingResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Ping not implemented")
+}
 func (UnimplementedPersistServiceServer) QueryLogs(*QueryLogsRequest, grpc.ServerStreamingServer[LogLine]) error {
 	return status.Errorf(codes.Unimplemented, "method QueryLogs not implemented")
 }
@@ -160,6 +178,24 @@ func RegisterPersistServiceServer(s grpc.ServiceRegistrar, srv PersistServiceSer
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&PersistService_ServiceDesc, srv)
+}
+
+func _PersistService_Ping_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PingRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PersistServiceServer).Ping(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PersistService_Ping_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PersistServiceServer).Ping(ctx, req.(*PingRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _PersistService_QueryLogs_Handler(srv interface{}, stream grpc.ServerStream) error {
@@ -209,6 +245,10 @@ var PersistService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "joblet.persist.PersistService",
 	HandlerType: (*PersistServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Ping",
+			Handler:    _PersistService_Ping_Handler,
+		},
 		{
 			MethodName: "DeleteJob",
 			Handler:    _PersistService_DeleteJob_Handler,

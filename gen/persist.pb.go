@@ -71,6 +71,96 @@ func (StreamType) EnumDescriptor() ([]byte, []int) {
 	return file_persist_proto_rawDescGZIP(), []int{0}
 }
 
+// PingRequest is a health check request (empty)
+type PingRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PingRequest) Reset() {
+	*x = PingRequest{}
+	mi := &file_persist_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PingRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PingRequest) ProtoMessage() {}
+
+func (x *PingRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_persist_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PingRequest.ProtoReflect.Descriptor instead.
+func (*PingRequest) Descriptor() ([]byte, []int) {
+	return file_persist_proto_rawDescGZIP(), []int{0}
+}
+
+// PingResponse indicates persist is healthy and responsive
+type PingResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Healthy       bool                   `protobuf:"varint,1,opt,name=healthy,proto3" json:"healthy,omitempty"`
+	Timestamp     int64                  `protobuf:"varint,2,opt,name=timestamp,proto3" json:"timestamp,omitempty"` // Unix nanoseconds when ping was processed
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PingResponse) Reset() {
+	*x = PingResponse{}
+	mi := &file_persist_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PingResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PingResponse) ProtoMessage() {}
+
+func (x *PingResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_persist_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PingResponse.ProtoReflect.Descriptor instead.
+func (*PingResponse) Descriptor() ([]byte, []int) {
+	return file_persist_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *PingResponse) GetHealthy() bool {
+	if x != nil {
+		return x.Healthy
+	}
+	return false
+}
+
+func (x *PingResponse) GetTimestamp() int64 {
+	if x != nil {
+		return x.Timestamp
+	}
+	return 0
+}
+
 // QueryLogsRequest specifies parameters for log queries
 type QueryLogsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -89,7 +179,7 @@ type QueryLogsRequest struct {
 
 func (x *QueryLogsRequest) Reset() {
 	*x = QueryLogsRequest{}
-	mi := &file_persist_proto_msgTypes[0]
+	mi := &file_persist_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -101,7 +191,7 @@ func (x *QueryLogsRequest) String() string {
 func (*QueryLogsRequest) ProtoMessage() {}
 
 func (x *QueryLogsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_persist_proto_msgTypes[0]
+	mi := &file_persist_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -114,7 +204,7 @@ func (x *QueryLogsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use QueryLogsRequest.ProtoReflect.Descriptor instead.
 func (*QueryLogsRequest) Descriptor() ([]byte, []int) {
-	return file_persist_proto_rawDescGZIP(), []int{0}
+	return file_persist_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *QueryLogsRequest) GetJobId() string {
@@ -175,7 +265,7 @@ type QueryMetricsRequest struct {
 
 func (x *QueryMetricsRequest) Reset() {
 	*x = QueryMetricsRequest{}
-	mi := &file_persist_proto_msgTypes[1]
+	mi := &file_persist_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -187,7 +277,7 @@ func (x *QueryMetricsRequest) String() string {
 func (*QueryMetricsRequest) ProtoMessage() {}
 
 func (x *QueryMetricsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_persist_proto_msgTypes[1]
+	mi := &file_persist_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -200,7 +290,7 @@ func (x *QueryMetricsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use QueryMetricsRequest.ProtoReflect.Descriptor instead.
 func (*QueryMetricsRequest) Descriptor() ([]byte, []int) {
-	return file_persist_proto_rawDescGZIP(), []int{1}
+	return file_persist_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *QueryMetricsRequest) GetJobId() string {
@@ -252,7 +342,7 @@ type LogLine struct {
 
 func (x *LogLine) Reset() {
 	*x = LogLine{}
-	mi := &file_persist_proto_msgTypes[2]
+	mi := &file_persist_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -264,7 +354,7 @@ func (x *LogLine) String() string {
 func (*LogLine) ProtoMessage() {}
 
 func (x *LogLine) ProtoReflect() protoreflect.Message {
-	mi := &file_persist_proto_msgTypes[2]
+	mi := &file_persist_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -277,7 +367,7 @@ func (x *LogLine) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LogLine.ProtoReflect.Descriptor instead.
 func (*LogLine) Descriptor() ([]byte, []int) {
-	return file_persist_proto_rawDescGZIP(), []int{2}
+	return file_persist_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *LogLine) GetJobId() string {
@@ -328,7 +418,7 @@ type Metric struct {
 
 func (x *Metric) Reset() {
 	*x = Metric{}
-	mi := &file_persist_proto_msgTypes[3]
+	mi := &file_persist_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -340,7 +430,7 @@ func (x *Metric) String() string {
 func (*Metric) ProtoMessage() {}
 
 func (x *Metric) ProtoReflect() protoreflect.Message {
-	mi := &file_persist_proto_msgTypes[3]
+	mi := &file_persist_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -353,7 +443,7 @@ func (x *Metric) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Metric.ProtoReflect.Descriptor instead.
 func (*Metric) Descriptor() ([]byte, []int) {
-	return file_persist_proto_rawDescGZIP(), []int{3}
+	return file_persist_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *Metric) GetJobId() string {
@@ -398,7 +488,7 @@ type MetricData struct {
 
 func (x *MetricData) Reset() {
 	*x = MetricData{}
-	mi := &file_persist_proto_msgTypes[4]
+	mi := &file_persist_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -410,7 +500,7 @@ func (x *MetricData) String() string {
 func (*MetricData) ProtoMessage() {}
 
 func (x *MetricData) ProtoReflect() protoreflect.Message {
-	mi := &file_persist_proto_msgTypes[4]
+	mi := &file_persist_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -423,7 +513,7 @@ func (x *MetricData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MetricData.ProtoReflect.Descriptor instead.
 func (*MetricData) Descriptor() ([]byte, []int) {
-	return file_persist_proto_rawDescGZIP(), []int{4}
+	return file_persist_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *MetricData) GetCpuUsage() float64 {
@@ -474,7 +564,7 @@ type DiskIO struct {
 
 func (x *DiskIO) Reset() {
 	*x = DiskIO{}
-	mi := &file_persist_proto_msgTypes[5]
+	mi := &file_persist_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -486,7 +576,7 @@ func (x *DiskIO) String() string {
 func (*DiskIO) ProtoMessage() {}
 
 func (x *DiskIO) ProtoReflect() protoreflect.Message {
-	mi := &file_persist_proto_msgTypes[5]
+	mi := &file_persist_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -499,7 +589,7 @@ func (x *DiskIO) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DiskIO.ProtoReflect.Descriptor instead.
 func (*DiskIO) Descriptor() ([]byte, []int) {
-	return file_persist_proto_rawDescGZIP(), []int{5}
+	return file_persist_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *DiskIO) GetReadBytes() int64 {
@@ -543,7 +633,7 @@ type NetworkIO struct {
 
 func (x *NetworkIO) Reset() {
 	*x = NetworkIO{}
-	mi := &file_persist_proto_msgTypes[6]
+	mi := &file_persist_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -555,7 +645,7 @@ func (x *NetworkIO) String() string {
 func (*NetworkIO) ProtoMessage() {}
 
 func (x *NetworkIO) ProtoReflect() protoreflect.Message {
-	mi := &file_persist_proto_msgTypes[6]
+	mi := &file_persist_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -568,7 +658,7 @@ func (x *NetworkIO) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use NetworkIO.ProtoReflect.Descriptor instead.
 func (*NetworkIO) Descriptor() ([]byte, []int) {
-	return file_persist_proto_rawDescGZIP(), []int{6}
+	return file_persist_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *NetworkIO) GetRxBytes() int64 {
@@ -609,7 +699,7 @@ type DeleteJobRequest struct {
 
 func (x *DeleteJobRequest) Reset() {
 	*x = DeleteJobRequest{}
-	mi := &file_persist_proto_msgTypes[7]
+	mi := &file_persist_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -621,7 +711,7 @@ func (x *DeleteJobRequest) String() string {
 func (*DeleteJobRequest) ProtoMessage() {}
 
 func (x *DeleteJobRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_persist_proto_msgTypes[7]
+	mi := &file_persist_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -634,7 +724,7 @@ func (x *DeleteJobRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteJobRequest.ProtoReflect.Descriptor instead.
 func (*DeleteJobRequest) Descriptor() ([]byte, []int) {
-	return file_persist_proto_rawDescGZIP(), []int{7}
+	return file_persist_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *DeleteJobRequest) GetJobId() string {
@@ -655,7 +745,7 @@ type DeleteJobResponse struct {
 
 func (x *DeleteJobResponse) Reset() {
 	*x = DeleteJobResponse{}
-	mi := &file_persist_proto_msgTypes[8]
+	mi := &file_persist_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -667,7 +757,7 @@ func (x *DeleteJobResponse) String() string {
 func (*DeleteJobResponse) ProtoMessage() {}
 
 func (x *DeleteJobResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_persist_proto_msgTypes[8]
+	mi := &file_persist_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -680,7 +770,7 @@ func (x *DeleteJobResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteJobResponse.ProtoReflect.Descriptor instead.
 func (*DeleteJobResponse) Descriptor() ([]byte, []int) {
-	return file_persist_proto_rawDescGZIP(), []int{8}
+	return file_persist_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *DeleteJobResponse) GetSuccess() bool {
@@ -701,7 +791,11 @@ var File_persist_proto protoreflect.FileDescriptor
 
 const file_persist_proto_rawDesc = "" +
 	"\n" +
-	"\rpersist.proto\x12\x0ejoblet.persist\"\xc5\x01\n" +
+	"\rpersist.proto\x12\x0ejoblet.persist\"\r\n" +
+	"\vPingRequest\"F\n" +
+	"\fPingResponse\x12\x18\n" +
+	"\ahealthy\x18\x01 \x01(\bR\ahealthy\x12\x1c\n" +
+	"\ttimestamp\x18\x02 \x01(\x03R\ttimestamp\"\xc5\x01\n" +
 	"\x10QueryLogsRequest\x12\x15\n" +
 	"\x06job_id\x18\x01 \x01(\tR\x05jobId\x122\n" +
 	"\x06stream\x18\x02 \x01(\x0e2\x1a.joblet.persist.StreamTypeR\x06stream\x12\x1d\n" +
@@ -759,8 +853,9 @@ const file_persist_proto_rawDesc = "" +
 	"StreamType\x12\x1b\n" +
 	"\x17STREAM_TYPE_UNSPECIFIED\x10\x00\x12\x16\n" +
 	"\x12STREAM_TYPE_STDOUT\x10\x01\x12\x16\n" +
-	"\x12STREAM_TYPE_STDERR\x10\x022\xfb\x01\n" +
-	"\x0ePersistService\x12H\n" +
+	"\x12STREAM_TYPE_STDERR\x10\x022\xbe\x02\n" +
+	"\x0ePersistService\x12A\n" +
+	"\x04Ping\x12\x1b.joblet.persist.PingRequest\x1a\x1c.joblet.persist.PingResponse\x12H\n" +
 	"\tQueryLogs\x12 .joblet.persist.QueryLogsRequest\x1a\x17.joblet.persist.LogLine0\x01\x12M\n" +
 	"\fQueryMetrics\x12#.joblet.persist.QueryMetricsRequest\x1a\x16.joblet.persist.Metric0\x01\x12P\n" +
 	"\tDeleteJob\x12 .joblet.persist.DeleteJobRequest\x1a!.joblet.persist.DeleteJobResponseB*Z(github.com/ehsaniara/joblet-proto/v2/genb\x06proto3"
@@ -778,36 +873,40 @@ func file_persist_proto_rawDescGZIP() []byte {
 }
 
 var file_persist_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_persist_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_persist_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_persist_proto_goTypes = []any{
 	(StreamType)(0),             // 0: joblet.persist.StreamType
-	(*QueryLogsRequest)(nil),    // 1: joblet.persist.QueryLogsRequest
-	(*QueryMetricsRequest)(nil), // 2: joblet.persist.QueryMetricsRequest
-	(*LogLine)(nil),             // 3: joblet.persist.LogLine
-	(*Metric)(nil),              // 4: joblet.persist.Metric
-	(*MetricData)(nil),          // 5: joblet.persist.MetricData
-	(*DiskIO)(nil),              // 6: joblet.persist.DiskIO
-	(*NetworkIO)(nil),           // 7: joblet.persist.NetworkIO
-	(*DeleteJobRequest)(nil),    // 8: joblet.persist.DeleteJobRequest
-	(*DeleteJobResponse)(nil),   // 9: joblet.persist.DeleteJobResponse
+	(*PingRequest)(nil),         // 1: joblet.persist.PingRequest
+	(*PingResponse)(nil),        // 2: joblet.persist.PingResponse
+	(*QueryLogsRequest)(nil),    // 3: joblet.persist.QueryLogsRequest
+	(*QueryMetricsRequest)(nil), // 4: joblet.persist.QueryMetricsRequest
+	(*LogLine)(nil),             // 5: joblet.persist.LogLine
+	(*Metric)(nil),              // 6: joblet.persist.Metric
+	(*MetricData)(nil),          // 7: joblet.persist.MetricData
+	(*DiskIO)(nil),              // 8: joblet.persist.DiskIO
+	(*NetworkIO)(nil),           // 9: joblet.persist.NetworkIO
+	(*DeleteJobRequest)(nil),    // 10: joblet.persist.DeleteJobRequest
+	(*DeleteJobResponse)(nil),   // 11: joblet.persist.DeleteJobResponse
 }
 var file_persist_proto_depIdxs = []int32{
-	0, // 0: joblet.persist.QueryLogsRequest.stream:type_name -> joblet.persist.StreamType
-	0, // 1: joblet.persist.LogLine.stream:type_name -> joblet.persist.StreamType
-	5, // 2: joblet.persist.Metric.data:type_name -> joblet.persist.MetricData
-	6, // 3: joblet.persist.MetricData.disk_io:type_name -> joblet.persist.DiskIO
-	7, // 4: joblet.persist.MetricData.network_io:type_name -> joblet.persist.NetworkIO
-	1, // 5: joblet.persist.PersistService.QueryLogs:input_type -> joblet.persist.QueryLogsRequest
-	2, // 6: joblet.persist.PersistService.QueryMetrics:input_type -> joblet.persist.QueryMetricsRequest
-	8, // 7: joblet.persist.PersistService.DeleteJob:input_type -> joblet.persist.DeleteJobRequest
-	3, // 8: joblet.persist.PersistService.QueryLogs:output_type -> joblet.persist.LogLine
-	4, // 9: joblet.persist.PersistService.QueryMetrics:output_type -> joblet.persist.Metric
-	9, // 10: joblet.persist.PersistService.DeleteJob:output_type -> joblet.persist.DeleteJobResponse
-	8, // [8:11] is the sub-list for method output_type
-	5, // [5:8] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	0,  // 0: joblet.persist.QueryLogsRequest.stream:type_name -> joblet.persist.StreamType
+	0,  // 1: joblet.persist.LogLine.stream:type_name -> joblet.persist.StreamType
+	7,  // 2: joblet.persist.Metric.data:type_name -> joblet.persist.MetricData
+	8,  // 3: joblet.persist.MetricData.disk_io:type_name -> joblet.persist.DiskIO
+	9,  // 4: joblet.persist.MetricData.network_io:type_name -> joblet.persist.NetworkIO
+	1,  // 5: joblet.persist.PersistService.Ping:input_type -> joblet.persist.PingRequest
+	3,  // 6: joblet.persist.PersistService.QueryLogs:input_type -> joblet.persist.QueryLogsRequest
+	4,  // 7: joblet.persist.PersistService.QueryMetrics:input_type -> joblet.persist.QueryMetricsRequest
+	10, // 8: joblet.persist.PersistService.DeleteJob:input_type -> joblet.persist.DeleteJobRequest
+	2,  // 9: joblet.persist.PersistService.Ping:output_type -> joblet.persist.PingResponse
+	5,  // 10: joblet.persist.PersistService.QueryLogs:output_type -> joblet.persist.LogLine
+	6,  // 11: joblet.persist.PersistService.QueryMetrics:output_type -> joblet.persist.Metric
+	11, // 12: joblet.persist.PersistService.DeleteJob:output_type -> joblet.persist.DeleteJobResponse
+	9,  // [9:13] is the sub-list for method output_type
+	5,  // [5:9] is the sub-list for method input_type
+	5,  // [5:5] is the sub-list for extension type_name
+	5,  // [5:5] is the sub-list for extension extendee
+	0,  // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_persist_proto_init() }
@@ -821,7 +920,7 @@ func file_persist_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_persist_proto_rawDesc), len(file_persist_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   9,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

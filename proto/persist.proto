@@ -13,6 +13,9 @@ package joblet.persist;
 //
 // This service is provided by joblet-persist subprocess and communicates via Unix socket IPC.
 service PersistService {
+  // Health check - verify persist is running and responsive
+  rpc Ping(PingRequest) returns (PingResponse);
+
   // Query logs for a job from disk storage
   rpc QueryLogs(QueryLogsRequest) returns (stream LogLine);
 
@@ -21,6 +24,15 @@ service PersistService {
 
   // Delete all persisted data for a job (admin only)
   rpc DeleteJob(DeleteJobRequest) returns (DeleteJobResponse);
+}
+
+// PingRequest is a health check request (empty)
+message PingRequest {}
+
+// PingResponse indicates persist is healthy and responsive
+message PingResponse {
+  bool healthy = 1;
+  int64 timestamp = 2;  // Unix nanoseconds when ping was processed
 }
 
 // QueryLogsRequest specifies parameters for log queries
