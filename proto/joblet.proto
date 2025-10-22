@@ -619,6 +619,7 @@ message InstallRuntimeRequest {
   string branch = 3;               // Branch
   string path = 4;                 // Path in repo
   bool forceReinstall = 5;         // Force reinstall
+  string registry_url = 6;         // Registry URL (for installing from external registry)
 }
 
 message InstallRuntimeResponse {
