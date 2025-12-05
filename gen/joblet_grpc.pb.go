@@ -19,15 +19,17 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	JobService_RunJob_FullMethodName        = "/joblet.JobService/RunJob"
-	JobService_GetJobStatus_FullMethodName  = "/joblet.JobService/GetJobStatus"
-	JobService_StopJob_FullMethodName       = "/joblet.JobService/StopJob"
-	JobService_CancelJob_FullMethodName     = "/joblet.JobService/CancelJob"
-	JobService_DeleteJob_FullMethodName     = "/joblet.JobService/DeleteJob"
-	JobService_DeleteAllJobs_FullMethodName = "/joblet.JobService/DeleteAllJobs"
-	JobService_GetJobLogs_FullMethodName    = "/joblet.JobService/GetJobLogs"
-	JobService_ListJobs_FullMethodName      = "/joblet.JobService/ListJobs"
-	JobService_GetJobMetrics_FullMethodName = "/joblet.JobService/GetJobMetrics"
+	JobService_RunJob_FullMethodName             = "/joblet.JobService/RunJob"
+	JobService_GetJobStatus_FullMethodName       = "/joblet.JobService/GetJobStatus"
+	JobService_StopJob_FullMethodName            = "/joblet.JobService/StopJob"
+	JobService_CancelJob_FullMethodName          = "/joblet.JobService/CancelJob"
+	JobService_DeleteJob_FullMethodName          = "/joblet.JobService/DeleteJob"
+	JobService_DeleteAllJobs_FullMethodName      = "/joblet.JobService/DeleteAllJobs"
+	JobService_GetJobLogs_FullMethodName         = "/joblet.JobService/GetJobLogs"
+	JobService_ListJobs_FullMethodName           = "/joblet.JobService/ListJobs"
+	JobService_GetJobMetrics_FullMethodName      = "/joblet.JobService/GetJobMetrics"
+	JobService_StreamJobTelemetry_FullMethodName = "/joblet.JobService/StreamJobTelemetry"
+	JobService_GetJobTelemetry_FullMethodName    = "/joblet.JobService/GetJobTelemetry"
 )
 
 // JobServiceClient is the client API for JobService service.
@@ -47,6 +49,11 @@ type JobServiceClient interface {
 	ListJobs(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*Jobs, error)
 	// Job metrics operations
 	GetJobMetrics(ctx context.Context, in *JobMetricsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[JobMetricsSample], error)
+	// Unified telemetry (metrics + eBPF activity events)
+	// Stream live telemetry for a running job
+	StreamJobTelemetry(ctx context.Context, in *StreamTelemetryRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[TelemetryEvent], error)
+	// Get historical telemetry for a completed job
+	GetJobTelemetry(ctx context.Context, in *GetTelemetryRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[TelemetryEvent], error)
 }
 
 type jobServiceClient struct {
@@ -165,6 +172,44 @@ func (c *jobServiceClient) GetJobMetrics(ctx context.Context, in *JobMetricsRequ
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type JobService_GetJobMetricsClient = grpc.ServerStreamingClient[JobMetricsSample]
 
+func (c *jobServiceClient) StreamJobTelemetry(ctx context.Context, in *StreamTelemetryRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[TelemetryEvent], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &JobService_ServiceDesc.Streams[2], JobService_StreamJobTelemetry_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[StreamTelemetryRequest, TelemetryEvent]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type JobService_StreamJobTelemetryClient = grpc.ServerStreamingClient[TelemetryEvent]
+
+func (c *jobServiceClient) GetJobTelemetry(ctx context.Context, in *GetTelemetryRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[TelemetryEvent], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &JobService_ServiceDesc.Streams[3], JobService_GetJobTelemetry_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[GetTelemetryRequest, TelemetryEvent]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type JobService_GetJobTelemetryClient = grpc.ServerStreamingClient[TelemetryEvent]
+
 // JobServiceServer is the server API for JobService service.
 // All implementations must embed UnimplementedJobServiceServer
 // for forward compatibility.
@@ -182,6 +227,11 @@ type JobServiceServer interface {
 	ListJobs(context.Context, *EmptyRequest) (*Jobs, error)
 	// Job metrics operations
 	GetJobMetrics(*JobMetricsRequest, grpc.ServerStreamingServer[JobMetricsSample]) error
+	// Unified telemetry (metrics + eBPF activity events)
+	// Stream live telemetry for a running job
+	StreamJobTelemetry(*StreamTelemetryRequest, grpc.ServerStreamingServer[TelemetryEvent]) error
+	// Get historical telemetry for a completed job
+	GetJobTelemetry(*GetTelemetryRequest, grpc.ServerStreamingServer[TelemetryEvent]) error
 	mustEmbedUnimplementedJobServiceServer()
 }
 
@@ -218,6 +268,12 @@ func (UnimplementedJobServiceServer) ListJobs(context.Context, *EmptyRequest) (*
 }
 func (UnimplementedJobServiceServer) GetJobMetrics(*JobMetricsRequest, grpc.ServerStreamingServer[JobMetricsSample]) error {
 	return status.Errorf(codes.Unimplemented, "method GetJobMetrics not implemented")
+}
+func (UnimplementedJobServiceServer) StreamJobTelemetry(*StreamTelemetryRequest, grpc.ServerStreamingServer[TelemetryEvent]) error {
+	return status.Errorf(codes.Unimplemented, "method StreamJobTelemetry not implemented")
+}
+func (UnimplementedJobServiceServer) GetJobTelemetry(*GetTelemetryRequest, grpc.ServerStreamingServer[TelemetryEvent]) error {
+	return status.Errorf(codes.Unimplemented, "method GetJobTelemetry not implemented")
 }
 func (UnimplementedJobServiceServer) mustEmbedUnimplementedJobServiceServer() {}
 func (UnimplementedJobServiceServer) testEmbeddedByValue()                    {}
@@ -388,6 +444,28 @@ func _JobService_GetJobMetrics_Handler(srv interface{}, stream grpc.ServerStream
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type JobService_GetJobMetricsServer = grpc.ServerStreamingServer[JobMetricsSample]
 
+func _JobService_StreamJobTelemetry_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(StreamTelemetryRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(JobServiceServer).StreamJobTelemetry(m, &grpc.GenericServerStream[StreamTelemetryRequest, TelemetryEvent]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type JobService_StreamJobTelemetryServer = grpc.ServerStreamingServer[TelemetryEvent]
+
+func _JobService_GetJobTelemetry_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetTelemetryRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(JobServiceServer).GetJobTelemetry(m, &grpc.GenericServerStream[GetTelemetryRequest, TelemetryEvent]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type JobService_GetJobTelemetryServer = grpc.ServerStreamingServer[TelemetryEvent]
+
 // JobService_ServiceDesc is the grpc.ServiceDesc for JobService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -433,6 +511,16 @@ var JobService_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "GetJobMetrics",
 			Handler:       _JobService_GetJobMetrics_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "StreamJobTelemetry",
+			Handler:       _JobService_StreamJobTelemetry_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "GetJobTelemetry",
+			Handler:       _JobService_GetJobTelemetry_Handler,
 			ServerStreams: true,
 		},
 	},

@@ -18,6 +18,12 @@ service JobService {
 
   // Job metrics operations
   rpc GetJobMetrics(JobMetricsRequest) returns (stream JobMetricsSample){}
+
+  // Unified telemetry (metrics + eBPF activity events)
+  // Stream live telemetry for a running job
+  rpc StreamJobTelemetry(StreamTelemetryRequest) returns (stream TelemetryEvent){}
+  // Get historical telemetry for a completed job
+  rpc GetJobTelemetry(GetTelemetryRequest) returns (stream TelemetryEvent){}
 }
 
 // Network service
@@ -812,4 +818,77 @@ message JobMetricsAggregate {
   double p50 = 4;                  // Median
   double p95 = 5;
   double p99 = 6;
+}
+
+// =============================================================================
+// Unified Telemetry Messages (Metrics + eBPF Activity Events)
+// =============================================================================
+
+// Request to stream live telemetry for a running job
+message StreamTelemetryRequest {
+  string job_uuid = 1;             // Job UUID identifier
+  repeated string types = 2;       // Filter by types: ["metrics", "exec", "connect", "file"] or empty for all
+}
+
+// Request to get historical telemetry for a completed job
+message GetTelemetryRequest {
+  string job_uuid = 1;             // Job UUID identifier
+  repeated string types = 2;       // Filter by types: ["metrics", "exec", "connect", "file"] or empty for all
+  int64 start_time = 3;            // Start time in Unix nanoseconds (0 = beginning)
+  int64 end_time = 4;              // End time in Unix nanoseconds (0 = now)
+  int32 limit = 5;                 // Maximum events to return (0 = no limit)
+}
+
+// Unified telemetry event containing either metrics or activity data
+message TelemetryEvent {
+  int64 timestamp = 1;             // Unix timestamp in nanoseconds
+  string job_id = 2;               // Job UUID
+  string type = 3;                 // Event type: "metrics", "exec", "connect", "file"
+
+  oneof data {
+    TelemetryMetricsData metrics = 10;
+    TelemetryExecData exec = 11;
+    TelemetryConnectData connect = 12;
+    TelemetryFileData file = 13;
+  }
+}
+
+// Metrics data from cgroups v2 (periodic sampling)
+message TelemetryMetricsData {
+  double cpu_percent = 1;          // CPU usage percentage
+  int64 memory_bytes = 2;          // Current memory usage in bytes
+  int64 memory_limit = 3;          // Memory limit in bytes
+  int64 disk_read_bytes = 4;       // Total disk bytes read
+  int64 disk_write_bytes = 5;      // Total disk bytes written
+  int64 net_recv_bytes = 6;        // Total network bytes received
+  int64 net_sent_bytes = 7;        // Total network bytes sent
+  double gpu_percent = 8;          // GPU utilization percentage (0 if no GPU)
+  int64 gpu_memory_bytes = 9;      // GPU memory usage in bytes (0 if no GPU)
+}
+
+// Process execution event from eBPF (execve tracing)
+message TelemetryExecData {
+  uint32 pid = 1;                  // Process ID
+  string binary = 2;               // Binary path (e.g., "/usr/bin/python")
+  repeated string args = 3;        // Command arguments
+  int32 exit_code = 4;             // Exit code (only set on process exit)
+  uint32 ppid = 5;                 // Parent process ID
+}
+
+// Network connection event from eBPF (connect tracing)
+message TelemetryConnectData {
+  uint32 pid = 1;                  // Process ID that initiated connection
+  string address = 2;              // Remote IP address (IPv4 or IPv6)
+  uint32 port = 3;                 // Remote port number
+  string protocol = 4;             // Protocol: "tcp" or "udp"
+  string local_address = 5;        // Local IP address (optional)
+  uint32 local_port = 6;           // Local port number (optional)
+}
+
+// File access event from eBPF (open/read/write tracing)
+message TelemetryFileData {
+  uint32 pid = 1;                  // Process ID
+  string path = 2;                 // File path
+  string operation = 3;            // Operation: "read", "write", "create", "delete"
+  int64 bytes = 4;                 // Bytes read/written (if applicable)
 }
