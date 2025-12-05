@@ -4971,1702 +4971,6 @@ func (x *RuntimeSpecInfo) GetArchitecture() string {
 	return ""
 }
 
-type JobMetricsRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"` // Job UUID identifier
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *JobMetricsRequest) Reset() {
-	*x = JobMetricsRequest{}
-	mi := &file_joblet_proto_msgTypes[65]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *JobMetricsRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*JobMetricsRequest) ProtoMessage() {}
-
-func (x *JobMetricsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[65]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use JobMetricsRequest.ProtoReflect.Descriptor instead.
-func (*JobMetricsRequest) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{65}
-}
-
-func (x *JobMetricsRequest) GetUuid() string {
-	if x != nil {
-		return x.Uuid
-	}
-	return ""
-}
-
-type JobMetricsSummaryRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`                    // Job UUID identifier
-	PeriodSeconds int32                  `protobuf:"varint,2,opt,name=periodSeconds,proto3" json:"periodSeconds,omitempty"` // Aggregation period (default: 300s = 5min)
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *JobMetricsSummaryRequest) Reset() {
-	*x = JobMetricsSummaryRequest{}
-	mi := &file_joblet_proto_msgTypes[66]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *JobMetricsSummaryRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*JobMetricsSummaryRequest) ProtoMessage() {}
-
-func (x *JobMetricsSummaryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[66]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use JobMetricsSummaryRequest.ProtoReflect.Descriptor instead.
-func (*JobMetricsSummaryRequest) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{66}
-}
-
-func (x *JobMetricsSummaryRequest) GetUuid() string {
-	if x != nil {
-		return x.Uuid
-	}
-	return ""
-}
-
-func (x *JobMetricsSummaryRequest) GetPeriodSeconds() int32 {
-	if x != nil {
-		return x.PeriodSeconds
-	}
-	return 0
-}
-
-type JobMetricsSummaryResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Cpu           *JobMetricsAggregate   `protobuf:"bytes,1,opt,name=cpu,proto3" json:"cpu,omitempty"`
-	Memory        *JobMetricsAggregate   `protobuf:"bytes,2,opt,name=memory,proto3" json:"memory,omitempty"`
-	Io            *JobMetricsAggregate   `protobuf:"bytes,3,opt,name=io,proto3" json:"io,omitempty"`
-	Network       *JobMetricsAggregate   `protobuf:"bytes,4,opt,name=network,proto3" json:"network,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *JobMetricsSummaryResponse) Reset() {
-	*x = JobMetricsSummaryResponse{}
-	mi := &file_joblet_proto_msgTypes[67]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *JobMetricsSummaryResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*JobMetricsSummaryResponse) ProtoMessage() {}
-
-func (x *JobMetricsSummaryResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[67]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use JobMetricsSummaryResponse.ProtoReflect.Descriptor instead.
-func (*JobMetricsSummaryResponse) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{67}
-}
-
-func (x *JobMetricsSummaryResponse) GetCpu() *JobMetricsAggregate {
-	if x != nil {
-		return x.Cpu
-	}
-	return nil
-}
-
-func (x *JobMetricsSummaryResponse) GetMemory() *JobMetricsAggregate {
-	if x != nil {
-		return x.Memory
-	}
-	return nil
-}
-
-func (x *JobMetricsSummaryResponse) GetIo() *JobMetricsAggregate {
-	if x != nil {
-		return x.Io
-	}
-	return nil
-}
-
-func (x *JobMetricsSummaryResponse) GetNetwork() *JobMetricsAggregate {
-	if x != nil {
-		return x.Network
-	}
-	return nil
-}
-
-type JobMetricsSample struct {
-	state                 protoimpl.MessageState `protogen:"open.v1"`
-	JobId                 string                 `protobuf:"bytes,1,opt,name=jobId,proto3" json:"jobId,omitempty"`
-	Timestamp             int64                  `protobuf:"varint,2,opt,name=timestamp,proto3" json:"timestamp,omitempty"` // Unix timestamp in seconds
-	SampleIntervalSeconds int32                  `protobuf:"varint,3,opt,name=sampleIntervalSeconds,proto3" json:"sampleIntervalSeconds,omitempty"`
-	// Metrics
-	Cpu     *JobCPUMetrics     `protobuf:"bytes,4,opt,name=cpu,proto3" json:"cpu,omitempty"`
-	Memory  *JobMemoryMetrics  `protobuf:"bytes,5,opt,name=memory,proto3" json:"memory,omitempty"`
-	Io      *JobIOMetrics      `protobuf:"bytes,6,opt,name=io,proto3" json:"io,omitempty"`
-	Network *JobNetworkMetrics `protobuf:"bytes,7,opt,name=network,proto3" json:"network,omitempty"`
-	Process *JobProcessMetrics `protobuf:"bytes,8,opt,name=process,proto3" json:"process,omitempty"`
-	Gpu     []*JobGPUMetrics   `protobuf:"bytes,9,rep,name=gpu,proto3" json:"gpu,omitempty"`
-	// Metadata
-	CgroupPath    string             `protobuf:"bytes,10,opt,name=cgroupPath,proto3" json:"cgroupPath,omitempty"`
-	Limits        *JobResourceLimits `protobuf:"bytes,11,opt,name=limits,proto3" json:"limits,omitempty"`
-	GpuAllocation []int32            `protobuf:"varint,12,rep,packed,name=gpuAllocation,proto3" json:"gpuAllocation,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *JobMetricsSample) Reset() {
-	*x = JobMetricsSample{}
-	mi := &file_joblet_proto_msgTypes[68]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *JobMetricsSample) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*JobMetricsSample) ProtoMessage() {}
-
-func (x *JobMetricsSample) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[68]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use JobMetricsSample.ProtoReflect.Descriptor instead.
-func (*JobMetricsSample) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{68}
-}
-
-func (x *JobMetricsSample) GetJobId() string {
-	if x != nil {
-		return x.JobId
-	}
-	return ""
-}
-
-func (x *JobMetricsSample) GetTimestamp() int64 {
-	if x != nil {
-		return x.Timestamp
-	}
-	return 0
-}
-
-func (x *JobMetricsSample) GetSampleIntervalSeconds() int32 {
-	if x != nil {
-		return x.SampleIntervalSeconds
-	}
-	return 0
-}
-
-func (x *JobMetricsSample) GetCpu() *JobCPUMetrics {
-	if x != nil {
-		return x.Cpu
-	}
-	return nil
-}
-
-func (x *JobMetricsSample) GetMemory() *JobMemoryMetrics {
-	if x != nil {
-		return x.Memory
-	}
-	return nil
-}
-
-func (x *JobMetricsSample) GetIo() *JobIOMetrics {
-	if x != nil {
-		return x.Io
-	}
-	return nil
-}
-
-func (x *JobMetricsSample) GetNetwork() *JobNetworkMetrics {
-	if x != nil {
-		return x.Network
-	}
-	return nil
-}
-
-func (x *JobMetricsSample) GetProcess() *JobProcessMetrics {
-	if x != nil {
-		return x.Process
-	}
-	return nil
-}
-
-func (x *JobMetricsSample) GetGpu() []*JobGPUMetrics {
-	if x != nil {
-		return x.Gpu
-	}
-	return nil
-}
-
-func (x *JobMetricsSample) GetCgroupPath() string {
-	if x != nil {
-		return x.CgroupPath
-	}
-	return ""
-}
-
-func (x *JobMetricsSample) GetLimits() *JobResourceLimits {
-	if x != nil {
-		return x.Limits
-	}
-	return nil
-}
-
-func (x *JobMetricsSample) GetGpuAllocation() []int32 {
-	if x != nil {
-		return x.GpuAllocation
-	}
-	return nil
-}
-
-type JobResourceLimits struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Cpu           int32                  `protobuf:"varint,1,opt,name=cpu,proto3" json:"cpu,omitempty"`       // CPU percentage limit
-	Memory        int64                  `protobuf:"varint,2,opt,name=memory,proto3" json:"memory,omitempty"` // Memory limit in bytes
-	Io            int32                  `protobuf:"varint,3,opt,name=io,proto3" json:"io,omitempty"`         // I/O limit in bytes/sec
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *JobResourceLimits) Reset() {
-	*x = JobResourceLimits{}
-	mi := &file_joblet_proto_msgTypes[69]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *JobResourceLimits) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*JobResourceLimits) ProtoMessage() {}
-
-func (x *JobResourceLimits) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[69]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use JobResourceLimits.ProtoReflect.Descriptor instead.
-func (*JobResourceLimits) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{69}
-}
-
-func (x *JobResourceLimits) GetCpu() int32 {
-	if x != nil {
-		return x.Cpu
-	}
-	return 0
-}
-
-func (x *JobResourceLimits) GetMemory() int64 {
-	if x != nil {
-		return x.Memory
-	}
-	return 0
-}
-
-func (x *JobResourceLimits) GetIo() int32 {
-	if x != nil {
-		return x.Io
-	}
-	return 0
-}
-
-type JobCPUMetrics struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	UsageUsec       uint64                 `protobuf:"varint,1,opt,name=usageUsec,proto3" json:"usageUsec,omitempty"`              // Total CPU time in microseconds
-	UserUsec        uint64                 `protobuf:"varint,2,opt,name=userUsec,proto3" json:"userUsec,omitempty"`                // User mode CPU time
-	SystemUsec      uint64                 `protobuf:"varint,3,opt,name=systemUsec,proto3" json:"systemUsec,omitempty"`            // Kernel mode CPU time
-	NrPeriods       uint64                 `protobuf:"varint,4,opt,name=nrPeriods,proto3" json:"nrPeriods,omitempty"`              // Number of enforcement periods
-	NrThrottled     uint64                 `protobuf:"varint,5,opt,name=nrThrottled,proto3" json:"nrThrottled,omitempty"`          // Number of throttled periods
-	ThrottledUsec   uint64                 `protobuf:"varint,6,opt,name=throttledUsec,proto3" json:"throttledUsec,omitempty"`      // Total throttled time
-	UsagePercent    float64                `protobuf:"fixed64,7,opt,name=usagePercent,proto3" json:"usagePercent,omitempty"`       // Current CPU usage %
-	ThrottlePercent float64                `protobuf:"fixed64,8,opt,name=throttlePercent,proto3" json:"throttlePercent,omitempty"` // Percentage of time throttled
-	// PSI (Pressure Stall Information)
-	PressureSome10  float64 `protobuf:"fixed64,9,opt,name=pressureSome10,proto3" json:"pressureSome10,omitempty"`
-	PressureSome60  float64 `protobuf:"fixed64,10,opt,name=pressureSome60,proto3" json:"pressureSome60,omitempty"`
-	PressureSome300 float64 `protobuf:"fixed64,11,opt,name=pressureSome300,proto3" json:"pressureSome300,omitempty"`
-	PressureFull10  float64 `protobuf:"fixed64,12,opt,name=pressureFull10,proto3" json:"pressureFull10,omitempty"`
-	PressureFull60  float64 `protobuf:"fixed64,13,opt,name=pressureFull60,proto3" json:"pressureFull60,omitempty"`
-	PressureFull300 float64 `protobuf:"fixed64,14,opt,name=pressureFull300,proto3" json:"pressureFull300,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
-}
-
-func (x *JobCPUMetrics) Reset() {
-	*x = JobCPUMetrics{}
-	mi := &file_joblet_proto_msgTypes[70]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *JobCPUMetrics) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*JobCPUMetrics) ProtoMessage() {}
-
-func (x *JobCPUMetrics) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[70]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use JobCPUMetrics.ProtoReflect.Descriptor instead.
-func (*JobCPUMetrics) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{70}
-}
-
-func (x *JobCPUMetrics) GetUsageUsec() uint64 {
-	if x != nil {
-		return x.UsageUsec
-	}
-	return 0
-}
-
-func (x *JobCPUMetrics) GetUserUsec() uint64 {
-	if x != nil {
-		return x.UserUsec
-	}
-	return 0
-}
-
-func (x *JobCPUMetrics) GetSystemUsec() uint64 {
-	if x != nil {
-		return x.SystemUsec
-	}
-	return 0
-}
-
-func (x *JobCPUMetrics) GetNrPeriods() uint64 {
-	if x != nil {
-		return x.NrPeriods
-	}
-	return 0
-}
-
-func (x *JobCPUMetrics) GetNrThrottled() uint64 {
-	if x != nil {
-		return x.NrThrottled
-	}
-	return 0
-}
-
-func (x *JobCPUMetrics) GetThrottledUsec() uint64 {
-	if x != nil {
-		return x.ThrottledUsec
-	}
-	return 0
-}
-
-func (x *JobCPUMetrics) GetUsagePercent() float64 {
-	if x != nil {
-		return x.UsagePercent
-	}
-	return 0
-}
-
-func (x *JobCPUMetrics) GetThrottlePercent() float64 {
-	if x != nil {
-		return x.ThrottlePercent
-	}
-	return 0
-}
-
-func (x *JobCPUMetrics) GetPressureSome10() float64 {
-	if x != nil {
-		return x.PressureSome10
-	}
-	return 0
-}
-
-func (x *JobCPUMetrics) GetPressureSome60() float64 {
-	if x != nil {
-		return x.PressureSome60
-	}
-	return 0
-}
-
-func (x *JobCPUMetrics) GetPressureSome300() float64 {
-	if x != nil {
-		return x.PressureSome300
-	}
-	return 0
-}
-
-func (x *JobCPUMetrics) GetPressureFull10() float64 {
-	if x != nil {
-		return x.PressureFull10
-	}
-	return 0
-}
-
-func (x *JobCPUMetrics) GetPressureFull60() float64 {
-	if x != nil {
-		return x.PressureFull60
-	}
-	return 0
-}
-
-func (x *JobCPUMetrics) GetPressureFull300() float64 {
-	if x != nil {
-		return x.PressureFull300
-	}
-	return 0
-}
-
-type JobMemoryMetrics struct {
-	state        protoimpl.MessageState `protogen:"open.v1"`
-	Current      uint64                 `protobuf:"varint,1,opt,name=current,proto3" json:"current,omitempty"`            // Current memory usage in bytes
-	Max          uint64                 `protobuf:"varint,2,opt,name=max,proto3" json:"max,omitempty"`                    // Memory limit in bytes
-	UsagePercent float64                `protobuf:"fixed64,3,opt,name=usagePercent,proto3" json:"usagePercent,omitempty"` // Memory usage percentage
-	// Detailed memory stats
-	Anon          uint64 `protobuf:"varint,4,opt,name=anon,proto3" json:"anon,omitempty"`                    // Anonymous memory
-	File          uint64 `protobuf:"varint,5,opt,name=file,proto3" json:"file,omitempty"`                    // File-backed memory (cache)
-	KernelStack   uint64 `protobuf:"varint,6,opt,name=kernelStack,proto3" json:"kernelStack,omitempty"`      // Kernel stack memory
-	Slab          uint64 `protobuf:"varint,7,opt,name=slab,proto3" json:"slab,omitempty"`                    // Kernel slab memory
-	Sock          uint64 `protobuf:"varint,8,opt,name=sock,proto3" json:"sock,omitempty"`                    // Socket buffer memory
-	Shmem         uint64 `protobuf:"varint,9,opt,name=shmem,proto3" json:"shmem,omitempty"`                  // Shared memory
-	FileMapped    uint64 `protobuf:"varint,10,opt,name=fileMapped,proto3" json:"fileMapped,omitempty"`       // Memory-mapped files
-	FileDirty     uint64 `protobuf:"varint,11,opt,name=fileDirty,proto3" json:"fileDirty,omitempty"`         // Dirty page cache
-	FileWriteback uint64 `protobuf:"varint,12,opt,name=fileWriteback,proto3" json:"fileWriteback,omitempty"` // Pages under writeback
-	PgFault       uint64 `protobuf:"varint,13,opt,name=pgFault,proto3" json:"pgFault,omitempty"`             // Page fault count
-	PgMajFault    uint64 `protobuf:"varint,14,opt,name=pgMajFault,proto3" json:"pgMajFault,omitempty"`       // Major page fault count
-	OomEvents     uint64 `protobuf:"varint,15,opt,name=oomEvents,proto3" json:"oomEvents,omitempty"`         // OOM killer invocations
-	OomKill       uint64 `protobuf:"varint,16,opt,name=oomKill,proto3" json:"oomKill,omitempty"`             // Processes killed by OOM
-	// PSI
-	PressureSome10  float64 `protobuf:"fixed64,17,opt,name=pressureSome10,proto3" json:"pressureSome10,omitempty"`
-	PressureSome60  float64 `protobuf:"fixed64,18,opt,name=pressureSome60,proto3" json:"pressureSome60,omitempty"`
-	PressureSome300 float64 `protobuf:"fixed64,19,opt,name=pressureSome300,proto3" json:"pressureSome300,omitempty"`
-	PressureFull10  float64 `protobuf:"fixed64,20,opt,name=pressureFull10,proto3" json:"pressureFull10,omitempty"`
-	PressureFull60  float64 `protobuf:"fixed64,21,opt,name=pressureFull60,proto3" json:"pressureFull60,omitempty"`
-	PressureFull300 float64 `protobuf:"fixed64,22,opt,name=pressureFull300,proto3" json:"pressureFull300,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
-}
-
-func (x *JobMemoryMetrics) Reset() {
-	*x = JobMemoryMetrics{}
-	mi := &file_joblet_proto_msgTypes[71]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *JobMemoryMetrics) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*JobMemoryMetrics) ProtoMessage() {}
-
-func (x *JobMemoryMetrics) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[71]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use JobMemoryMetrics.ProtoReflect.Descriptor instead.
-func (*JobMemoryMetrics) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{71}
-}
-
-func (x *JobMemoryMetrics) GetCurrent() uint64 {
-	if x != nil {
-		return x.Current
-	}
-	return 0
-}
-
-func (x *JobMemoryMetrics) GetMax() uint64 {
-	if x != nil {
-		return x.Max
-	}
-	return 0
-}
-
-func (x *JobMemoryMetrics) GetUsagePercent() float64 {
-	if x != nil {
-		return x.UsagePercent
-	}
-	return 0
-}
-
-func (x *JobMemoryMetrics) GetAnon() uint64 {
-	if x != nil {
-		return x.Anon
-	}
-	return 0
-}
-
-func (x *JobMemoryMetrics) GetFile() uint64 {
-	if x != nil {
-		return x.File
-	}
-	return 0
-}
-
-func (x *JobMemoryMetrics) GetKernelStack() uint64 {
-	if x != nil {
-		return x.KernelStack
-	}
-	return 0
-}
-
-func (x *JobMemoryMetrics) GetSlab() uint64 {
-	if x != nil {
-		return x.Slab
-	}
-	return 0
-}
-
-func (x *JobMemoryMetrics) GetSock() uint64 {
-	if x != nil {
-		return x.Sock
-	}
-	return 0
-}
-
-func (x *JobMemoryMetrics) GetShmem() uint64 {
-	if x != nil {
-		return x.Shmem
-	}
-	return 0
-}
-
-func (x *JobMemoryMetrics) GetFileMapped() uint64 {
-	if x != nil {
-		return x.FileMapped
-	}
-	return 0
-}
-
-func (x *JobMemoryMetrics) GetFileDirty() uint64 {
-	if x != nil {
-		return x.FileDirty
-	}
-	return 0
-}
-
-func (x *JobMemoryMetrics) GetFileWriteback() uint64 {
-	if x != nil {
-		return x.FileWriteback
-	}
-	return 0
-}
-
-func (x *JobMemoryMetrics) GetPgFault() uint64 {
-	if x != nil {
-		return x.PgFault
-	}
-	return 0
-}
-
-func (x *JobMemoryMetrics) GetPgMajFault() uint64 {
-	if x != nil {
-		return x.PgMajFault
-	}
-	return 0
-}
-
-func (x *JobMemoryMetrics) GetOomEvents() uint64 {
-	if x != nil {
-		return x.OomEvents
-	}
-	return 0
-}
-
-func (x *JobMemoryMetrics) GetOomKill() uint64 {
-	if x != nil {
-		return x.OomKill
-	}
-	return 0
-}
-
-func (x *JobMemoryMetrics) GetPressureSome10() float64 {
-	if x != nil {
-		return x.PressureSome10
-	}
-	return 0
-}
-
-func (x *JobMemoryMetrics) GetPressureSome60() float64 {
-	if x != nil {
-		return x.PressureSome60
-	}
-	return 0
-}
-
-func (x *JobMemoryMetrics) GetPressureSome300() float64 {
-	if x != nil {
-		return x.PressureSome300
-	}
-	return 0
-}
-
-func (x *JobMemoryMetrics) GetPressureFull10() float64 {
-	if x != nil {
-		return x.PressureFull10
-	}
-	return 0
-}
-
-func (x *JobMemoryMetrics) GetPressureFull60() float64 {
-	if x != nil {
-		return x.PressureFull60
-	}
-	return 0
-}
-
-func (x *JobMemoryMetrics) GetPressureFull300() float64 {
-	if x != nil {
-		return x.PressureFull300
-	}
-	return 0
-}
-
-type JobIOMetrics struct {
-	state   protoimpl.MessageState      `protogen:"open.v1"`
-	Devices map[string]*DeviceIOMetrics `protobuf:"bytes,1,rep,name=devices,proto3" json:"devices,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // Per-device metrics
-	// Aggregated metrics
-	TotalReadBytes    uint64 `protobuf:"varint,2,opt,name=totalReadBytes,proto3" json:"totalReadBytes,omitempty"`
-	TotalWriteBytes   uint64 `protobuf:"varint,3,opt,name=totalWriteBytes,proto3" json:"totalWriteBytes,omitempty"`
-	TotalReadOps      uint64 `protobuf:"varint,4,opt,name=totalReadOps,proto3" json:"totalReadOps,omitempty"`
-	TotalWriteOps     uint64 `protobuf:"varint,5,opt,name=totalWriteOps,proto3" json:"totalWriteOps,omitempty"`
-	TotalDiscardBytes uint64 `protobuf:"varint,6,opt,name=totalDiscardBytes,proto3" json:"totalDiscardBytes,omitempty"`
-	TotalDiscardOps   uint64 `protobuf:"varint,7,opt,name=totalDiscardOps,proto3" json:"totalDiscardOps,omitempty"`
-	// Calculated rates
-	ReadBPS   float64 `protobuf:"fixed64,8,opt,name=readBPS,proto3" json:"readBPS,omitempty"`      // Read bandwidth (bytes/sec)
-	WriteBPS  float64 `protobuf:"fixed64,9,opt,name=writeBPS,proto3" json:"writeBPS,omitempty"`    // Write bandwidth (bytes/sec)
-	ReadIOPS  float64 `protobuf:"fixed64,10,opt,name=readIOPS,proto3" json:"readIOPS,omitempty"`   // Read IOPS
-	WriteIOPS float64 `protobuf:"fixed64,11,opt,name=writeIOPS,proto3" json:"writeIOPS,omitempty"` // Write IOPS
-	// PSI
-	PressureSome10  float64 `protobuf:"fixed64,12,opt,name=pressureSome10,proto3" json:"pressureSome10,omitempty"`
-	PressureSome60  float64 `protobuf:"fixed64,13,opt,name=pressureSome60,proto3" json:"pressureSome60,omitempty"`
-	PressureSome300 float64 `protobuf:"fixed64,14,opt,name=pressureSome300,proto3" json:"pressureSome300,omitempty"`
-	PressureFull10  float64 `protobuf:"fixed64,15,opt,name=pressureFull10,proto3" json:"pressureFull10,omitempty"`
-	PressureFull60  float64 `protobuf:"fixed64,16,opt,name=pressureFull60,proto3" json:"pressureFull60,omitempty"`
-	PressureFull300 float64 `protobuf:"fixed64,17,opt,name=pressureFull300,proto3" json:"pressureFull300,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
-}
-
-func (x *JobIOMetrics) Reset() {
-	*x = JobIOMetrics{}
-	mi := &file_joblet_proto_msgTypes[72]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *JobIOMetrics) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*JobIOMetrics) ProtoMessage() {}
-
-func (x *JobIOMetrics) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[72]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use JobIOMetrics.ProtoReflect.Descriptor instead.
-func (*JobIOMetrics) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{72}
-}
-
-func (x *JobIOMetrics) GetDevices() map[string]*DeviceIOMetrics {
-	if x != nil {
-		return x.Devices
-	}
-	return nil
-}
-
-func (x *JobIOMetrics) GetTotalReadBytes() uint64 {
-	if x != nil {
-		return x.TotalReadBytes
-	}
-	return 0
-}
-
-func (x *JobIOMetrics) GetTotalWriteBytes() uint64 {
-	if x != nil {
-		return x.TotalWriteBytes
-	}
-	return 0
-}
-
-func (x *JobIOMetrics) GetTotalReadOps() uint64 {
-	if x != nil {
-		return x.TotalReadOps
-	}
-	return 0
-}
-
-func (x *JobIOMetrics) GetTotalWriteOps() uint64 {
-	if x != nil {
-		return x.TotalWriteOps
-	}
-	return 0
-}
-
-func (x *JobIOMetrics) GetTotalDiscardBytes() uint64 {
-	if x != nil {
-		return x.TotalDiscardBytes
-	}
-	return 0
-}
-
-func (x *JobIOMetrics) GetTotalDiscardOps() uint64 {
-	if x != nil {
-		return x.TotalDiscardOps
-	}
-	return 0
-}
-
-func (x *JobIOMetrics) GetReadBPS() float64 {
-	if x != nil {
-		return x.ReadBPS
-	}
-	return 0
-}
-
-func (x *JobIOMetrics) GetWriteBPS() float64 {
-	if x != nil {
-		return x.WriteBPS
-	}
-	return 0
-}
-
-func (x *JobIOMetrics) GetReadIOPS() float64 {
-	if x != nil {
-		return x.ReadIOPS
-	}
-	return 0
-}
-
-func (x *JobIOMetrics) GetWriteIOPS() float64 {
-	if x != nil {
-		return x.WriteIOPS
-	}
-	return 0
-}
-
-func (x *JobIOMetrics) GetPressureSome10() float64 {
-	if x != nil {
-		return x.PressureSome10
-	}
-	return 0
-}
-
-func (x *JobIOMetrics) GetPressureSome60() float64 {
-	if x != nil {
-		return x.PressureSome60
-	}
-	return 0
-}
-
-func (x *JobIOMetrics) GetPressureSome300() float64 {
-	if x != nil {
-		return x.PressureSome300
-	}
-	return 0
-}
-
-func (x *JobIOMetrics) GetPressureFull10() float64 {
-	if x != nil {
-		return x.PressureFull10
-	}
-	return 0
-}
-
-func (x *JobIOMetrics) GetPressureFull60() float64 {
-	if x != nil {
-		return x.PressureFull60
-	}
-	return 0
-}
-
-func (x *JobIOMetrics) GetPressureFull300() float64 {
-	if x != nil {
-		return x.PressureFull300
-	}
-	return 0
-}
-
-type DeviceIOMetrics struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Device        string                 `protobuf:"bytes,1,opt,name=device,proto3" json:"device,omitempty"` // Device identifier (major:minor)
-	ReadBytes     uint64                 `protobuf:"varint,2,opt,name=readBytes,proto3" json:"readBytes,omitempty"`
-	WriteBytes    uint64                 `protobuf:"varint,3,opt,name=writeBytes,proto3" json:"writeBytes,omitempty"`
-	ReadOps       uint64                 `protobuf:"varint,4,opt,name=readOps,proto3" json:"readOps,omitempty"`
-	WriteOps      uint64                 `protobuf:"varint,5,opt,name=writeOps,proto3" json:"writeOps,omitempty"`
-	DiscardBytes  uint64                 `protobuf:"varint,6,opt,name=discardBytes,proto3" json:"discardBytes,omitempty"`
-	DiscardOps    uint64                 `protobuf:"varint,7,opt,name=discardOps,proto3" json:"discardOps,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *DeviceIOMetrics) Reset() {
-	*x = DeviceIOMetrics{}
-	mi := &file_joblet_proto_msgTypes[73]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DeviceIOMetrics) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeviceIOMetrics) ProtoMessage() {}
-
-func (x *DeviceIOMetrics) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[73]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeviceIOMetrics.ProtoReflect.Descriptor instead.
-func (*DeviceIOMetrics) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{73}
-}
-
-func (x *DeviceIOMetrics) GetDevice() string {
-	if x != nil {
-		return x.Device
-	}
-	return ""
-}
-
-func (x *DeviceIOMetrics) GetReadBytes() uint64 {
-	if x != nil {
-		return x.ReadBytes
-	}
-	return 0
-}
-
-func (x *DeviceIOMetrics) GetWriteBytes() uint64 {
-	if x != nil {
-		return x.WriteBytes
-	}
-	return 0
-}
-
-func (x *DeviceIOMetrics) GetReadOps() uint64 {
-	if x != nil {
-		return x.ReadOps
-	}
-	return 0
-}
-
-func (x *DeviceIOMetrics) GetWriteOps() uint64 {
-	if x != nil {
-		return x.WriteOps
-	}
-	return 0
-}
-
-func (x *DeviceIOMetrics) GetDiscardBytes() uint64 {
-	if x != nil {
-		return x.DiscardBytes
-	}
-	return 0
-}
-
-func (x *DeviceIOMetrics) GetDiscardOps() uint64 {
-	if x != nil {
-		return x.DiscardOps
-	}
-	return 0
-}
-
-type JobNetworkMetrics struct {
-	state      protoimpl.MessageState              `protogen:"open.v1"`
-	Interfaces map[string]*NetworkInterfaceMetrics `protobuf:"bytes,1,rep,name=interfaces,proto3" json:"interfaces,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	// Aggregated metrics
-	TotalRxBytes   uint64 `protobuf:"varint,2,opt,name=totalRxBytes,proto3" json:"totalRxBytes,omitempty"`
-	TotalTxBytes   uint64 `protobuf:"varint,3,opt,name=totalTxBytes,proto3" json:"totalTxBytes,omitempty"`
-	TotalRxPackets uint64 `protobuf:"varint,4,opt,name=totalRxPackets,proto3" json:"totalRxPackets,omitempty"`
-	TotalTxPackets uint64 `protobuf:"varint,5,opt,name=totalTxPackets,proto3" json:"totalTxPackets,omitempty"`
-	TotalRxErrors  uint64 `protobuf:"varint,6,opt,name=totalRxErrors,proto3" json:"totalRxErrors,omitempty"`
-	TotalTxErrors  uint64 `protobuf:"varint,7,opt,name=totalTxErrors,proto3" json:"totalTxErrors,omitempty"`
-	TotalRxDropped uint64 `protobuf:"varint,8,opt,name=totalRxDropped,proto3" json:"totalRxDropped,omitempty"`
-	TotalTxDropped uint64 `protobuf:"varint,9,opt,name=totalTxDropped,proto3" json:"totalTxDropped,omitempty"`
-	// Calculated rates
-	RxBPS         float64 `protobuf:"fixed64,10,opt,name=rxBPS,proto3" json:"rxBPS,omitempty"` // Receive bandwidth (bytes/sec)
-	TxBPS         float64 `protobuf:"fixed64,11,opt,name=txBPS,proto3" json:"txBPS,omitempty"` // Transmit bandwidth (bytes/sec)
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *JobNetworkMetrics) Reset() {
-	*x = JobNetworkMetrics{}
-	mi := &file_joblet_proto_msgTypes[74]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *JobNetworkMetrics) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*JobNetworkMetrics) ProtoMessage() {}
-
-func (x *JobNetworkMetrics) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[74]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use JobNetworkMetrics.ProtoReflect.Descriptor instead.
-func (*JobNetworkMetrics) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{74}
-}
-
-func (x *JobNetworkMetrics) GetInterfaces() map[string]*NetworkInterfaceMetrics {
-	if x != nil {
-		return x.Interfaces
-	}
-	return nil
-}
-
-func (x *JobNetworkMetrics) GetTotalRxBytes() uint64 {
-	if x != nil {
-		return x.TotalRxBytes
-	}
-	return 0
-}
-
-func (x *JobNetworkMetrics) GetTotalTxBytes() uint64 {
-	if x != nil {
-		return x.TotalTxBytes
-	}
-	return 0
-}
-
-func (x *JobNetworkMetrics) GetTotalRxPackets() uint64 {
-	if x != nil {
-		return x.TotalRxPackets
-	}
-	return 0
-}
-
-func (x *JobNetworkMetrics) GetTotalTxPackets() uint64 {
-	if x != nil {
-		return x.TotalTxPackets
-	}
-	return 0
-}
-
-func (x *JobNetworkMetrics) GetTotalRxErrors() uint64 {
-	if x != nil {
-		return x.TotalRxErrors
-	}
-	return 0
-}
-
-func (x *JobNetworkMetrics) GetTotalTxErrors() uint64 {
-	if x != nil {
-		return x.TotalTxErrors
-	}
-	return 0
-}
-
-func (x *JobNetworkMetrics) GetTotalRxDropped() uint64 {
-	if x != nil {
-		return x.TotalRxDropped
-	}
-	return 0
-}
-
-func (x *JobNetworkMetrics) GetTotalTxDropped() uint64 {
-	if x != nil {
-		return x.TotalTxDropped
-	}
-	return 0
-}
-
-func (x *JobNetworkMetrics) GetRxBPS() float64 {
-	if x != nil {
-		return x.RxBPS
-	}
-	return 0
-}
-
-func (x *JobNetworkMetrics) GetTxBPS() float64 {
-	if x != nil {
-		return x.TxBPS
-	}
-	return 0
-}
-
-type NetworkInterfaceMetrics struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Interface     string                 `protobuf:"bytes,1,opt,name=interface,proto3" json:"interface,omitempty"`
-	RxBytes       uint64                 `protobuf:"varint,2,opt,name=rxBytes,proto3" json:"rxBytes,omitempty"`
-	TxBytes       uint64                 `protobuf:"varint,3,opt,name=txBytes,proto3" json:"txBytes,omitempty"`
-	RxPackets     uint64                 `protobuf:"varint,4,opt,name=rxPackets,proto3" json:"rxPackets,omitempty"`
-	TxPackets     uint64                 `protobuf:"varint,5,opt,name=txPackets,proto3" json:"txPackets,omitempty"`
-	RxErrors      uint64                 `protobuf:"varint,6,opt,name=rxErrors,proto3" json:"rxErrors,omitempty"`
-	TxErrors      uint64                 `protobuf:"varint,7,opt,name=txErrors,proto3" json:"txErrors,omitempty"`
-	RxDropped     uint64                 `protobuf:"varint,8,opt,name=rxDropped,proto3" json:"rxDropped,omitempty"`
-	TxDropped     uint64                 `protobuf:"varint,9,opt,name=txDropped,proto3" json:"txDropped,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *NetworkInterfaceMetrics) Reset() {
-	*x = NetworkInterfaceMetrics{}
-	mi := &file_joblet_proto_msgTypes[75]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *NetworkInterfaceMetrics) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*NetworkInterfaceMetrics) ProtoMessage() {}
-
-func (x *NetworkInterfaceMetrics) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[75]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use NetworkInterfaceMetrics.ProtoReflect.Descriptor instead.
-func (*NetworkInterfaceMetrics) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{75}
-}
-
-func (x *NetworkInterfaceMetrics) GetInterface() string {
-	if x != nil {
-		return x.Interface
-	}
-	return ""
-}
-
-func (x *NetworkInterfaceMetrics) GetRxBytes() uint64 {
-	if x != nil {
-		return x.RxBytes
-	}
-	return 0
-}
-
-func (x *NetworkInterfaceMetrics) GetTxBytes() uint64 {
-	if x != nil {
-		return x.TxBytes
-	}
-	return 0
-}
-
-func (x *NetworkInterfaceMetrics) GetRxPackets() uint64 {
-	if x != nil {
-		return x.RxPackets
-	}
-	return 0
-}
-
-func (x *NetworkInterfaceMetrics) GetTxPackets() uint64 {
-	if x != nil {
-		return x.TxPackets
-	}
-	return 0
-}
-
-func (x *NetworkInterfaceMetrics) GetRxErrors() uint64 {
-	if x != nil {
-		return x.RxErrors
-	}
-	return 0
-}
-
-func (x *NetworkInterfaceMetrics) GetTxErrors() uint64 {
-	if x != nil {
-		return x.TxErrors
-	}
-	return 0
-}
-
-func (x *NetworkInterfaceMetrics) GetRxDropped() uint64 {
-	if x != nil {
-		return x.RxDropped
-	}
-	return 0
-}
-
-func (x *NetworkInterfaceMetrics) GetTxDropped() uint64 {
-	if x != nil {
-		return x.TxDropped
-	}
-	return 0
-}
-
-type JobProcessMetrics struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Current       uint64                 `protobuf:"varint,1,opt,name=current,proto3" json:"current,omitempty"`   // Current number of processes/threads
-	Max           uint64                 `protobuf:"varint,2,opt,name=max,proto3" json:"max,omitempty"`           // Maximum PIDs allowed
-	Events        uint64                 `protobuf:"varint,3,opt,name=events,proto3" json:"events,omitempty"`     // PID limit hit count
-	Threads       uint64                 `protobuf:"varint,4,opt,name=threads,proto3" json:"threads,omitempty"`   // Total thread count
-	Running       uint64                 `protobuf:"varint,5,opt,name=running,proto3" json:"running,omitempty"`   // Running processes
-	Sleeping      uint64                 `protobuf:"varint,6,opt,name=sleeping,proto3" json:"sleeping,omitempty"` // Sleeping processes
-	Stopped       uint64                 `protobuf:"varint,7,opt,name=stopped,proto3" json:"stopped,omitempty"`   // Stopped processes
-	Zombie        uint64                 `protobuf:"varint,8,opt,name=zombie,proto3" json:"zombie,omitempty"`     // Zombie processes
-	OpenFDs       uint64                 `protobuf:"varint,9,opt,name=openFDs,proto3" json:"openFDs,omitempty"`   // Open file descriptors
-	MaxFDs        uint64                 `protobuf:"varint,10,opt,name=maxFDs,proto3" json:"maxFDs,omitempty"`    // FD limit
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *JobProcessMetrics) Reset() {
-	*x = JobProcessMetrics{}
-	mi := &file_joblet_proto_msgTypes[76]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *JobProcessMetrics) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*JobProcessMetrics) ProtoMessage() {}
-
-func (x *JobProcessMetrics) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[76]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use JobProcessMetrics.ProtoReflect.Descriptor instead.
-func (*JobProcessMetrics) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{76}
-}
-
-func (x *JobProcessMetrics) GetCurrent() uint64 {
-	if x != nil {
-		return x.Current
-	}
-	return 0
-}
-
-func (x *JobProcessMetrics) GetMax() uint64 {
-	if x != nil {
-		return x.Max
-	}
-	return 0
-}
-
-func (x *JobProcessMetrics) GetEvents() uint64 {
-	if x != nil {
-		return x.Events
-	}
-	return 0
-}
-
-func (x *JobProcessMetrics) GetThreads() uint64 {
-	if x != nil {
-		return x.Threads
-	}
-	return 0
-}
-
-func (x *JobProcessMetrics) GetRunning() uint64 {
-	if x != nil {
-		return x.Running
-	}
-	return 0
-}
-
-func (x *JobProcessMetrics) GetSleeping() uint64 {
-	if x != nil {
-		return x.Sleeping
-	}
-	return 0
-}
-
-func (x *JobProcessMetrics) GetStopped() uint64 {
-	if x != nil {
-		return x.Stopped
-	}
-	return 0
-}
-
-func (x *JobProcessMetrics) GetZombie() uint64 {
-	if x != nil {
-		return x.Zombie
-	}
-	return 0
-}
-
-func (x *JobProcessMetrics) GetOpenFDs() uint64 {
-	if x != nil {
-		return x.OpenFDs
-	}
-	return 0
-}
-
-func (x *JobProcessMetrics) GetMaxFDs() uint64 {
-	if x != nil {
-		return x.MaxFDs
-	}
-	return 0
-}
-
-type JobGPUMetrics struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Device identification
-	Index             int32  `protobuf:"varint,1,opt,name=index,proto3" json:"index,omitempty"`                        // GPU device index
-	Uuid              string `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`                           // GPU unique identifier
-	Name              string `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`                           // GPU model name
-	ComputeCapability string `protobuf:"bytes,4,opt,name=computeCapability,proto3" json:"computeCapability,omitempty"` // CUDA compute capability
-	DriverVersion     string `protobuf:"bytes,5,opt,name=driverVersion,proto3" json:"driverVersion,omitempty"`         // NVIDIA driver version
-	// Utilization metrics
-	Utilization   float64 `protobuf:"fixed64,6,opt,name=utilization,proto3" json:"utilization,omitempty"`      // GPU core utilization (0-100%)
-	MemoryUsed    uint64  `protobuf:"varint,7,opt,name=memoryUsed,proto3" json:"memoryUsed,omitempty"`         // GPU memory used (bytes)
-	MemoryTotal   uint64  `protobuf:"varint,8,opt,name=memoryTotal,proto3" json:"memoryTotal,omitempty"`       // GPU memory total (bytes)
-	MemoryFree    uint64  `protobuf:"varint,9,opt,name=memoryFree,proto3" json:"memoryFree,omitempty"`         // GPU memory free (bytes)
-	MemoryPercent float64 `protobuf:"fixed64,10,opt,name=memoryPercent,proto3" json:"memoryPercent,omitempty"` // Memory utilization percentage
-	EncoderUtil   float64 `protobuf:"fixed64,11,opt,name=encoderUtil,proto3" json:"encoderUtil,omitempty"`     // Video encoder utilization
-	DecoderUtil   float64 `protobuf:"fixed64,12,opt,name=decoderUtil,proto3" json:"decoderUtil,omitempty"`     // Video decoder utilization
-	// Performance metrics
-	SmClock          uint64  `protobuf:"varint,13,opt,name=smClock,proto3" json:"smClock,omitempty"`                    // Streaming Multiprocessor clock (MHz)
-	MemoryClock      uint64  `protobuf:"varint,14,opt,name=memoryClock,proto3" json:"memoryClock,omitempty"`            // Memory clock speed (MHz)
-	PcieThroughputRx float64 `protobuf:"fixed64,15,opt,name=pcieThroughputRx,proto3" json:"pcieThroughputRx,omitempty"` // PCIe receive throughput (MB/s)
-	PcieThroughputTx float64 `protobuf:"fixed64,16,opt,name=pcieThroughputTx,proto3" json:"pcieThroughputTx,omitempty"` // PCIe transmit throughput (MB/s)
-	// Thermal & Power
-	Temperature       float64 `protobuf:"fixed64,17,opt,name=temperature,proto3" json:"temperature,omitempty"`             // GPU temperature (Celsius)
-	TemperatureMemory float64 `protobuf:"fixed64,18,opt,name=temperatureMemory,proto3" json:"temperatureMemory,omitempty"` // Memory temperature
-	PowerDraw         float64 `protobuf:"fixed64,19,opt,name=powerDraw,proto3" json:"powerDraw,omitempty"`                 // Current power draw (Watts)
-	PowerLimit        float64 `protobuf:"fixed64,20,opt,name=powerLimit,proto3" json:"powerLimit,omitempty"`               // Power limit (Watts)
-	FanSpeed          float64 `protobuf:"fixed64,21,opt,name=fanSpeed,proto3" json:"fanSpeed,omitempty"`                   // Fan speed percentage
-	// Error & Health
-	EccErrorsSingle uint64 `protobuf:"varint,22,opt,name=eccErrorsSingle,proto3" json:"eccErrorsSingle,omitempty"` // Single-bit ECC errors
-	EccErrorsDouble uint64 `protobuf:"varint,23,opt,name=eccErrorsDouble,proto3" json:"eccErrorsDouble,omitempty"` // Double-bit ECC errors
-	XidErrors       uint64 `protobuf:"varint,24,opt,name=xidErrors,proto3" json:"xidErrors,omitempty"`             // XID error events
-	RetiredPages    uint64 `protobuf:"varint,25,opt,name=retiredPages,proto3" json:"retiredPages,omitempty"`       // Retired memory pages
-	ThrottleReasons uint64 `protobuf:"varint,26,opt,name=throttleReasons,proto3" json:"throttleReasons,omitempty"` // Throttling reason bitmask
-	// Process metrics
-	ProcessesCount  uint64 `protobuf:"varint,27,opt,name=processesCount,proto3" json:"processesCount,omitempty"`   // Number of processes using GPU
-	ProcessesMemory uint64 `protobuf:"varint,28,opt,name=processesMemory,proto3" json:"processesMemory,omitempty"` // Memory used by job processes
-	ComputeMode     string `protobuf:"bytes,29,opt,name=computeMode,proto3" json:"computeMode,omitempty"`          // Compute mode (exclusive/shared)
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
-}
-
-func (x *JobGPUMetrics) Reset() {
-	*x = JobGPUMetrics{}
-	mi := &file_joblet_proto_msgTypes[77]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *JobGPUMetrics) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*JobGPUMetrics) ProtoMessage() {}
-
-func (x *JobGPUMetrics) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[77]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use JobGPUMetrics.ProtoReflect.Descriptor instead.
-func (*JobGPUMetrics) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{77}
-}
-
-func (x *JobGPUMetrics) GetIndex() int32 {
-	if x != nil {
-		return x.Index
-	}
-	return 0
-}
-
-func (x *JobGPUMetrics) GetUuid() string {
-	if x != nil {
-		return x.Uuid
-	}
-	return ""
-}
-
-func (x *JobGPUMetrics) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *JobGPUMetrics) GetComputeCapability() string {
-	if x != nil {
-		return x.ComputeCapability
-	}
-	return ""
-}
-
-func (x *JobGPUMetrics) GetDriverVersion() string {
-	if x != nil {
-		return x.DriverVersion
-	}
-	return ""
-}
-
-func (x *JobGPUMetrics) GetUtilization() float64 {
-	if x != nil {
-		return x.Utilization
-	}
-	return 0
-}
-
-func (x *JobGPUMetrics) GetMemoryUsed() uint64 {
-	if x != nil {
-		return x.MemoryUsed
-	}
-	return 0
-}
-
-func (x *JobGPUMetrics) GetMemoryTotal() uint64 {
-	if x != nil {
-		return x.MemoryTotal
-	}
-	return 0
-}
-
-func (x *JobGPUMetrics) GetMemoryFree() uint64 {
-	if x != nil {
-		return x.MemoryFree
-	}
-	return 0
-}
-
-func (x *JobGPUMetrics) GetMemoryPercent() float64 {
-	if x != nil {
-		return x.MemoryPercent
-	}
-	return 0
-}
-
-func (x *JobGPUMetrics) GetEncoderUtil() float64 {
-	if x != nil {
-		return x.EncoderUtil
-	}
-	return 0
-}
-
-func (x *JobGPUMetrics) GetDecoderUtil() float64 {
-	if x != nil {
-		return x.DecoderUtil
-	}
-	return 0
-}
-
-func (x *JobGPUMetrics) GetSmClock() uint64 {
-	if x != nil {
-		return x.SmClock
-	}
-	return 0
-}
-
-func (x *JobGPUMetrics) GetMemoryClock() uint64 {
-	if x != nil {
-		return x.MemoryClock
-	}
-	return 0
-}
-
-func (x *JobGPUMetrics) GetPcieThroughputRx() float64 {
-	if x != nil {
-		return x.PcieThroughputRx
-	}
-	return 0
-}
-
-func (x *JobGPUMetrics) GetPcieThroughputTx() float64 {
-	if x != nil {
-		return x.PcieThroughputTx
-	}
-	return 0
-}
-
-func (x *JobGPUMetrics) GetTemperature() float64 {
-	if x != nil {
-		return x.Temperature
-	}
-	return 0
-}
-
-func (x *JobGPUMetrics) GetTemperatureMemory() float64 {
-	if x != nil {
-		return x.TemperatureMemory
-	}
-	return 0
-}
-
-func (x *JobGPUMetrics) GetPowerDraw() float64 {
-	if x != nil {
-		return x.PowerDraw
-	}
-	return 0
-}
-
-func (x *JobGPUMetrics) GetPowerLimit() float64 {
-	if x != nil {
-		return x.PowerLimit
-	}
-	return 0
-}
-
-func (x *JobGPUMetrics) GetFanSpeed() float64 {
-	if x != nil {
-		return x.FanSpeed
-	}
-	return 0
-}
-
-func (x *JobGPUMetrics) GetEccErrorsSingle() uint64 {
-	if x != nil {
-		return x.EccErrorsSingle
-	}
-	return 0
-}
-
-func (x *JobGPUMetrics) GetEccErrorsDouble() uint64 {
-	if x != nil {
-		return x.EccErrorsDouble
-	}
-	return 0
-}
-
-func (x *JobGPUMetrics) GetXidErrors() uint64 {
-	if x != nil {
-		return x.XidErrors
-	}
-	return 0
-}
-
-func (x *JobGPUMetrics) GetRetiredPages() uint64 {
-	if x != nil {
-		return x.RetiredPages
-	}
-	return 0
-}
-
-func (x *JobGPUMetrics) GetThrottleReasons() uint64 {
-	if x != nil {
-		return x.ThrottleReasons
-	}
-	return 0
-}
-
-func (x *JobGPUMetrics) GetProcessesCount() uint64 {
-	if x != nil {
-		return x.ProcessesCount
-	}
-	return 0
-}
-
-func (x *JobGPUMetrics) GetProcessesMemory() uint64 {
-	if x != nil {
-		return x.ProcessesMemory
-	}
-	return 0
-}
-
-func (x *JobGPUMetrics) GetComputeMode() string {
-	if x != nil {
-		return x.ComputeMode
-	}
-	return ""
-}
-
-type JobMetricsAggregate struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Min           float64                `protobuf:"fixed64,1,opt,name=min,proto3" json:"min,omitempty"`
-	Max           float64                `protobuf:"fixed64,2,opt,name=max,proto3" json:"max,omitempty"`
-	Avg           float64                `protobuf:"fixed64,3,opt,name=avg,proto3" json:"avg,omitempty"`
-	P50           float64                `protobuf:"fixed64,4,opt,name=p50,proto3" json:"p50,omitempty"` // Median
-	P95           float64                `protobuf:"fixed64,5,opt,name=p95,proto3" json:"p95,omitempty"`
-	P99           float64                `protobuf:"fixed64,6,opt,name=p99,proto3" json:"p99,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *JobMetricsAggregate) Reset() {
-	*x = JobMetricsAggregate{}
-	mi := &file_joblet_proto_msgTypes[78]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *JobMetricsAggregate) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*JobMetricsAggregate) ProtoMessage() {}
-
-func (x *JobMetricsAggregate) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[78]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use JobMetricsAggregate.ProtoReflect.Descriptor instead.
-func (*JobMetricsAggregate) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{78}
-}
-
-func (x *JobMetricsAggregate) GetMin() float64 {
-	if x != nil {
-		return x.Min
-	}
-	return 0
-}
-
-func (x *JobMetricsAggregate) GetMax() float64 {
-	if x != nil {
-		return x.Max
-	}
-	return 0
-}
-
-func (x *JobMetricsAggregate) GetAvg() float64 {
-	if x != nil {
-		return x.Avg
-	}
-	return 0
-}
-
-func (x *JobMetricsAggregate) GetP50() float64 {
-	if x != nil {
-		return x.P50
-	}
-	return 0
-}
-
-func (x *JobMetricsAggregate) GetP95() float64 {
-	if x != nil {
-		return x.P95
-	}
-	return 0
-}
-
-func (x *JobMetricsAggregate) GetP99() float64 {
-	if x != nil {
-		return x.P99
-	}
-	return 0
-}
-
 // Request to stream live telemetry for a running job
 type StreamTelemetryRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -6678,7 +4982,7 @@ type StreamTelemetryRequest struct {
 
 func (x *StreamTelemetryRequest) Reset() {
 	*x = StreamTelemetryRequest{}
-	mi := &file_joblet_proto_msgTypes[79]
+	mi := &file_joblet_proto_msgTypes[65]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6690,7 +4994,7 @@ func (x *StreamTelemetryRequest) String() string {
 func (*StreamTelemetryRequest) ProtoMessage() {}
 
 func (x *StreamTelemetryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[79]
+	mi := &file_joblet_proto_msgTypes[65]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6703,7 +5007,7 @@ func (x *StreamTelemetryRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StreamTelemetryRequest.ProtoReflect.Descriptor instead.
 func (*StreamTelemetryRequest) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{79}
+	return file_joblet_proto_rawDescGZIP(), []int{65}
 }
 
 func (x *StreamTelemetryRequest) GetJobUuid() string {
@@ -6734,7 +5038,7 @@ type GetTelemetryRequest struct {
 
 func (x *GetTelemetryRequest) Reset() {
 	*x = GetTelemetryRequest{}
-	mi := &file_joblet_proto_msgTypes[80]
+	mi := &file_joblet_proto_msgTypes[66]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6746,7 +5050,7 @@ func (x *GetTelemetryRequest) String() string {
 func (*GetTelemetryRequest) ProtoMessage() {}
 
 func (x *GetTelemetryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[80]
+	mi := &file_joblet_proto_msgTypes[66]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6759,7 +5063,7 @@ func (x *GetTelemetryRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTelemetryRequest.ProtoReflect.Descriptor instead.
 func (*GetTelemetryRequest) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{80}
+	return file_joblet_proto_rawDescGZIP(), []int{66}
 }
 
 func (x *GetTelemetryRequest) GetJobUuid() string {
@@ -6816,7 +5120,7 @@ type TelemetryEvent struct {
 
 func (x *TelemetryEvent) Reset() {
 	*x = TelemetryEvent{}
-	mi := &file_joblet_proto_msgTypes[81]
+	mi := &file_joblet_proto_msgTypes[67]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6828,7 +5132,7 @@ func (x *TelemetryEvent) String() string {
 func (*TelemetryEvent) ProtoMessage() {}
 
 func (x *TelemetryEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[81]
+	mi := &file_joblet_proto_msgTypes[67]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6841,7 +5145,7 @@ func (x *TelemetryEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TelemetryEvent.ProtoReflect.Descriptor instead.
 func (*TelemetryEvent) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{81}
+	return file_joblet_proto_rawDescGZIP(), []int{67}
 }
 
 func (x *TelemetryEvent) GetTimestamp() int64 {
@@ -6954,7 +5258,7 @@ type TelemetryMetricsData struct {
 
 func (x *TelemetryMetricsData) Reset() {
 	*x = TelemetryMetricsData{}
-	mi := &file_joblet_proto_msgTypes[82]
+	mi := &file_joblet_proto_msgTypes[68]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6966,7 +5270,7 @@ func (x *TelemetryMetricsData) String() string {
 func (*TelemetryMetricsData) ProtoMessage() {}
 
 func (x *TelemetryMetricsData) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[82]
+	mi := &file_joblet_proto_msgTypes[68]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6979,7 +5283,7 @@ func (x *TelemetryMetricsData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TelemetryMetricsData.ProtoReflect.Descriptor instead.
 func (*TelemetryMetricsData) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{82}
+	return file_joblet_proto_rawDescGZIP(), []int{68}
 }
 
 func (x *TelemetryMetricsData) GetCpuPercent() float64 {
@@ -7059,7 +5363,7 @@ type TelemetryExecData struct {
 
 func (x *TelemetryExecData) Reset() {
 	*x = TelemetryExecData{}
-	mi := &file_joblet_proto_msgTypes[83]
+	mi := &file_joblet_proto_msgTypes[69]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7071,7 +5375,7 @@ func (x *TelemetryExecData) String() string {
 func (*TelemetryExecData) ProtoMessage() {}
 
 func (x *TelemetryExecData) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[83]
+	mi := &file_joblet_proto_msgTypes[69]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7084,7 +5388,7 @@ func (x *TelemetryExecData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TelemetryExecData.ProtoReflect.Descriptor instead.
 func (*TelemetryExecData) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{83}
+	return file_joblet_proto_rawDescGZIP(), []int{69}
 }
 
 func (x *TelemetryExecData) GetPid() uint32 {
@@ -7137,7 +5441,7 @@ type TelemetryConnectData struct {
 
 func (x *TelemetryConnectData) Reset() {
 	*x = TelemetryConnectData{}
-	mi := &file_joblet_proto_msgTypes[84]
+	mi := &file_joblet_proto_msgTypes[70]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7149,7 +5453,7 @@ func (x *TelemetryConnectData) String() string {
 func (*TelemetryConnectData) ProtoMessage() {}
 
 func (x *TelemetryConnectData) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[84]
+	mi := &file_joblet_proto_msgTypes[70]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7162,7 +5466,7 @@ func (x *TelemetryConnectData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TelemetryConnectData.ProtoReflect.Descriptor instead.
 func (*TelemetryConnectData) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{84}
+	return file_joblet_proto_rawDescGZIP(), []int{70}
 }
 
 func (x *TelemetryConnectData) GetPid() uint32 {
@@ -7220,7 +5524,7 @@ type TelemetryFileData struct {
 
 func (x *TelemetryFileData) Reset() {
 	*x = TelemetryFileData{}
-	mi := &file_joblet_proto_msgTypes[85]
+	mi := &file_joblet_proto_msgTypes[71]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7232,7 +5536,7 @@ func (x *TelemetryFileData) String() string {
 func (*TelemetryFileData) ProtoMessage() {}
 
 func (x *TelemetryFileData) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[85]
+	mi := &file_joblet_proto_msgTypes[71]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7245,7 +5549,7 @@ func (x *TelemetryFileData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TelemetryFileData.ProtoReflect.Descriptor instead.
 func (*TelemetryFileData) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{85}
+	return file_joblet_proto_rawDescGZIP(), []int{71}
 }
 
 func (x *TelemetryFileData) GetPid() uint32 {
@@ -7744,201 +6048,7 @@ const file_joblet_proto_rawDesc = "" +
 	"\blanguage\x18\x01 \x01(\tR\blanguage\x12\x18\n" +
 	"\aversion\x18\x02 \x01(\tR\aversion\x12\x1a\n" +
 	"\bvariants\x18\x03 \x03(\tR\bvariants\x12\"\n" +
-	"\farchitecture\x18\x04 \x01(\tR\farchitecture\"'\n" +
-	"\x11JobMetricsRequest\x12\x12\n" +
-	"\x04uuid\x18\x01 \x01(\tR\x04uuid\"T\n" +
-	"\x18JobMetricsSummaryRequest\x12\x12\n" +
-	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12$\n" +
-	"\rperiodSeconds\x18\x02 \x01(\x05R\rperiodSeconds\"\xe3\x01\n" +
-	"\x19JobMetricsSummaryResponse\x12-\n" +
-	"\x03cpu\x18\x01 \x01(\v2\x1b.joblet.JobMetricsAggregateR\x03cpu\x123\n" +
-	"\x06memory\x18\x02 \x01(\v2\x1b.joblet.JobMetricsAggregateR\x06memory\x12+\n" +
-	"\x02io\x18\x03 \x01(\v2\x1b.joblet.JobMetricsAggregateR\x02io\x125\n" +
-	"\anetwork\x18\x04 \x01(\v2\x1b.joblet.JobMetricsAggregateR\anetwork\"\x89\x04\n" +
-	"\x10JobMetricsSample\x12\x14\n" +
-	"\x05jobId\x18\x01 \x01(\tR\x05jobId\x12\x1c\n" +
-	"\ttimestamp\x18\x02 \x01(\x03R\ttimestamp\x124\n" +
-	"\x15sampleIntervalSeconds\x18\x03 \x01(\x05R\x15sampleIntervalSeconds\x12'\n" +
-	"\x03cpu\x18\x04 \x01(\v2\x15.joblet.JobCPUMetricsR\x03cpu\x120\n" +
-	"\x06memory\x18\x05 \x01(\v2\x18.joblet.JobMemoryMetricsR\x06memory\x12$\n" +
-	"\x02io\x18\x06 \x01(\v2\x14.joblet.JobIOMetricsR\x02io\x123\n" +
-	"\anetwork\x18\a \x01(\v2\x19.joblet.JobNetworkMetricsR\anetwork\x123\n" +
-	"\aprocess\x18\b \x01(\v2\x19.joblet.JobProcessMetricsR\aprocess\x12'\n" +
-	"\x03gpu\x18\t \x03(\v2\x15.joblet.JobGPUMetricsR\x03gpu\x12\x1e\n" +
-	"\n" +
-	"cgroupPath\x18\n" +
-	" \x01(\tR\n" +
-	"cgroupPath\x121\n" +
-	"\x06limits\x18\v \x01(\v2\x19.joblet.JobResourceLimitsR\x06limits\x12$\n" +
-	"\rgpuAllocation\x18\f \x03(\x05R\rgpuAllocation\"M\n" +
-	"\x11JobResourceLimits\x12\x10\n" +
-	"\x03cpu\x18\x01 \x01(\x05R\x03cpu\x12\x16\n" +
-	"\x06memory\x18\x02 \x01(\x03R\x06memory\x12\x0e\n" +
-	"\x02io\x18\x03 \x01(\x05R\x02io\"\x91\x04\n" +
-	"\rJobCPUMetrics\x12\x1c\n" +
-	"\tusageUsec\x18\x01 \x01(\x04R\tusageUsec\x12\x1a\n" +
-	"\buserUsec\x18\x02 \x01(\x04R\buserUsec\x12\x1e\n" +
-	"\n" +
-	"systemUsec\x18\x03 \x01(\x04R\n" +
-	"systemUsec\x12\x1c\n" +
-	"\tnrPeriods\x18\x04 \x01(\x04R\tnrPeriods\x12 \n" +
-	"\vnrThrottled\x18\x05 \x01(\x04R\vnrThrottled\x12$\n" +
-	"\rthrottledUsec\x18\x06 \x01(\x04R\rthrottledUsec\x12\"\n" +
-	"\fusagePercent\x18\a \x01(\x01R\fusagePercent\x12(\n" +
-	"\x0fthrottlePercent\x18\b \x01(\x01R\x0fthrottlePercent\x12&\n" +
-	"\x0epressureSome10\x18\t \x01(\x01R\x0epressureSome10\x12&\n" +
-	"\x0epressureSome60\x18\n" +
-	" \x01(\x01R\x0epressureSome60\x12(\n" +
-	"\x0fpressureSome300\x18\v \x01(\x01R\x0fpressureSome300\x12&\n" +
-	"\x0epressureFull10\x18\f \x01(\x01R\x0epressureFull10\x12&\n" +
-	"\x0epressureFull60\x18\r \x01(\x01R\x0epressureFull60\x12(\n" +
-	"\x0fpressureFull300\x18\x0e \x01(\x01R\x0fpressureFull300\"\xb4\x05\n" +
-	"\x10JobMemoryMetrics\x12\x18\n" +
-	"\acurrent\x18\x01 \x01(\x04R\acurrent\x12\x10\n" +
-	"\x03max\x18\x02 \x01(\x04R\x03max\x12\"\n" +
-	"\fusagePercent\x18\x03 \x01(\x01R\fusagePercent\x12\x12\n" +
-	"\x04anon\x18\x04 \x01(\x04R\x04anon\x12\x12\n" +
-	"\x04file\x18\x05 \x01(\x04R\x04file\x12 \n" +
-	"\vkernelStack\x18\x06 \x01(\x04R\vkernelStack\x12\x12\n" +
-	"\x04slab\x18\a \x01(\x04R\x04slab\x12\x12\n" +
-	"\x04sock\x18\b \x01(\x04R\x04sock\x12\x14\n" +
-	"\x05shmem\x18\t \x01(\x04R\x05shmem\x12\x1e\n" +
-	"\n" +
-	"fileMapped\x18\n" +
-	" \x01(\x04R\n" +
-	"fileMapped\x12\x1c\n" +
-	"\tfileDirty\x18\v \x01(\x04R\tfileDirty\x12$\n" +
-	"\rfileWriteback\x18\f \x01(\x04R\rfileWriteback\x12\x18\n" +
-	"\apgFault\x18\r \x01(\x04R\apgFault\x12\x1e\n" +
-	"\n" +
-	"pgMajFault\x18\x0e \x01(\x04R\n" +
-	"pgMajFault\x12\x1c\n" +
-	"\toomEvents\x18\x0f \x01(\x04R\toomEvents\x12\x18\n" +
-	"\aoomKill\x18\x10 \x01(\x04R\aoomKill\x12&\n" +
-	"\x0epressureSome10\x18\x11 \x01(\x01R\x0epressureSome10\x12&\n" +
-	"\x0epressureSome60\x18\x12 \x01(\x01R\x0epressureSome60\x12(\n" +
-	"\x0fpressureSome300\x18\x13 \x01(\x01R\x0fpressureSome300\x12&\n" +
-	"\x0epressureFull10\x18\x14 \x01(\x01R\x0epressureFull10\x12&\n" +
-	"\x0epressureFull60\x18\x15 \x01(\x01R\x0epressureFull60\x12(\n" +
-	"\x0fpressureFull300\x18\x16 \x01(\x01R\x0fpressureFull300\"\xf8\x05\n" +
-	"\fJobIOMetrics\x12;\n" +
-	"\adevices\x18\x01 \x03(\v2!.joblet.JobIOMetrics.DevicesEntryR\adevices\x12&\n" +
-	"\x0etotalReadBytes\x18\x02 \x01(\x04R\x0etotalReadBytes\x12(\n" +
-	"\x0ftotalWriteBytes\x18\x03 \x01(\x04R\x0ftotalWriteBytes\x12\"\n" +
-	"\ftotalReadOps\x18\x04 \x01(\x04R\ftotalReadOps\x12$\n" +
-	"\rtotalWriteOps\x18\x05 \x01(\x04R\rtotalWriteOps\x12,\n" +
-	"\x11totalDiscardBytes\x18\x06 \x01(\x04R\x11totalDiscardBytes\x12(\n" +
-	"\x0ftotalDiscardOps\x18\a \x01(\x04R\x0ftotalDiscardOps\x12\x18\n" +
-	"\areadBPS\x18\b \x01(\x01R\areadBPS\x12\x1a\n" +
-	"\bwriteBPS\x18\t \x01(\x01R\bwriteBPS\x12\x1a\n" +
-	"\breadIOPS\x18\n" +
-	" \x01(\x01R\breadIOPS\x12\x1c\n" +
-	"\twriteIOPS\x18\v \x01(\x01R\twriteIOPS\x12&\n" +
-	"\x0epressureSome10\x18\f \x01(\x01R\x0epressureSome10\x12&\n" +
-	"\x0epressureSome60\x18\r \x01(\x01R\x0epressureSome60\x12(\n" +
-	"\x0fpressureSome300\x18\x0e \x01(\x01R\x0fpressureSome300\x12&\n" +
-	"\x0epressureFull10\x18\x0f \x01(\x01R\x0epressureFull10\x12&\n" +
-	"\x0epressureFull60\x18\x10 \x01(\x01R\x0epressureFull60\x12(\n" +
-	"\x0fpressureFull300\x18\x11 \x01(\x01R\x0fpressureFull300\x1aS\n" +
-	"\fDevicesEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x12-\n" +
-	"\x05value\x18\x02 \x01(\v2\x17.joblet.DeviceIOMetricsR\x05value:\x028\x01\"\xe1\x01\n" +
-	"\x0fDeviceIOMetrics\x12\x16\n" +
-	"\x06device\x18\x01 \x01(\tR\x06device\x12\x1c\n" +
-	"\treadBytes\x18\x02 \x01(\x04R\treadBytes\x12\x1e\n" +
-	"\n" +
-	"writeBytes\x18\x03 \x01(\x04R\n" +
-	"writeBytes\x12\x18\n" +
-	"\areadOps\x18\x04 \x01(\x04R\areadOps\x12\x1a\n" +
-	"\bwriteOps\x18\x05 \x01(\x04R\bwriteOps\x12\"\n" +
-	"\fdiscardBytes\x18\x06 \x01(\x04R\fdiscardBytes\x12\x1e\n" +
-	"\n" +
-	"discardOps\x18\a \x01(\x04R\n" +
-	"discardOps\"\x9e\x04\n" +
-	"\x11JobNetworkMetrics\x12I\n" +
-	"\n" +
-	"interfaces\x18\x01 \x03(\v2).joblet.JobNetworkMetrics.InterfacesEntryR\n" +
-	"interfaces\x12\"\n" +
-	"\ftotalRxBytes\x18\x02 \x01(\x04R\ftotalRxBytes\x12\"\n" +
-	"\ftotalTxBytes\x18\x03 \x01(\x04R\ftotalTxBytes\x12&\n" +
-	"\x0etotalRxPackets\x18\x04 \x01(\x04R\x0etotalRxPackets\x12&\n" +
-	"\x0etotalTxPackets\x18\x05 \x01(\x04R\x0etotalTxPackets\x12$\n" +
-	"\rtotalRxErrors\x18\x06 \x01(\x04R\rtotalRxErrors\x12$\n" +
-	"\rtotalTxErrors\x18\a \x01(\x04R\rtotalTxErrors\x12&\n" +
-	"\x0etotalRxDropped\x18\b \x01(\x04R\x0etotalRxDropped\x12&\n" +
-	"\x0etotalTxDropped\x18\t \x01(\x04R\x0etotalTxDropped\x12\x14\n" +
-	"\x05rxBPS\x18\n" +
-	" \x01(\x01R\x05rxBPS\x12\x14\n" +
-	"\x05txBPS\x18\v \x01(\x01R\x05txBPS\x1a^\n" +
-	"\x0fInterfacesEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x125\n" +
-	"\x05value\x18\x02 \x01(\v2\x1f.joblet.NetworkInterfaceMetricsR\x05value:\x028\x01\"\x9b\x02\n" +
-	"\x17NetworkInterfaceMetrics\x12\x1c\n" +
-	"\tinterface\x18\x01 \x01(\tR\tinterface\x12\x18\n" +
-	"\arxBytes\x18\x02 \x01(\x04R\arxBytes\x12\x18\n" +
-	"\atxBytes\x18\x03 \x01(\x04R\atxBytes\x12\x1c\n" +
-	"\trxPackets\x18\x04 \x01(\x04R\trxPackets\x12\x1c\n" +
-	"\ttxPackets\x18\x05 \x01(\x04R\ttxPackets\x12\x1a\n" +
-	"\brxErrors\x18\x06 \x01(\x04R\brxErrors\x12\x1a\n" +
-	"\btxErrors\x18\a \x01(\x04R\btxErrors\x12\x1c\n" +
-	"\trxDropped\x18\b \x01(\x04R\trxDropped\x12\x1c\n" +
-	"\ttxDropped\x18\t \x01(\x04R\ttxDropped\"\x8b\x02\n" +
-	"\x11JobProcessMetrics\x12\x18\n" +
-	"\acurrent\x18\x01 \x01(\x04R\acurrent\x12\x10\n" +
-	"\x03max\x18\x02 \x01(\x04R\x03max\x12\x16\n" +
-	"\x06events\x18\x03 \x01(\x04R\x06events\x12\x18\n" +
-	"\athreads\x18\x04 \x01(\x04R\athreads\x12\x18\n" +
-	"\arunning\x18\x05 \x01(\x04R\arunning\x12\x1a\n" +
-	"\bsleeping\x18\x06 \x01(\x04R\bsleeping\x12\x18\n" +
-	"\astopped\x18\a \x01(\x04R\astopped\x12\x16\n" +
-	"\x06zombie\x18\b \x01(\x04R\x06zombie\x12\x18\n" +
-	"\aopenFDs\x18\t \x01(\x04R\aopenFDs\x12\x16\n" +
-	"\x06maxFDs\x18\n" +
-	" \x01(\x04R\x06maxFDs\"\x81\b\n" +
-	"\rJobGPUMetrics\x12\x14\n" +
-	"\x05index\x18\x01 \x01(\x05R\x05index\x12\x12\n" +
-	"\x04uuid\x18\x02 \x01(\tR\x04uuid\x12\x12\n" +
-	"\x04name\x18\x03 \x01(\tR\x04name\x12,\n" +
-	"\x11computeCapability\x18\x04 \x01(\tR\x11computeCapability\x12$\n" +
-	"\rdriverVersion\x18\x05 \x01(\tR\rdriverVersion\x12 \n" +
-	"\vutilization\x18\x06 \x01(\x01R\vutilization\x12\x1e\n" +
-	"\n" +
-	"memoryUsed\x18\a \x01(\x04R\n" +
-	"memoryUsed\x12 \n" +
-	"\vmemoryTotal\x18\b \x01(\x04R\vmemoryTotal\x12\x1e\n" +
-	"\n" +
-	"memoryFree\x18\t \x01(\x04R\n" +
-	"memoryFree\x12$\n" +
-	"\rmemoryPercent\x18\n" +
-	" \x01(\x01R\rmemoryPercent\x12 \n" +
-	"\vencoderUtil\x18\v \x01(\x01R\vencoderUtil\x12 \n" +
-	"\vdecoderUtil\x18\f \x01(\x01R\vdecoderUtil\x12\x18\n" +
-	"\asmClock\x18\r \x01(\x04R\asmClock\x12 \n" +
-	"\vmemoryClock\x18\x0e \x01(\x04R\vmemoryClock\x12*\n" +
-	"\x10pcieThroughputRx\x18\x0f \x01(\x01R\x10pcieThroughputRx\x12*\n" +
-	"\x10pcieThroughputTx\x18\x10 \x01(\x01R\x10pcieThroughputTx\x12 \n" +
-	"\vtemperature\x18\x11 \x01(\x01R\vtemperature\x12,\n" +
-	"\x11temperatureMemory\x18\x12 \x01(\x01R\x11temperatureMemory\x12\x1c\n" +
-	"\tpowerDraw\x18\x13 \x01(\x01R\tpowerDraw\x12\x1e\n" +
-	"\n" +
-	"powerLimit\x18\x14 \x01(\x01R\n" +
-	"powerLimit\x12\x1a\n" +
-	"\bfanSpeed\x18\x15 \x01(\x01R\bfanSpeed\x12(\n" +
-	"\x0feccErrorsSingle\x18\x16 \x01(\x04R\x0feccErrorsSingle\x12(\n" +
-	"\x0feccErrorsDouble\x18\x17 \x01(\x04R\x0feccErrorsDouble\x12\x1c\n" +
-	"\txidErrors\x18\x18 \x01(\x04R\txidErrors\x12\"\n" +
-	"\fretiredPages\x18\x19 \x01(\x04R\fretiredPages\x12(\n" +
-	"\x0fthrottleReasons\x18\x1a \x01(\x04R\x0fthrottleReasons\x12&\n" +
-	"\x0eprocessesCount\x18\x1b \x01(\x04R\x0eprocessesCount\x12(\n" +
-	"\x0fprocessesMemory\x18\x1c \x01(\x04R\x0fprocessesMemory\x12 \n" +
-	"\vcomputeMode\x18\x1d \x01(\tR\vcomputeMode\"\x81\x01\n" +
-	"\x13JobMetricsAggregate\x12\x10\n" +
-	"\x03min\x18\x01 \x01(\x01R\x03min\x12\x10\n" +
-	"\x03max\x18\x02 \x01(\x01R\x03max\x12\x10\n" +
-	"\x03avg\x18\x03 \x01(\x01R\x03avg\x12\x10\n" +
-	"\x03p50\x18\x04 \x01(\x01R\x03p50\x12\x10\n" +
-	"\x03p95\x18\x05 \x01(\x01R\x03p95\x12\x10\n" +
-	"\x03p99\x18\x06 \x01(\x01R\x03p99\"I\n" +
+	"\farchitecture\x18\x04 \x01(\tR\farchitecture\"I\n" +
 	"\x16StreamTelemetryRequest\x12\x19\n" +
 	"\bjob_uuid\x18\x01 \x01(\tR\ajobUuid\x12\x14\n" +
 	"\x05types\x18\x02 \x03(\tR\x05types\"\x96\x01\n" +
@@ -7989,7 +6099,7 @@ const file_joblet_proto_rawDesc = "" +
 	"\x03pid\x18\x01 \x01(\rR\x03pid\x12\x12\n" +
 	"\x04path\x18\x02 \x01(\tR\x04path\x12\x1c\n" +
 	"\toperation\x18\x03 \x01(\tR\toperation\x12\x14\n" +
-	"\x05bytes\x18\x04 \x01(\x03R\x05bytes2\xd1\x05\n" +
+	"\x05bytes\x18\x04 \x01(\x03R\x05bytes2\x87\x05\n" +
 	"\n" +
 	"JobService\x129\n" +
 	"\x06RunJob\x12\x15.joblet.RunJobRequest\x1a\x16.joblet.RunJobResponse\"\x00\x12B\n" +
@@ -8000,8 +6110,7 @@ const file_joblet_proto_rawDesc = "" +
 	"\rDeleteAllJobs\x12\x18.joblet.DeleteAllJobsReq\x1a\x18.joblet.DeleteAllJobsRes\"\x00\x128\n" +
 	"\n" +
 	"GetJobLogs\x12\x15.joblet.GetJobLogsReq\x1a\x11.joblet.DataChunk0\x01\x120\n" +
-	"\bListJobs\x12\x14.joblet.EmptyRequest\x1a\f.joblet.Jobs\"\x00\x12H\n" +
-	"\rGetJobMetrics\x12\x19.joblet.JobMetricsRequest\x1a\x18.joblet.JobMetricsSample\"\x000\x01\x12P\n" +
+	"\bListJobs\x12\x14.joblet.EmptyRequest\x1a\f.joblet.Jobs\"\x00\x12P\n" +
 	"\x12StreamJobTelemetry\x12\x1e.joblet.StreamTelemetryRequest\x1a\x16.joblet.TelemetryEvent\"\x000\x01\x12J\n" +
 	"\x0fGetJobTelemetry\x12\x1b.joblet.GetTelemetryRequest\x1a\x16.joblet.TelemetryEvent\"\x000\x012\xd8\x01\n" +
 	"\x0eNetworkService\x12E\n" +
@@ -8038,7 +6147,7 @@ func file_joblet_proto_rawDescGZIP() []byte {
 	return file_joblet_proto_rawDescData
 }
 
-var file_joblet_proto_msgTypes = make([]protoimpl.MessageInfo, 95)
+var file_joblet_proto_msgTypes = make([]protoimpl.MessageInfo, 79)
 var file_joblet_proto_goTypes = []any{
 	(*Jobs)(nil),                           // 0: joblet.Jobs
 	(*Job)(nil),                            // 1: joblet.Job
@@ -8105,43 +6214,27 @@ var file_joblet_proto_goTypes = []any{
 	(*RuntimeRemoveReq)(nil),               // 62: joblet.RuntimeRemoveReq
 	(*RuntimeRemoveRes)(nil),               // 63: joblet.RuntimeRemoveRes
 	(*RuntimeSpecInfo)(nil),                // 64: joblet.RuntimeSpecInfo
-	(*JobMetricsRequest)(nil),              // 65: joblet.JobMetricsRequest
-	(*JobMetricsSummaryRequest)(nil),       // 66: joblet.JobMetricsSummaryRequest
-	(*JobMetricsSummaryResponse)(nil),      // 67: joblet.JobMetricsSummaryResponse
-	(*JobMetricsSample)(nil),               // 68: joblet.JobMetricsSample
-	(*JobResourceLimits)(nil),              // 69: joblet.JobResourceLimits
-	(*JobCPUMetrics)(nil),                  // 70: joblet.JobCPUMetrics
-	(*JobMemoryMetrics)(nil),               // 71: joblet.JobMemoryMetrics
-	(*JobIOMetrics)(nil),                   // 72: joblet.JobIOMetrics
-	(*DeviceIOMetrics)(nil),                // 73: joblet.DeviceIOMetrics
-	(*JobNetworkMetrics)(nil),              // 74: joblet.JobNetworkMetrics
-	(*NetworkInterfaceMetrics)(nil),        // 75: joblet.NetworkInterfaceMetrics
-	(*JobProcessMetrics)(nil),              // 76: joblet.JobProcessMetrics
-	(*JobGPUMetrics)(nil),                  // 77: joblet.JobGPUMetrics
-	(*JobMetricsAggregate)(nil),            // 78: joblet.JobMetricsAggregate
-	(*StreamTelemetryRequest)(nil),         // 79: joblet.StreamTelemetryRequest
-	(*GetTelemetryRequest)(nil),            // 80: joblet.GetTelemetryRequest
-	(*TelemetryEvent)(nil),                 // 81: joblet.TelemetryEvent
-	(*TelemetryMetricsData)(nil),           // 82: joblet.TelemetryMetricsData
-	(*TelemetryExecData)(nil),              // 83: joblet.TelemetryExecData
-	(*TelemetryConnectData)(nil),           // 84: joblet.TelemetryConnectData
-	(*TelemetryFileData)(nil),              // 85: joblet.TelemetryFileData
-	nil,                                    // 86: joblet.Job.EnvironmentEntry
-	nil,                                    // 87: joblet.Job.SecretEnvironmentEntry
-	nil,                                    // 88: joblet.GetJobStatusRes.EnvironmentEntry
-	nil,                                    // 89: joblet.GetJobStatusRes.SecretEnvironmentEntry
-	nil,                                    // 90: joblet.CloudInfo.MetadataEntry
-	nil,                                    // 91: joblet.RunJobRequest.EnvironmentEntry
-	nil,                                    // 92: joblet.RunJobRequest.SecretEnvironmentEntry
-	nil,                                    // 93: joblet.JobIOMetrics.DevicesEntry
-	nil,                                    // 94: joblet.JobNetworkMetrics.InterfacesEntry
+	(*StreamTelemetryRequest)(nil),         // 65: joblet.StreamTelemetryRequest
+	(*GetTelemetryRequest)(nil),            // 66: joblet.GetTelemetryRequest
+	(*TelemetryEvent)(nil),                 // 67: joblet.TelemetryEvent
+	(*TelemetryMetricsData)(nil),           // 68: joblet.TelemetryMetricsData
+	(*TelemetryExecData)(nil),              // 69: joblet.TelemetryExecData
+	(*TelemetryConnectData)(nil),           // 70: joblet.TelemetryConnectData
+	(*TelemetryFileData)(nil),              // 71: joblet.TelemetryFileData
+	nil,                                    // 72: joblet.Job.EnvironmentEntry
+	nil,                                    // 73: joblet.Job.SecretEnvironmentEntry
+	nil,                                    // 74: joblet.GetJobStatusRes.EnvironmentEntry
+	nil,                                    // 75: joblet.GetJobStatusRes.SecretEnvironmentEntry
+	nil,                                    // 76: joblet.CloudInfo.MetadataEntry
+	nil,                                    // 77: joblet.RunJobRequest.EnvironmentEntry
+	nil,                                    // 78: joblet.RunJobRequest.SecretEnvironmentEntry
 }
 var file_joblet_proto_depIdxs = []int32{
 	1,  // 0: joblet.Jobs.jobs:type_name -> joblet.Job
-	86, // 1: joblet.Job.environment:type_name -> joblet.Job.EnvironmentEntry
-	87, // 2: joblet.Job.secret_environment:type_name -> joblet.Job.SecretEnvironmentEntry
-	88, // 3: joblet.GetJobStatusRes.environment:type_name -> joblet.GetJobStatusRes.EnvironmentEntry
-	89, // 4: joblet.GetJobStatusRes.secret_environment:type_name -> joblet.GetJobStatusRes.SecretEnvironmentEntry
+	72, // 1: joblet.Job.environment:type_name -> joblet.Job.EnvironmentEntry
+	73, // 2: joblet.Job.secret_environment:type_name -> joblet.Job.SecretEnvironmentEntry
+	74, // 3: joblet.GetJobStatusRes.environment:type_name -> joblet.GetJobStatusRes.EnvironmentEntry
+	75, // 4: joblet.GetJobStatusRes.secret_environment:type_name -> joblet.GetJobStatusRes.SecretEnvironmentEntry
 	17, // 5: joblet.RuntimeInstallationChunk.progress:type_name -> joblet.RuntimeInstallationProgress
 	18, // 6: joblet.RuntimeInstallationChunk.log:type_name -> joblet.RuntimeInstallationLog
 	19, // 7: joblet.RuntimeInstallationChunk.result:type_name -> joblet.RuntimeInstallationResult
@@ -8167,95 +6260,78 @@ var file_joblet_proto_depIdxs = []int32{
 	41, // 27: joblet.IOMetrics.diskIO:type_name -> joblet.DiskIOMetrics
 	43, // 28: joblet.ProcessMetrics.topByCPU:type_name -> joblet.ProcessInfo
 	43, // 29: joblet.ProcessMetrics.topByMemory:type_name -> joblet.ProcessInfo
-	90, // 30: joblet.CloudInfo.metadata:type_name -> joblet.CloudInfo.MetadataEntry
+	76, // 30: joblet.CloudInfo.metadata:type_name -> joblet.CloudInfo.MetadataEntry
 	47, // 31: joblet.RuntimesRes.runtimes:type_name -> joblet.RuntimeInfo
 	48, // 32: joblet.RuntimeInfo.requirements:type_name -> joblet.RuntimeRequirements
 	47, // 33: joblet.RuntimeInfoRes.runtime:type_name -> joblet.RuntimeInfo
 	3,  // 34: joblet.RunJobRequest.uploads:type_name -> joblet.FileUpload
-	91, // 35: joblet.RunJobRequest.environment:type_name -> joblet.RunJobRequest.EnvironmentEntry
-	92, // 36: joblet.RunJobRequest.secret_environment:type_name -> joblet.RunJobRequest.SecretEnvironmentEntry
+	77, // 35: joblet.RunJobRequest.environment:type_name -> joblet.RunJobRequest.EnvironmentEntry
+	78, // 36: joblet.RunJobRequest.secret_environment:type_name -> joblet.RunJobRequest.SecretEnvironmentEntry
 	59, // 37: joblet.InstallRuntimeFromLocalRequest.files:type_name -> joblet.RuntimeFile
 	64, // 38: joblet.ValidateRuntimeSpecResponse.specInfo:type_name -> joblet.RuntimeSpecInfo
-	78, // 39: joblet.JobMetricsSummaryResponse.cpu:type_name -> joblet.JobMetricsAggregate
-	78, // 40: joblet.JobMetricsSummaryResponse.memory:type_name -> joblet.JobMetricsAggregate
-	78, // 41: joblet.JobMetricsSummaryResponse.io:type_name -> joblet.JobMetricsAggregate
-	78, // 42: joblet.JobMetricsSummaryResponse.network:type_name -> joblet.JobMetricsAggregate
-	70, // 43: joblet.JobMetricsSample.cpu:type_name -> joblet.JobCPUMetrics
-	71, // 44: joblet.JobMetricsSample.memory:type_name -> joblet.JobMemoryMetrics
-	72, // 45: joblet.JobMetricsSample.io:type_name -> joblet.JobIOMetrics
-	74, // 46: joblet.JobMetricsSample.network:type_name -> joblet.JobNetworkMetrics
-	76, // 47: joblet.JobMetricsSample.process:type_name -> joblet.JobProcessMetrics
-	77, // 48: joblet.JobMetricsSample.gpu:type_name -> joblet.JobGPUMetrics
-	69, // 49: joblet.JobMetricsSample.limits:type_name -> joblet.JobResourceLimits
-	93, // 50: joblet.JobIOMetrics.devices:type_name -> joblet.JobIOMetrics.DevicesEntry
-	94, // 51: joblet.JobNetworkMetrics.interfaces:type_name -> joblet.JobNetworkMetrics.InterfacesEntry
-	82, // 52: joblet.TelemetryEvent.metrics:type_name -> joblet.TelemetryMetricsData
-	83, // 53: joblet.TelemetryEvent.exec:type_name -> joblet.TelemetryExecData
-	84, // 54: joblet.TelemetryEvent.connect:type_name -> joblet.TelemetryConnectData
-	85, // 55: joblet.TelemetryEvent.file:type_name -> joblet.TelemetryFileData
-	73, // 56: joblet.JobIOMetrics.DevicesEntry.value:type_name -> joblet.DeviceIOMetrics
-	75, // 57: joblet.JobNetworkMetrics.InterfacesEntry.value:type_name -> joblet.NetworkInterfaceMetrics
-	53, // 58: joblet.JobService.RunJob:input_type -> joblet.RunJobRequest
-	4,  // 59: joblet.JobService.GetJobStatus:input_type -> joblet.GetJobStatusReq
-	6,  // 60: joblet.JobService.StopJob:input_type -> joblet.StopJobReq
-	8,  // 61: joblet.JobService.CancelJob:input_type -> joblet.CancelJobReq
-	10, // 62: joblet.JobService.DeleteJob:input_type -> joblet.DeleteJobReq
-	12, // 63: joblet.JobService.DeleteAllJobs:input_type -> joblet.DeleteAllJobsReq
-	14, // 64: joblet.JobService.GetJobLogs:input_type -> joblet.GetJobLogsReq
-	2,  // 65: joblet.JobService.ListJobs:input_type -> joblet.EmptyRequest
-	65, // 66: joblet.JobService.GetJobMetrics:input_type -> joblet.JobMetricsRequest
-	79, // 67: joblet.JobService.StreamJobTelemetry:input_type -> joblet.StreamTelemetryRequest
-	80, // 68: joblet.JobService.GetJobTelemetry:input_type -> joblet.GetTelemetryRequest
-	20, // 69: joblet.NetworkService.CreateNetwork:input_type -> joblet.CreateNetworkReq
-	2,  // 70: joblet.NetworkService.ListNetworks:input_type -> joblet.EmptyRequest
-	22, // 71: joblet.NetworkService.RemoveNetwork:input_type -> joblet.RemoveNetworkReq
-	26, // 72: joblet.VolumeService.CreateVolume:input_type -> joblet.CreateVolumeReq
-	2,  // 73: joblet.VolumeService.ListVolumes:input_type -> joblet.EmptyRequest
-	28, // 74: joblet.VolumeService.RemoveVolume:input_type -> joblet.RemoveVolumeReq
-	2,  // 75: joblet.MonitoringService.GetSystemStatus:input_type -> joblet.EmptyRequest
-	34, // 76: joblet.MonitoringService.StreamSystemMetrics:input_type -> joblet.StreamMetricsReq
-	2,  // 77: joblet.RuntimeService.ListRuntimes:input_type -> joblet.EmptyRequest
-	49, // 78: joblet.RuntimeService.GetRuntimeInfo:input_type -> joblet.RuntimeInfoReq
-	51, // 79: joblet.RuntimeService.TestRuntime:input_type -> joblet.RuntimeTestReq
-	56, // 80: joblet.RuntimeService.InstallRuntimeFromGithub:input_type -> joblet.InstallRuntimeRequest
-	58, // 81: joblet.RuntimeService.InstallRuntimeFromLocal:input_type -> joblet.InstallRuntimeFromLocalRequest
-	56, // 82: joblet.RuntimeService.StreamingInstallRuntimeFromGithub:input_type -> joblet.InstallRuntimeRequest
-	58, // 83: joblet.RuntimeService.StreamingInstallRuntimeFromLocal:input_type -> joblet.InstallRuntimeFromLocalRequest
-	60, // 84: joblet.RuntimeService.ValidateRuntimeSpec:input_type -> joblet.ValidateRuntimeSpecRequest
-	62, // 85: joblet.RuntimeService.RemoveRuntime:input_type -> joblet.RuntimeRemoveReq
-	54, // 86: joblet.JobService.RunJob:output_type -> joblet.RunJobResponse
-	5,  // 87: joblet.JobService.GetJobStatus:output_type -> joblet.GetJobStatusRes
-	7,  // 88: joblet.JobService.StopJob:output_type -> joblet.StopJobRes
-	9,  // 89: joblet.JobService.CancelJob:output_type -> joblet.CancelJobRes
-	11, // 90: joblet.JobService.DeleteJob:output_type -> joblet.DeleteJobRes
-	13, // 91: joblet.JobService.DeleteAllJobs:output_type -> joblet.DeleteAllJobsRes
-	15, // 92: joblet.JobService.GetJobLogs:output_type -> joblet.DataChunk
-	0,  // 93: joblet.JobService.ListJobs:output_type -> joblet.Jobs
-	68, // 94: joblet.JobService.GetJobMetrics:output_type -> joblet.JobMetricsSample
-	81, // 95: joblet.JobService.StreamJobTelemetry:output_type -> joblet.TelemetryEvent
-	81, // 96: joblet.JobService.GetJobTelemetry:output_type -> joblet.TelemetryEvent
-	21, // 97: joblet.NetworkService.CreateNetwork:output_type -> joblet.CreateNetworkRes
-	25, // 98: joblet.NetworkService.ListNetworks:output_type -> joblet.Networks
-	23, // 99: joblet.NetworkService.RemoveNetwork:output_type -> joblet.RemoveNetworkRes
-	27, // 100: joblet.VolumeService.CreateVolume:output_type -> joblet.CreateVolumeRes
-	31, // 101: joblet.VolumeService.ListVolumes:output_type -> joblet.Volumes
-	29, // 102: joblet.VolumeService.RemoveVolume:output_type -> joblet.RemoveVolumeRes
-	32, // 103: joblet.MonitoringService.GetSystemStatus:output_type -> joblet.SystemStatusRes
-	33, // 104: joblet.MonitoringService.StreamSystemMetrics:output_type -> joblet.SystemMetricsRes
-	46, // 105: joblet.RuntimeService.ListRuntimes:output_type -> joblet.RuntimesRes
-	50, // 106: joblet.RuntimeService.GetRuntimeInfo:output_type -> joblet.RuntimeInfoRes
-	52, // 107: joblet.RuntimeService.TestRuntime:output_type -> joblet.RuntimeTestRes
-	57, // 108: joblet.RuntimeService.InstallRuntimeFromGithub:output_type -> joblet.InstallRuntimeResponse
-	57, // 109: joblet.RuntimeService.InstallRuntimeFromLocal:output_type -> joblet.InstallRuntimeResponse
-	16, // 110: joblet.RuntimeService.StreamingInstallRuntimeFromGithub:output_type -> joblet.RuntimeInstallationChunk
-	16, // 111: joblet.RuntimeService.StreamingInstallRuntimeFromLocal:output_type -> joblet.RuntimeInstallationChunk
-	61, // 112: joblet.RuntimeService.ValidateRuntimeSpec:output_type -> joblet.ValidateRuntimeSpecResponse
-	63, // 113: joblet.RuntimeService.RemoveRuntime:output_type -> joblet.RuntimeRemoveRes
-	86, // [86:114] is the sub-list for method output_type
-	58, // [58:86] is the sub-list for method input_type
-	58, // [58:58] is the sub-list for extension type_name
-	58, // [58:58] is the sub-list for extension extendee
-	0,  // [0:58] is the sub-list for field type_name
+	68, // 39: joblet.TelemetryEvent.metrics:type_name -> joblet.TelemetryMetricsData
+	69, // 40: joblet.TelemetryEvent.exec:type_name -> joblet.TelemetryExecData
+	70, // 41: joblet.TelemetryEvent.connect:type_name -> joblet.TelemetryConnectData
+	71, // 42: joblet.TelemetryEvent.file:type_name -> joblet.TelemetryFileData
+	53, // 43: joblet.JobService.RunJob:input_type -> joblet.RunJobRequest
+	4,  // 44: joblet.JobService.GetJobStatus:input_type -> joblet.GetJobStatusReq
+	6,  // 45: joblet.JobService.StopJob:input_type -> joblet.StopJobReq
+	8,  // 46: joblet.JobService.CancelJob:input_type -> joblet.CancelJobReq
+	10, // 47: joblet.JobService.DeleteJob:input_type -> joblet.DeleteJobReq
+	12, // 48: joblet.JobService.DeleteAllJobs:input_type -> joblet.DeleteAllJobsReq
+	14, // 49: joblet.JobService.GetJobLogs:input_type -> joblet.GetJobLogsReq
+	2,  // 50: joblet.JobService.ListJobs:input_type -> joblet.EmptyRequest
+	65, // 51: joblet.JobService.StreamJobTelemetry:input_type -> joblet.StreamTelemetryRequest
+	66, // 52: joblet.JobService.GetJobTelemetry:input_type -> joblet.GetTelemetryRequest
+	20, // 53: joblet.NetworkService.CreateNetwork:input_type -> joblet.CreateNetworkReq
+	2,  // 54: joblet.NetworkService.ListNetworks:input_type -> joblet.EmptyRequest
+	22, // 55: joblet.NetworkService.RemoveNetwork:input_type -> joblet.RemoveNetworkReq
+	26, // 56: joblet.VolumeService.CreateVolume:input_type -> joblet.CreateVolumeReq
+	2,  // 57: joblet.VolumeService.ListVolumes:input_type -> joblet.EmptyRequest
+	28, // 58: joblet.VolumeService.RemoveVolume:input_type -> joblet.RemoveVolumeReq
+	2,  // 59: joblet.MonitoringService.GetSystemStatus:input_type -> joblet.EmptyRequest
+	34, // 60: joblet.MonitoringService.StreamSystemMetrics:input_type -> joblet.StreamMetricsReq
+	2,  // 61: joblet.RuntimeService.ListRuntimes:input_type -> joblet.EmptyRequest
+	49, // 62: joblet.RuntimeService.GetRuntimeInfo:input_type -> joblet.RuntimeInfoReq
+	51, // 63: joblet.RuntimeService.TestRuntime:input_type -> joblet.RuntimeTestReq
+	56, // 64: joblet.RuntimeService.InstallRuntimeFromGithub:input_type -> joblet.InstallRuntimeRequest
+	58, // 65: joblet.RuntimeService.InstallRuntimeFromLocal:input_type -> joblet.InstallRuntimeFromLocalRequest
+	56, // 66: joblet.RuntimeService.StreamingInstallRuntimeFromGithub:input_type -> joblet.InstallRuntimeRequest
+	58, // 67: joblet.RuntimeService.StreamingInstallRuntimeFromLocal:input_type -> joblet.InstallRuntimeFromLocalRequest
+	60, // 68: joblet.RuntimeService.ValidateRuntimeSpec:input_type -> joblet.ValidateRuntimeSpecRequest
+	62, // 69: joblet.RuntimeService.RemoveRuntime:input_type -> joblet.RuntimeRemoveReq
+	54, // 70: joblet.JobService.RunJob:output_type -> joblet.RunJobResponse
+	5,  // 71: joblet.JobService.GetJobStatus:output_type -> joblet.GetJobStatusRes
+	7,  // 72: joblet.JobService.StopJob:output_type -> joblet.StopJobRes
+	9,  // 73: joblet.JobService.CancelJob:output_type -> joblet.CancelJobRes
+	11, // 74: joblet.JobService.DeleteJob:output_type -> joblet.DeleteJobRes
+	13, // 75: joblet.JobService.DeleteAllJobs:output_type -> joblet.DeleteAllJobsRes
+	15, // 76: joblet.JobService.GetJobLogs:output_type -> joblet.DataChunk
+	0,  // 77: joblet.JobService.ListJobs:output_type -> joblet.Jobs
+	67, // 78: joblet.JobService.StreamJobTelemetry:output_type -> joblet.TelemetryEvent
+	67, // 79: joblet.JobService.GetJobTelemetry:output_type -> joblet.TelemetryEvent
+	21, // 80: joblet.NetworkService.CreateNetwork:output_type -> joblet.CreateNetworkRes
+	25, // 81: joblet.NetworkService.ListNetworks:output_type -> joblet.Networks
+	23, // 82: joblet.NetworkService.RemoveNetwork:output_type -> joblet.RemoveNetworkRes
+	27, // 83: joblet.VolumeService.CreateVolume:output_type -> joblet.CreateVolumeRes
+	31, // 84: joblet.VolumeService.ListVolumes:output_type -> joblet.Volumes
+	29, // 85: joblet.VolumeService.RemoveVolume:output_type -> joblet.RemoveVolumeRes
+	32, // 86: joblet.MonitoringService.GetSystemStatus:output_type -> joblet.SystemStatusRes
+	33, // 87: joblet.MonitoringService.StreamSystemMetrics:output_type -> joblet.SystemMetricsRes
+	46, // 88: joblet.RuntimeService.ListRuntimes:output_type -> joblet.RuntimesRes
+	50, // 89: joblet.RuntimeService.GetRuntimeInfo:output_type -> joblet.RuntimeInfoRes
+	52, // 90: joblet.RuntimeService.TestRuntime:output_type -> joblet.RuntimeTestRes
+	57, // 91: joblet.RuntimeService.InstallRuntimeFromGithub:output_type -> joblet.InstallRuntimeResponse
+	57, // 92: joblet.RuntimeService.InstallRuntimeFromLocal:output_type -> joblet.InstallRuntimeResponse
+	16, // 93: joblet.RuntimeService.StreamingInstallRuntimeFromGithub:output_type -> joblet.RuntimeInstallationChunk
+	16, // 94: joblet.RuntimeService.StreamingInstallRuntimeFromLocal:output_type -> joblet.RuntimeInstallationChunk
+	61, // 95: joblet.RuntimeService.ValidateRuntimeSpec:output_type -> joblet.ValidateRuntimeSpecResponse
+	63, // 96: joblet.RuntimeService.RemoveRuntime:output_type -> joblet.RuntimeRemoveRes
+	70, // [70:97] is the sub-list for method output_type
+	43, // [43:70] is the sub-list for method input_type
+	43, // [43:43] is the sub-list for extension type_name
+	43, // [43:43] is the sub-list for extension extendee
+	0,  // [0:43] is the sub-list for field type_name
 }
 
 func init() { file_joblet_proto_init() }
@@ -8268,7 +6344,7 @@ func file_joblet_proto_init() {
 		(*RuntimeInstallationChunk_Log)(nil),
 		(*RuntimeInstallationChunk_Result)(nil),
 	}
-	file_joblet_proto_msgTypes[81].OneofWrappers = []any{
+	file_joblet_proto_msgTypes[67].OneofWrappers = []any{
 		(*TelemetryEvent_Metrics)(nil),
 		(*TelemetryEvent_Exec)(nil),
 		(*TelemetryEvent_Connect)(nil),
@@ -8280,7 +6356,7 @@ func file_joblet_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_joblet_proto_rawDesc), len(file_joblet_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   95,
+			NumMessages:   79,
 			NumExtensions: 0,
 			NumServices:   5,
 		},

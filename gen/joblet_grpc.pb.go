@@ -27,7 +27,6 @@ const (
 	JobService_DeleteAllJobs_FullMethodName      = "/joblet.JobService/DeleteAllJobs"
 	JobService_GetJobLogs_FullMethodName         = "/joblet.JobService/GetJobLogs"
 	JobService_ListJobs_FullMethodName           = "/joblet.JobService/ListJobs"
-	JobService_GetJobMetrics_FullMethodName      = "/joblet.JobService/GetJobMetrics"
 	JobService_StreamJobTelemetry_FullMethodName = "/joblet.JobService/StreamJobTelemetry"
 	JobService_GetJobTelemetry_FullMethodName    = "/joblet.JobService/GetJobTelemetry"
 )
@@ -47,8 +46,6 @@ type JobServiceClient interface {
 	DeleteAllJobs(ctx context.Context, in *DeleteAllJobsReq, opts ...grpc.CallOption) (*DeleteAllJobsRes, error)
 	GetJobLogs(ctx context.Context, in *GetJobLogsReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[DataChunk], error)
 	ListJobs(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*Jobs, error)
-	// Job metrics operations
-	GetJobMetrics(ctx context.Context, in *JobMetricsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[JobMetricsSample], error)
 	// Unified telemetry (metrics + eBPF activity events)
 	// Stream live telemetry for a running job
 	StreamJobTelemetry(ctx context.Context, in *StreamTelemetryRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[TelemetryEvent], error)
@@ -153,28 +150,9 @@ func (c *jobServiceClient) ListJobs(ctx context.Context, in *EmptyRequest, opts 
 	return out, nil
 }
 
-func (c *jobServiceClient) GetJobMetrics(ctx context.Context, in *JobMetricsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[JobMetricsSample], error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &JobService_ServiceDesc.Streams[1], JobService_GetJobMetrics_FullMethodName, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	x := &grpc.GenericClientStream[JobMetricsRequest, JobMetricsSample]{ClientStream: stream}
-	if err := x.ClientStream.SendMsg(in); err != nil {
-		return nil, err
-	}
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	return x, nil
-}
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type JobService_GetJobMetricsClient = grpc.ServerStreamingClient[JobMetricsSample]
-
 func (c *jobServiceClient) StreamJobTelemetry(ctx context.Context, in *StreamTelemetryRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[TelemetryEvent], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &JobService_ServiceDesc.Streams[2], JobService_StreamJobTelemetry_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &JobService_ServiceDesc.Streams[1], JobService_StreamJobTelemetry_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -193,7 +171,7 @@ type JobService_StreamJobTelemetryClient = grpc.ServerStreamingClient[TelemetryE
 
 func (c *jobServiceClient) GetJobTelemetry(ctx context.Context, in *GetTelemetryRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[TelemetryEvent], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &JobService_ServiceDesc.Streams[3], JobService_GetJobTelemetry_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &JobService_ServiceDesc.Streams[2], JobService_GetJobTelemetry_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -225,8 +203,6 @@ type JobServiceServer interface {
 	DeleteAllJobs(context.Context, *DeleteAllJobsReq) (*DeleteAllJobsRes, error)
 	GetJobLogs(*GetJobLogsReq, grpc.ServerStreamingServer[DataChunk]) error
 	ListJobs(context.Context, *EmptyRequest) (*Jobs, error)
-	// Job metrics operations
-	GetJobMetrics(*JobMetricsRequest, grpc.ServerStreamingServer[JobMetricsSample]) error
 	// Unified telemetry (metrics + eBPF activity events)
 	// Stream live telemetry for a running job
 	StreamJobTelemetry(*StreamTelemetryRequest, grpc.ServerStreamingServer[TelemetryEvent]) error
@@ -265,9 +241,6 @@ func (UnimplementedJobServiceServer) GetJobLogs(*GetJobLogsReq, grpc.ServerStrea
 }
 func (UnimplementedJobServiceServer) ListJobs(context.Context, *EmptyRequest) (*Jobs, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListJobs not implemented")
-}
-func (UnimplementedJobServiceServer) GetJobMetrics(*JobMetricsRequest, grpc.ServerStreamingServer[JobMetricsSample]) error {
-	return status.Errorf(codes.Unimplemented, "method GetJobMetrics not implemented")
 }
 func (UnimplementedJobServiceServer) StreamJobTelemetry(*StreamTelemetryRequest, grpc.ServerStreamingServer[TelemetryEvent]) error {
 	return status.Errorf(codes.Unimplemented, "method StreamJobTelemetry not implemented")
@@ -433,17 +406,6 @@ func _JobService_ListJobs_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _JobService_GetJobMetrics_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(JobMetricsRequest)
-	if err := stream.RecvMsg(m); err != nil {
-		return err
-	}
-	return srv.(JobServiceServer).GetJobMetrics(m, &grpc.GenericServerStream[JobMetricsRequest, JobMetricsSample]{ServerStream: stream})
-}
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type JobService_GetJobMetricsServer = grpc.ServerStreamingServer[JobMetricsSample]
-
 func _JobService_StreamJobTelemetry_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(StreamTelemetryRequest)
 	if err := stream.RecvMsg(m); err != nil {
@@ -506,11 +468,6 @@ var JobService_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "GetJobLogs",
 			Handler:       _JobService_GetJobLogs_Handler,
-			ServerStreams: true,
-		},
-		{
-			StreamName:    "GetJobMetrics",
-			Handler:       _JobService_GetJobMetrics_Handler,
 			ServerStreams: true,
 		},
 		{
