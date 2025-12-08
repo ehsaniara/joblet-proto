@@ -1058,3 +1058,201 @@ class TelemetryFileData(_message.Message):
     operation: str
     bytes: int
     def __init__(self, pid: _Optional[int] = ..., path: _Optional[str] = ..., operation: _Optional[str] = ..., bytes: _Optional[int] = ...) -> None: ...
+
+class StreamJobMetricsRequest(_message.Message):
+    __slots__ = ("job_uuid",)
+    JOB_UUID_FIELD_NUMBER: _ClassVar[int]
+    job_uuid: str
+    def __init__(self, job_uuid: _Optional[str] = ...) -> None: ...
+
+class GetJobMetricsRequest(_message.Message):
+    __slots__ = ("job_uuid", "start_time", "end_time", "limit")
+    JOB_UUID_FIELD_NUMBER: _ClassVar[int]
+    START_TIME_FIELD_NUMBER: _ClassVar[int]
+    END_TIME_FIELD_NUMBER: _ClassVar[int]
+    LIMIT_FIELD_NUMBER: _ClassVar[int]
+    job_uuid: str
+    start_time: int
+    end_time: int
+    limit: int
+    def __init__(self, job_uuid: _Optional[str] = ..., start_time: _Optional[int] = ..., end_time: _Optional[int] = ..., limit: _Optional[int] = ...) -> None: ...
+
+class JobMetricsEvent(_message.Message):
+    __slots__ = ("timestamp", "job_id", "cpu_percent", "memory_bytes", "memory_limit", "disk_read_bytes", "disk_write_bytes", "net_recv_bytes", "net_sent_bytes", "gpu_percent", "gpu_memory_bytes")
+    TIMESTAMP_FIELD_NUMBER: _ClassVar[int]
+    JOB_ID_FIELD_NUMBER: _ClassVar[int]
+    CPU_PERCENT_FIELD_NUMBER: _ClassVar[int]
+    MEMORY_BYTES_FIELD_NUMBER: _ClassVar[int]
+    MEMORY_LIMIT_FIELD_NUMBER: _ClassVar[int]
+    DISK_READ_BYTES_FIELD_NUMBER: _ClassVar[int]
+    DISK_WRITE_BYTES_FIELD_NUMBER: _ClassVar[int]
+    NET_RECV_BYTES_FIELD_NUMBER: _ClassVar[int]
+    NET_SENT_BYTES_FIELD_NUMBER: _ClassVar[int]
+    GPU_PERCENT_FIELD_NUMBER: _ClassVar[int]
+    GPU_MEMORY_BYTES_FIELD_NUMBER: _ClassVar[int]
+    timestamp: int
+    job_id: str
+    cpu_percent: float
+    memory_bytes: int
+    memory_limit: int
+    disk_read_bytes: int
+    disk_write_bytes: int
+    net_recv_bytes: int
+    net_sent_bytes: int
+    gpu_percent: float
+    gpu_memory_bytes: int
+    def __init__(self, timestamp: _Optional[int] = ..., job_id: _Optional[str] = ..., cpu_percent: _Optional[float] = ..., memory_bytes: _Optional[int] = ..., memory_limit: _Optional[int] = ..., disk_read_bytes: _Optional[int] = ..., disk_write_bytes: _Optional[int] = ..., net_recv_bytes: _Optional[int] = ..., net_sent_bytes: _Optional[int] = ..., gpu_percent: _Optional[float] = ..., gpu_memory_bytes: _Optional[int] = ...) -> None: ...
+
+class StreamJobVisibilityRequest(_message.Message):
+    __slots__ = ("job_uuid", "types")
+    JOB_UUID_FIELD_NUMBER: _ClassVar[int]
+    TYPES_FIELD_NUMBER: _ClassVar[int]
+    job_uuid: str
+    types: _containers.RepeatedScalarFieldContainer[str]
+    def __init__(self, job_uuid: _Optional[str] = ..., types: _Optional[_Iterable[str]] = ...) -> None: ...
+
+class GetJobVisibilityRequest(_message.Message):
+    __slots__ = ("job_uuid", "types", "start_time", "end_time", "limit")
+    JOB_UUID_FIELD_NUMBER: _ClassVar[int]
+    TYPES_FIELD_NUMBER: _ClassVar[int]
+    START_TIME_FIELD_NUMBER: _ClassVar[int]
+    END_TIME_FIELD_NUMBER: _ClassVar[int]
+    LIMIT_FIELD_NUMBER: _ClassVar[int]
+    job_uuid: str
+    types: _containers.RepeatedScalarFieldContainer[str]
+    start_time: int
+    end_time: int
+    limit: int
+    def __init__(self, job_uuid: _Optional[str] = ..., types: _Optional[_Iterable[str]] = ..., start_time: _Optional[int] = ..., end_time: _Optional[int] = ..., limit: _Optional[int] = ...) -> None: ...
+
+class VisibilityEvent(_message.Message):
+    __slots__ = ("timestamp", "job_id", "type", "exec", "connect", "accept", "file", "mmap", "mprotect", "socket_data")
+    TIMESTAMP_FIELD_NUMBER: _ClassVar[int]
+    JOB_ID_FIELD_NUMBER: _ClassVar[int]
+    TYPE_FIELD_NUMBER: _ClassVar[int]
+    EXEC_FIELD_NUMBER: _ClassVar[int]
+    CONNECT_FIELD_NUMBER: _ClassVar[int]
+    ACCEPT_FIELD_NUMBER: _ClassVar[int]
+    FILE_FIELD_NUMBER: _ClassVar[int]
+    MMAP_FIELD_NUMBER: _ClassVar[int]
+    MPROTECT_FIELD_NUMBER: _ClassVar[int]
+    SOCKET_DATA_FIELD_NUMBER: _ClassVar[int]
+    timestamp: int
+    job_id: str
+    type: str
+    exec: VisibilityExecData
+    connect: VisibilityConnectData
+    accept: VisibilityAcceptData
+    file: VisibilityFileData
+    mmap: VisibilityMmapData
+    mprotect: VisibilityMprotectData
+    socket_data: VisibilitySocketDataData
+    def __init__(self, timestamp: _Optional[int] = ..., job_id: _Optional[str] = ..., type: _Optional[str] = ..., exec: _Optional[_Union[VisibilityExecData, _Mapping]] = ..., connect: _Optional[_Union[VisibilityConnectData, _Mapping]] = ..., accept: _Optional[_Union[VisibilityAcceptData, _Mapping]] = ..., file: _Optional[_Union[VisibilityFileData, _Mapping]] = ..., mmap: _Optional[_Union[VisibilityMmapData, _Mapping]] = ..., mprotect: _Optional[_Union[VisibilityMprotectData, _Mapping]] = ..., socket_data: _Optional[_Union[VisibilitySocketDataData, _Mapping]] = ...) -> None: ...
+
+class VisibilityExecData(_message.Message):
+    __slots__ = ("pid", "ppid", "binary", "args", "exit_code")
+    PID_FIELD_NUMBER: _ClassVar[int]
+    PPID_FIELD_NUMBER: _ClassVar[int]
+    BINARY_FIELD_NUMBER: _ClassVar[int]
+    ARGS_FIELD_NUMBER: _ClassVar[int]
+    EXIT_CODE_FIELD_NUMBER: _ClassVar[int]
+    pid: int
+    ppid: int
+    binary: str
+    args: _containers.RepeatedScalarFieldContainer[str]
+    exit_code: int
+    def __init__(self, pid: _Optional[int] = ..., ppid: _Optional[int] = ..., binary: _Optional[str] = ..., args: _Optional[_Iterable[str]] = ..., exit_code: _Optional[int] = ...) -> None: ...
+
+class VisibilityConnectData(_message.Message):
+    __slots__ = ("pid", "dst_addr", "dst_port", "protocol", "src_addr", "src_port")
+    PID_FIELD_NUMBER: _ClassVar[int]
+    DST_ADDR_FIELD_NUMBER: _ClassVar[int]
+    DST_PORT_FIELD_NUMBER: _ClassVar[int]
+    PROTOCOL_FIELD_NUMBER: _ClassVar[int]
+    SRC_ADDR_FIELD_NUMBER: _ClassVar[int]
+    SRC_PORT_FIELD_NUMBER: _ClassVar[int]
+    pid: int
+    dst_addr: str
+    dst_port: int
+    protocol: str
+    src_addr: str
+    src_port: int
+    def __init__(self, pid: _Optional[int] = ..., dst_addr: _Optional[str] = ..., dst_port: _Optional[int] = ..., protocol: _Optional[str] = ..., src_addr: _Optional[str] = ..., src_port: _Optional[int] = ...) -> None: ...
+
+class VisibilityAcceptData(_message.Message):
+    __slots__ = ("pid", "src_addr", "src_port", "dst_addr", "dst_port", "protocol")
+    PID_FIELD_NUMBER: _ClassVar[int]
+    SRC_ADDR_FIELD_NUMBER: _ClassVar[int]
+    SRC_PORT_FIELD_NUMBER: _ClassVar[int]
+    DST_ADDR_FIELD_NUMBER: _ClassVar[int]
+    DST_PORT_FIELD_NUMBER: _ClassVar[int]
+    PROTOCOL_FIELD_NUMBER: _ClassVar[int]
+    pid: int
+    src_addr: str
+    src_port: int
+    dst_addr: str
+    dst_port: int
+    protocol: str
+    def __init__(self, pid: _Optional[int] = ..., src_addr: _Optional[str] = ..., src_port: _Optional[int] = ..., dst_addr: _Optional[str] = ..., dst_port: _Optional[int] = ..., protocol: _Optional[str] = ...) -> None: ...
+
+class VisibilityFileData(_message.Message):
+    __slots__ = ("pid", "path", "operation", "bytes", "flags")
+    PID_FIELD_NUMBER: _ClassVar[int]
+    PATH_FIELD_NUMBER: _ClassVar[int]
+    OPERATION_FIELD_NUMBER: _ClassVar[int]
+    BYTES_FIELD_NUMBER: _ClassVar[int]
+    FLAGS_FIELD_NUMBER: _ClassVar[int]
+    pid: int
+    path: str
+    operation: str
+    bytes: int
+    flags: int
+    def __init__(self, pid: _Optional[int] = ..., path: _Optional[str] = ..., operation: _Optional[str] = ..., bytes: _Optional[int] = ..., flags: _Optional[int] = ...) -> None: ...
+
+class VisibilityMmapData(_message.Message):
+    __slots__ = ("pid", "addr", "length", "prot", "flags", "file_path")
+    PID_FIELD_NUMBER: _ClassVar[int]
+    ADDR_FIELD_NUMBER: _ClassVar[int]
+    LENGTH_FIELD_NUMBER: _ClassVar[int]
+    PROT_FIELD_NUMBER: _ClassVar[int]
+    FLAGS_FIELD_NUMBER: _ClassVar[int]
+    FILE_PATH_FIELD_NUMBER: _ClassVar[int]
+    pid: int
+    addr: int
+    length: int
+    prot: int
+    flags: int
+    file_path: str
+    def __init__(self, pid: _Optional[int] = ..., addr: _Optional[int] = ..., length: _Optional[int] = ..., prot: _Optional[int] = ..., flags: _Optional[int] = ..., file_path: _Optional[str] = ...) -> None: ...
+
+class VisibilityMprotectData(_message.Message):
+    __slots__ = ("pid", "addr", "length", "prot")
+    PID_FIELD_NUMBER: _ClassVar[int]
+    ADDR_FIELD_NUMBER: _ClassVar[int]
+    LENGTH_FIELD_NUMBER: _ClassVar[int]
+    PROT_FIELD_NUMBER: _ClassVar[int]
+    pid: int
+    addr: int
+    length: int
+    prot: int
+    def __init__(self, pid: _Optional[int] = ..., addr: _Optional[int] = ..., length: _Optional[int] = ..., prot: _Optional[int] = ...) -> None: ...
+
+class VisibilitySocketDataData(_message.Message):
+    __slots__ = ("pid", "direction", "dst_addr", "dst_port", "src_addr", "src_port", "protocol", "bytes")
+    PID_FIELD_NUMBER: _ClassVar[int]
+    DIRECTION_FIELD_NUMBER: _ClassVar[int]
+    DST_ADDR_FIELD_NUMBER: _ClassVar[int]
+    DST_PORT_FIELD_NUMBER: _ClassVar[int]
+    SRC_ADDR_FIELD_NUMBER: _ClassVar[int]
+    SRC_PORT_FIELD_NUMBER: _ClassVar[int]
+    PROTOCOL_FIELD_NUMBER: _ClassVar[int]
+    BYTES_FIELD_NUMBER: _ClassVar[int]
+    pid: int
+    direction: str
+    dst_addr: str
+    dst_port: int
+    src_addr: str
+    src_port: int
+    protocol: str
+    bytes: int
+    def __init__(self, pid: _Optional[int] = ..., direction: _Optional[str] = ..., dst_addr: _Optional[str] = ..., dst_port: _Optional[int] = ..., src_addr: _Optional[str] = ..., src_port: _Optional[int] = ..., protocol: _Optional[str] = ..., bytes: _Optional[int] = ...) -> None: ...

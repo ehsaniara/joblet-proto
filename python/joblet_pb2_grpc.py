@@ -85,6 +85,26 @@ class JobServiceStub(object):
                 request_serializer=joblet__pb2.GetTelemetryRequest.SerializeToString,
                 response_deserializer=joblet__pb2.TelemetryEvent.FromString,
                 _registered_method=True)
+        self.StreamJobMetrics = channel.unary_stream(
+                '/joblet.JobService/StreamJobMetrics',
+                request_serializer=joblet__pb2.StreamJobMetricsRequest.SerializeToString,
+                response_deserializer=joblet__pb2.JobMetricsEvent.FromString,
+                _registered_method=True)
+        self.GetJobMetrics = channel.unary_stream(
+                '/joblet.JobService/GetJobMetrics',
+                request_serializer=joblet__pb2.GetJobMetricsRequest.SerializeToString,
+                response_deserializer=joblet__pb2.JobMetricsEvent.FromString,
+                _registered_method=True)
+        self.StreamJobVisibility = channel.unary_stream(
+                '/joblet.JobService/StreamJobVisibility',
+                request_serializer=joblet__pb2.StreamJobVisibilityRequest.SerializeToString,
+                response_deserializer=joblet__pb2.VisibilityEvent.FromString,
+                _registered_method=True)
+        self.GetJobVisibility = channel.unary_stream(
+                '/joblet.JobService/GetJobVisibility',
+                request_serializer=joblet__pb2.GetJobVisibilityRequest.SerializeToString,
+                response_deserializer=joblet__pb2.VisibilityEvent.FromString,
+                _registered_method=True)
 
 
 class JobServiceServicer(object):
@@ -141,7 +161,7 @@ class JobServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def StreamJobTelemetry(self, request, context):
-        """Unified telemetry (metrics + eBPF activity events)
+        """Unified telemetry (metrics + eBPF activity events) - DEPRECATED: Use separate methods below
         Stream live telemetry for a running job
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -150,6 +170,36 @@ class JobServiceServicer(object):
 
     def GetJobTelemetry(self, request, context):
         """Get historical telemetry for a completed job
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def StreamJobMetrics(self, request, context):
+        """Job Metrics (resource usage from cgroups - sampled every 5s)
+        Stream live metrics for a running job
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetJobMetrics(self, request, context):
+        """Get historical metrics for a completed job
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def StreamJobVisibility(self, request, context):
+        """Job Visibility (eBPF security events - event-driven)
+        Stream live visibility events for a running job
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetJobVisibility(self, request, context):
+        """Get historical visibility events for a completed job
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -207,6 +257,26 @@ def add_JobServiceServicer_to_server(servicer, server):
                     servicer.GetJobTelemetry,
                     request_deserializer=joblet__pb2.GetTelemetryRequest.FromString,
                     response_serializer=joblet__pb2.TelemetryEvent.SerializeToString,
+            ),
+            'StreamJobMetrics': grpc.unary_stream_rpc_method_handler(
+                    servicer.StreamJobMetrics,
+                    request_deserializer=joblet__pb2.StreamJobMetricsRequest.FromString,
+                    response_serializer=joblet__pb2.JobMetricsEvent.SerializeToString,
+            ),
+            'GetJobMetrics': grpc.unary_stream_rpc_method_handler(
+                    servicer.GetJobMetrics,
+                    request_deserializer=joblet__pb2.GetJobMetricsRequest.FromString,
+                    response_serializer=joblet__pb2.JobMetricsEvent.SerializeToString,
+            ),
+            'StreamJobVisibility': grpc.unary_stream_rpc_method_handler(
+                    servicer.StreamJobVisibility,
+                    request_deserializer=joblet__pb2.StreamJobVisibilityRequest.FromString,
+                    response_serializer=joblet__pb2.VisibilityEvent.SerializeToString,
+            ),
+            'GetJobVisibility': grpc.unary_stream_rpc_method_handler(
+                    servicer.GetJobVisibility,
+                    request_deserializer=joblet__pb2.GetJobVisibilityRequest.FromString,
+                    response_serializer=joblet__pb2.VisibilityEvent.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -480,6 +550,114 @@ class JobService(object):
             '/joblet.JobService/GetJobTelemetry',
             joblet__pb2.GetTelemetryRequest.SerializeToString,
             joblet__pb2.TelemetryEvent.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def StreamJobMetrics(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(
+            request,
+            target,
+            '/joblet.JobService/StreamJobMetrics',
+            joblet__pb2.StreamJobMetricsRequest.SerializeToString,
+            joblet__pb2.JobMetricsEvent.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetJobMetrics(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(
+            request,
+            target,
+            '/joblet.JobService/GetJobMetrics',
+            joblet__pb2.GetJobMetricsRequest.SerializeToString,
+            joblet__pb2.JobMetricsEvent.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def StreamJobVisibility(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(
+            request,
+            target,
+            '/joblet.JobService/StreamJobVisibility',
+            joblet__pb2.StreamJobVisibilityRequest.SerializeToString,
+            joblet__pb2.VisibilityEvent.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetJobVisibility(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(
+            request,
+            target,
+            '/joblet.JobService/GetJobVisibility',
+            joblet__pb2.GetJobVisibilityRequest.SerializeToString,
+            joblet__pb2.VisibilityEvent.FromString,
             options,
             channel_credentials,
             insecure,

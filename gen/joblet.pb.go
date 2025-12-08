@@ -4971,29 +4971,28 @@ func (x *RuntimeSpecInfo) GetArchitecture() string {
 	return ""
 }
 
-// Request to stream live telemetry for a running job
-type StreamTelemetryRequest struct {
+// Request to stream live metrics for a running job
+type StreamJobMetricsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	JobUuid       string                 `protobuf:"bytes,1,opt,name=job_uuid,json=jobUuid,proto3" json:"job_uuid,omitempty"` // Job UUID identifier
-	Types         []string               `protobuf:"bytes,2,rep,name=types,proto3" json:"types,omitempty"`                    // Filter by types: ["metrics", "exec", "connect", "file"] or empty for all
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *StreamTelemetryRequest) Reset() {
-	*x = StreamTelemetryRequest{}
+func (x *StreamJobMetricsRequest) Reset() {
+	*x = StreamJobMetricsRequest{}
 	mi := &file_joblet_proto_msgTypes[65]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *StreamTelemetryRequest) String() string {
+func (x *StreamJobMetricsRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*StreamTelemetryRequest) ProtoMessage() {}
+func (*StreamJobMetricsRequest) ProtoMessage() {}
 
-func (x *StreamTelemetryRequest) ProtoReflect() protoreflect.Message {
+func (x *StreamJobMetricsRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[65]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -5005,30 +5004,270 @@ func (x *StreamTelemetryRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use StreamTelemetryRequest.ProtoReflect.Descriptor instead.
-func (*StreamTelemetryRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use StreamJobMetricsRequest.ProtoReflect.Descriptor instead.
+func (*StreamJobMetricsRequest) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{65}
 }
 
-func (x *StreamTelemetryRequest) GetJobUuid() string {
+func (x *StreamJobMetricsRequest) GetJobUuid() string {
 	if x != nil {
 		return x.JobUuid
 	}
 	return ""
 }
 
-func (x *StreamTelemetryRequest) GetTypes() []string {
+// Request to get historical metrics for a completed job
+type GetJobMetricsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	JobUuid       string                 `protobuf:"bytes,1,opt,name=job_uuid,json=jobUuid,proto3" json:"job_uuid,omitempty"`        // Job UUID identifier
+	StartTime     int64                  `protobuf:"varint,2,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"` // Start time in Unix nanoseconds (0 = beginning)
+	EndTime       int64                  `protobuf:"varint,3,opt,name=end_time,json=endTime,proto3" json:"end_time,omitempty"`       // End time in Unix nanoseconds (0 = now)
+	Limit         int32                  `protobuf:"varint,4,opt,name=limit,proto3" json:"limit,omitempty"`                          // Maximum events to return (0 = no limit)
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetJobMetricsRequest) Reset() {
+	*x = GetJobMetricsRequest{}
+	mi := &file_joblet_proto_msgTypes[66]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetJobMetricsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetJobMetricsRequest) ProtoMessage() {}
+
+func (x *GetJobMetricsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_joblet_proto_msgTypes[66]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetJobMetricsRequest.ProtoReflect.Descriptor instead.
+func (*GetJobMetricsRequest) Descriptor() ([]byte, []int) {
+	return file_joblet_proto_rawDescGZIP(), []int{66}
+}
+
+func (x *GetJobMetricsRequest) GetJobUuid() string {
+	if x != nil {
+		return x.JobUuid
+	}
+	return ""
+}
+
+func (x *GetJobMetricsRequest) GetStartTime() int64 {
+	if x != nil {
+		return x.StartTime
+	}
+	return 0
+}
+
+func (x *GetJobMetricsRequest) GetEndTime() int64 {
+	if x != nil {
+		return x.EndTime
+	}
+	return 0
+}
+
+func (x *GetJobMetricsRequest) GetLimit() int32 {
+	if x != nil {
+		return x.Limit
+	}
+	return 0
+}
+
+// Job metrics event (resource usage from cgroups v2)
+type JobMetricsEvent struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Timestamp      int64                  `protobuf:"varint,1,opt,name=timestamp,proto3" json:"timestamp,omitempty"`                                    // Unix timestamp in nanoseconds
+	JobId          string                 `protobuf:"bytes,2,opt,name=job_id,json=jobId,proto3" json:"job_id,omitempty"`                                // Job UUID
+	CpuPercent     float64                `protobuf:"fixed64,3,opt,name=cpu_percent,json=cpuPercent,proto3" json:"cpu_percent,omitempty"`               // CPU usage percentage
+	MemoryBytes    int64                  `protobuf:"varint,4,opt,name=memory_bytes,json=memoryBytes,proto3" json:"memory_bytes,omitempty"`             // Current memory usage in bytes
+	MemoryLimit    int64                  `protobuf:"varint,5,opt,name=memory_limit,json=memoryLimit,proto3" json:"memory_limit,omitempty"`             // Memory limit in bytes
+	DiskReadBytes  int64                  `protobuf:"varint,6,opt,name=disk_read_bytes,json=diskReadBytes,proto3" json:"disk_read_bytes,omitempty"`     // Total disk bytes read
+	DiskWriteBytes int64                  `protobuf:"varint,7,opt,name=disk_write_bytes,json=diskWriteBytes,proto3" json:"disk_write_bytes,omitempty"`  // Total disk bytes written
+	NetRecvBytes   int64                  `protobuf:"varint,8,opt,name=net_recv_bytes,json=netRecvBytes,proto3" json:"net_recv_bytes,omitempty"`        // Total network bytes received
+	NetSentBytes   int64                  `protobuf:"varint,9,opt,name=net_sent_bytes,json=netSentBytes,proto3" json:"net_sent_bytes,omitempty"`        // Total network bytes sent
+	GpuPercent     float64                `protobuf:"fixed64,10,opt,name=gpu_percent,json=gpuPercent,proto3" json:"gpu_percent,omitempty"`              // GPU utilization percentage (0 if no GPU)
+	GpuMemoryBytes int64                  `protobuf:"varint,11,opt,name=gpu_memory_bytes,json=gpuMemoryBytes,proto3" json:"gpu_memory_bytes,omitempty"` // GPU memory usage in bytes (0 if no GPU)
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *JobMetricsEvent) Reset() {
+	*x = JobMetricsEvent{}
+	mi := &file_joblet_proto_msgTypes[67]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *JobMetricsEvent) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*JobMetricsEvent) ProtoMessage() {}
+
+func (x *JobMetricsEvent) ProtoReflect() protoreflect.Message {
+	mi := &file_joblet_proto_msgTypes[67]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use JobMetricsEvent.ProtoReflect.Descriptor instead.
+func (*JobMetricsEvent) Descriptor() ([]byte, []int) {
+	return file_joblet_proto_rawDescGZIP(), []int{67}
+}
+
+func (x *JobMetricsEvent) GetTimestamp() int64 {
+	if x != nil {
+		return x.Timestamp
+	}
+	return 0
+}
+
+func (x *JobMetricsEvent) GetJobId() string {
+	if x != nil {
+		return x.JobId
+	}
+	return ""
+}
+
+func (x *JobMetricsEvent) GetCpuPercent() float64 {
+	if x != nil {
+		return x.CpuPercent
+	}
+	return 0
+}
+
+func (x *JobMetricsEvent) GetMemoryBytes() int64 {
+	if x != nil {
+		return x.MemoryBytes
+	}
+	return 0
+}
+
+func (x *JobMetricsEvent) GetMemoryLimit() int64 {
+	if x != nil {
+		return x.MemoryLimit
+	}
+	return 0
+}
+
+func (x *JobMetricsEvent) GetDiskReadBytes() int64 {
+	if x != nil {
+		return x.DiskReadBytes
+	}
+	return 0
+}
+
+func (x *JobMetricsEvent) GetDiskWriteBytes() int64 {
+	if x != nil {
+		return x.DiskWriteBytes
+	}
+	return 0
+}
+
+func (x *JobMetricsEvent) GetNetRecvBytes() int64 {
+	if x != nil {
+		return x.NetRecvBytes
+	}
+	return 0
+}
+
+func (x *JobMetricsEvent) GetNetSentBytes() int64 {
+	if x != nil {
+		return x.NetSentBytes
+	}
+	return 0
+}
+
+func (x *JobMetricsEvent) GetGpuPercent() float64 {
+	if x != nil {
+		return x.GpuPercent
+	}
+	return 0
+}
+
+func (x *JobMetricsEvent) GetGpuMemoryBytes() int64 {
+	if x != nil {
+		return x.GpuMemoryBytes
+	}
+	return 0
+}
+
+// Request to stream live visibility events for a running job
+type StreamJobVisibilityRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	JobUuid       string                 `protobuf:"bytes,1,opt,name=job_uuid,json=jobUuid,proto3" json:"job_uuid,omitempty"` // Job UUID identifier
+	Types         []string               `protobuf:"bytes,2,rep,name=types,proto3" json:"types,omitempty"`                    // Filter by types: ["exec", "connect", "accept", "file", "mmap", "mprotect"] or empty for all
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *StreamJobVisibilityRequest) Reset() {
+	*x = StreamJobVisibilityRequest{}
+	mi := &file_joblet_proto_msgTypes[68]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *StreamJobVisibilityRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*StreamJobVisibilityRequest) ProtoMessage() {}
+
+func (x *StreamJobVisibilityRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_joblet_proto_msgTypes[68]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use StreamJobVisibilityRequest.ProtoReflect.Descriptor instead.
+func (*StreamJobVisibilityRequest) Descriptor() ([]byte, []int) {
+	return file_joblet_proto_rawDescGZIP(), []int{68}
+}
+
+func (x *StreamJobVisibilityRequest) GetJobUuid() string {
+	if x != nil {
+		return x.JobUuid
+	}
+	return ""
+}
+
+func (x *StreamJobVisibilityRequest) GetTypes() []string {
 	if x != nil {
 		return x.Types
 	}
 	return nil
 }
 
-// Request to get historical telemetry for a completed job
-type GetTelemetryRequest struct {
+// Request to get historical visibility events for a completed job
+type GetJobVisibilityRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	JobUuid       string                 `protobuf:"bytes,1,opt,name=job_uuid,json=jobUuid,proto3" json:"job_uuid,omitempty"`        // Job UUID identifier
-	Types         []string               `protobuf:"bytes,2,rep,name=types,proto3" json:"types,omitempty"`                           // Filter by types: ["metrics", "exec", "connect", "file"] or empty for all
+	Types         []string               `protobuf:"bytes,2,rep,name=types,proto3" json:"types,omitempty"`                           // Filter by types: ["exec", "connect", "accept", "file", "mmap", "mprotect"] or empty for all
 	StartTime     int64                  `protobuf:"varint,3,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"` // Start time in Unix nanoseconds (0 = beginning)
 	EndTime       int64                  `protobuf:"varint,4,opt,name=end_time,json=endTime,proto3" json:"end_time,omitempty"`       // End time in Unix nanoseconds (0 = now)
 	Limit         int32                  `protobuf:"varint,5,opt,name=limit,proto3" json:"limit,omitempty"`                          // Maximum events to return (0 = no limit)
@@ -5036,21 +5275,21 @@ type GetTelemetryRequest struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetTelemetryRequest) Reset() {
-	*x = GetTelemetryRequest{}
-	mi := &file_joblet_proto_msgTypes[66]
+func (x *GetJobVisibilityRequest) Reset() {
+	*x = GetJobVisibilityRequest{}
+	mi := &file_joblet_proto_msgTypes[69]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetTelemetryRequest) String() string {
+func (x *GetJobVisibilityRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetTelemetryRequest) ProtoMessage() {}
+func (*GetJobVisibilityRequest) ProtoMessage() {}
 
-func (x *GetTelemetryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[66]
+func (x *GetJobVisibilityRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_joblet_proto_msgTypes[69]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5061,78 +5300,81 @@ func (x *GetTelemetryRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetTelemetryRequest.ProtoReflect.Descriptor instead.
-func (*GetTelemetryRequest) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{66}
+// Deprecated: Use GetJobVisibilityRequest.ProtoReflect.Descriptor instead.
+func (*GetJobVisibilityRequest) Descriptor() ([]byte, []int) {
+	return file_joblet_proto_rawDescGZIP(), []int{69}
 }
 
-func (x *GetTelemetryRequest) GetJobUuid() string {
+func (x *GetJobVisibilityRequest) GetJobUuid() string {
 	if x != nil {
 		return x.JobUuid
 	}
 	return ""
 }
 
-func (x *GetTelemetryRequest) GetTypes() []string {
+func (x *GetJobVisibilityRequest) GetTypes() []string {
 	if x != nil {
 		return x.Types
 	}
 	return nil
 }
 
-func (x *GetTelemetryRequest) GetStartTime() int64 {
+func (x *GetJobVisibilityRequest) GetStartTime() int64 {
 	if x != nil {
 		return x.StartTime
 	}
 	return 0
 }
 
-func (x *GetTelemetryRequest) GetEndTime() int64 {
+func (x *GetJobVisibilityRequest) GetEndTime() int64 {
 	if x != nil {
 		return x.EndTime
 	}
 	return 0
 }
 
-func (x *GetTelemetryRequest) GetLimit() int32 {
+func (x *GetJobVisibilityRequest) GetLimit() int32 {
 	if x != nil {
 		return x.Limit
 	}
 	return 0
 }
 
-// Unified telemetry event containing either metrics or activity data
-type TelemetryEvent struct {
+// Visibility event from eBPF tracing
+type VisibilityEvent struct {
 	state     protoimpl.MessageState `protogen:"open.v1"`
 	Timestamp int64                  `protobuf:"varint,1,opt,name=timestamp,proto3" json:"timestamp,omitempty"`     // Unix timestamp in nanoseconds
 	JobId     string                 `protobuf:"bytes,2,opt,name=job_id,json=jobId,proto3" json:"job_id,omitempty"` // Job UUID
-	Type      string                 `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`                // Event type: "metrics", "exec", "connect", "file"
+	Type      string                 `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`                // Event type: "exec", "connect", "accept", "file", "mmap", "mprotect"
 	// Types that are valid to be assigned to Data:
 	//
-	//	*TelemetryEvent_Metrics
-	//	*TelemetryEvent_Exec
-	//	*TelemetryEvent_Connect
-	//	*TelemetryEvent_File
-	Data          isTelemetryEvent_Data `protobuf_oneof:"data"`
+	//	*VisibilityEvent_Exec
+	//	*VisibilityEvent_Connect
+	//	*VisibilityEvent_Accept
+	//	*VisibilityEvent_File
+	//	*VisibilityEvent_Mmap
+	//	*VisibilityEvent_Mprotect
+	//	*VisibilityEvent_SocketData
+	Data          isVisibilityEvent_Data `protobuf_oneof:"data"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *TelemetryEvent) Reset() {
-	*x = TelemetryEvent{}
-	mi := &file_joblet_proto_msgTypes[67]
+func (x *VisibilityEvent) Reset() {
+	*x = VisibilityEvent{}
+	mi := &file_joblet_proto_msgTypes[70]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *TelemetryEvent) String() string {
+func (x *VisibilityEvent) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*TelemetryEvent) ProtoMessage() {}
+func (*VisibilityEvent) ProtoMessage() {}
 
-func (x *TelemetryEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[67]
+func (x *VisibilityEvent) ProtoReflect() protoreflect.Message {
+	mi := &file_joblet_proto_msgTypes[70]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5143,239 +5385,175 @@ func (x *TelemetryEvent) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TelemetryEvent.ProtoReflect.Descriptor instead.
-func (*TelemetryEvent) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{67}
+// Deprecated: Use VisibilityEvent.ProtoReflect.Descriptor instead.
+func (*VisibilityEvent) Descriptor() ([]byte, []int) {
+	return file_joblet_proto_rawDescGZIP(), []int{70}
 }
 
-func (x *TelemetryEvent) GetTimestamp() int64 {
+func (x *VisibilityEvent) GetTimestamp() int64 {
 	if x != nil {
 		return x.Timestamp
 	}
 	return 0
 }
 
-func (x *TelemetryEvent) GetJobId() string {
+func (x *VisibilityEvent) GetJobId() string {
 	if x != nil {
 		return x.JobId
 	}
 	return ""
 }
 
-func (x *TelemetryEvent) GetType() string {
+func (x *VisibilityEvent) GetType() string {
 	if x != nil {
 		return x.Type
 	}
 	return ""
 }
 
-func (x *TelemetryEvent) GetData() isTelemetryEvent_Data {
+func (x *VisibilityEvent) GetData() isVisibilityEvent_Data {
 	if x != nil {
 		return x.Data
 	}
 	return nil
 }
 
-func (x *TelemetryEvent) GetMetrics() *TelemetryMetricsData {
+func (x *VisibilityEvent) GetExec() *VisibilityExecData {
 	if x != nil {
-		if x, ok := x.Data.(*TelemetryEvent_Metrics); ok {
-			return x.Metrics
-		}
-	}
-	return nil
-}
-
-func (x *TelemetryEvent) GetExec() *TelemetryExecData {
-	if x != nil {
-		if x, ok := x.Data.(*TelemetryEvent_Exec); ok {
+		if x, ok := x.Data.(*VisibilityEvent_Exec); ok {
 			return x.Exec
 		}
 	}
 	return nil
 }
 
-func (x *TelemetryEvent) GetConnect() *TelemetryConnectData {
+func (x *VisibilityEvent) GetConnect() *VisibilityConnectData {
 	if x != nil {
-		if x, ok := x.Data.(*TelemetryEvent_Connect); ok {
+		if x, ok := x.Data.(*VisibilityEvent_Connect); ok {
 			return x.Connect
 		}
 	}
 	return nil
 }
 
-func (x *TelemetryEvent) GetFile() *TelemetryFileData {
+func (x *VisibilityEvent) GetAccept() *VisibilityAcceptData {
 	if x != nil {
-		if x, ok := x.Data.(*TelemetryEvent_File); ok {
+		if x, ok := x.Data.(*VisibilityEvent_Accept); ok {
+			return x.Accept
+		}
+	}
+	return nil
+}
+
+func (x *VisibilityEvent) GetFile() *VisibilityFileData {
+	if x != nil {
+		if x, ok := x.Data.(*VisibilityEvent_File); ok {
 			return x.File
 		}
 	}
 	return nil
 }
 
-type isTelemetryEvent_Data interface {
-	isTelemetryEvent_Data()
-}
-
-type TelemetryEvent_Metrics struct {
-	Metrics *TelemetryMetricsData `protobuf:"bytes,10,opt,name=metrics,proto3,oneof"`
-}
-
-type TelemetryEvent_Exec struct {
-	Exec *TelemetryExecData `protobuf:"bytes,11,opt,name=exec,proto3,oneof"`
-}
-
-type TelemetryEvent_Connect struct {
-	Connect *TelemetryConnectData `protobuf:"bytes,12,opt,name=connect,proto3,oneof"`
-}
-
-type TelemetryEvent_File struct {
-	File *TelemetryFileData `protobuf:"bytes,13,opt,name=file,proto3,oneof"`
-}
-
-func (*TelemetryEvent_Metrics) isTelemetryEvent_Data() {}
-
-func (*TelemetryEvent_Exec) isTelemetryEvent_Data() {}
-
-func (*TelemetryEvent_Connect) isTelemetryEvent_Data() {}
-
-func (*TelemetryEvent_File) isTelemetryEvent_Data() {}
-
-// Metrics data from cgroups v2 (periodic sampling)
-type TelemetryMetricsData struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	CpuPercent     float64                `protobuf:"fixed64,1,opt,name=cpu_percent,json=cpuPercent,proto3" json:"cpu_percent,omitempty"`              // CPU usage percentage
-	MemoryBytes    int64                  `protobuf:"varint,2,opt,name=memory_bytes,json=memoryBytes,proto3" json:"memory_bytes,omitempty"`            // Current memory usage in bytes
-	MemoryLimit    int64                  `protobuf:"varint,3,opt,name=memory_limit,json=memoryLimit,proto3" json:"memory_limit,omitempty"`            // Memory limit in bytes
-	DiskReadBytes  int64                  `protobuf:"varint,4,opt,name=disk_read_bytes,json=diskReadBytes,proto3" json:"disk_read_bytes,omitempty"`    // Total disk bytes read
-	DiskWriteBytes int64                  `protobuf:"varint,5,opt,name=disk_write_bytes,json=diskWriteBytes,proto3" json:"disk_write_bytes,omitempty"` // Total disk bytes written
-	NetRecvBytes   int64                  `protobuf:"varint,6,opt,name=net_recv_bytes,json=netRecvBytes,proto3" json:"net_recv_bytes,omitempty"`       // Total network bytes received
-	NetSentBytes   int64                  `protobuf:"varint,7,opt,name=net_sent_bytes,json=netSentBytes,proto3" json:"net_sent_bytes,omitempty"`       // Total network bytes sent
-	GpuPercent     float64                `protobuf:"fixed64,8,opt,name=gpu_percent,json=gpuPercent,proto3" json:"gpu_percent,omitempty"`              // GPU utilization percentage (0 if no GPU)
-	GpuMemoryBytes int64                  `protobuf:"varint,9,opt,name=gpu_memory_bytes,json=gpuMemoryBytes,proto3" json:"gpu_memory_bytes,omitempty"` // GPU memory usage in bytes (0 if no GPU)
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *TelemetryMetricsData) Reset() {
-	*x = TelemetryMetricsData{}
-	mi := &file_joblet_proto_msgTypes[68]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *TelemetryMetricsData) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*TelemetryMetricsData) ProtoMessage() {}
-
-func (x *TelemetryMetricsData) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[68]
+func (x *VisibilityEvent) GetMmap() *VisibilityMmapData {
 	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
+		if x, ok := x.Data.(*VisibilityEvent_Mmap); ok {
+			return x.Mmap
 		}
-		return ms
 	}
-	return mi.MessageOf(x)
+	return nil
 }
 
-// Deprecated: Use TelemetryMetricsData.ProtoReflect.Descriptor instead.
-func (*TelemetryMetricsData) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{68}
-}
-
-func (x *TelemetryMetricsData) GetCpuPercent() float64 {
+func (x *VisibilityEvent) GetMprotect() *VisibilityMprotectData {
 	if x != nil {
-		return x.CpuPercent
+		if x, ok := x.Data.(*VisibilityEvent_Mprotect); ok {
+			return x.Mprotect
+		}
 	}
-	return 0
+	return nil
 }
 
-func (x *TelemetryMetricsData) GetMemoryBytes() int64 {
+func (x *VisibilityEvent) GetSocketData() *VisibilitySocketDataData {
 	if x != nil {
-		return x.MemoryBytes
+		if x, ok := x.Data.(*VisibilityEvent_SocketData); ok {
+			return x.SocketData
+		}
 	}
-	return 0
+	return nil
 }
 
-func (x *TelemetryMetricsData) GetMemoryLimit() int64 {
-	if x != nil {
-		return x.MemoryLimit
-	}
-	return 0
+type isVisibilityEvent_Data interface {
+	isVisibilityEvent_Data()
 }
 
-func (x *TelemetryMetricsData) GetDiskReadBytes() int64 {
-	if x != nil {
-		return x.DiskReadBytes
-	}
-	return 0
+type VisibilityEvent_Exec struct {
+	Exec *VisibilityExecData `protobuf:"bytes,10,opt,name=exec,proto3,oneof"`
 }
 
-func (x *TelemetryMetricsData) GetDiskWriteBytes() int64 {
-	if x != nil {
-		return x.DiskWriteBytes
-	}
-	return 0
+type VisibilityEvent_Connect struct {
+	Connect *VisibilityConnectData `protobuf:"bytes,11,opt,name=connect,proto3,oneof"`
 }
 
-func (x *TelemetryMetricsData) GetNetRecvBytes() int64 {
-	if x != nil {
-		return x.NetRecvBytes
-	}
-	return 0
+type VisibilityEvent_Accept struct {
+	Accept *VisibilityAcceptData `protobuf:"bytes,12,opt,name=accept,proto3,oneof"`
 }
 
-func (x *TelemetryMetricsData) GetNetSentBytes() int64 {
-	if x != nil {
-		return x.NetSentBytes
-	}
-	return 0
+type VisibilityEvent_File struct {
+	File *VisibilityFileData `protobuf:"bytes,13,opt,name=file,proto3,oneof"`
 }
 
-func (x *TelemetryMetricsData) GetGpuPercent() float64 {
-	if x != nil {
-		return x.GpuPercent
-	}
-	return 0
+type VisibilityEvent_Mmap struct {
+	Mmap *VisibilityMmapData `protobuf:"bytes,14,opt,name=mmap,proto3,oneof"`
 }
 
-func (x *TelemetryMetricsData) GetGpuMemoryBytes() int64 {
-	if x != nil {
-		return x.GpuMemoryBytes
-	}
-	return 0
+type VisibilityEvent_Mprotect struct {
+	Mprotect *VisibilityMprotectData `protobuf:"bytes,15,opt,name=mprotect,proto3,oneof"`
 }
 
-// Process execution event from eBPF (execve tracing)
-type TelemetryExecData struct {
+type VisibilityEvent_SocketData struct {
+	SocketData *VisibilitySocketDataData `protobuf:"bytes,16,opt,name=socket_data,json=socketData,proto3,oneof"`
+}
+
+func (*VisibilityEvent_Exec) isVisibilityEvent_Data() {}
+
+func (*VisibilityEvent_Connect) isVisibilityEvent_Data() {}
+
+func (*VisibilityEvent_Accept) isVisibilityEvent_Data() {}
+
+func (*VisibilityEvent_File) isVisibilityEvent_Data() {}
+
+func (*VisibilityEvent_Mmap) isVisibilityEvent_Data() {}
+
+func (*VisibilityEvent_Mprotect) isVisibilityEvent_Data() {}
+
+func (*VisibilityEvent_SocketData) isVisibilityEvent_Data() {}
+
+// Process execution event (execve syscall)
+type VisibilityExecData struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Pid           uint32                 `protobuf:"varint,1,opt,name=pid,proto3" json:"pid,omitempty"`                           // Process ID
-	Binary        string                 `protobuf:"bytes,2,opt,name=binary,proto3" json:"binary,omitempty"`                      // Binary path (e.g., "/usr/bin/python")
-	Args          []string               `protobuf:"bytes,3,rep,name=args,proto3" json:"args,omitempty"`                          // Command arguments
-	ExitCode      int32                  `protobuf:"varint,4,opt,name=exit_code,json=exitCode,proto3" json:"exit_code,omitempty"` // Exit code (only set on process exit)
-	Ppid          uint32                 `protobuf:"varint,5,opt,name=ppid,proto3" json:"ppid,omitempty"`                         // Parent process ID
+	Ppid          uint32                 `protobuf:"varint,2,opt,name=ppid,proto3" json:"ppid,omitempty"`                         // Parent process ID
+	Binary        string                 `protobuf:"bytes,3,opt,name=binary,proto3" json:"binary,omitempty"`                      // Binary path (e.g., "/usr/bin/python")
+	Args          []string               `protobuf:"bytes,4,rep,name=args,proto3" json:"args,omitempty"`                          // Command arguments
+	ExitCode      int32                  `protobuf:"varint,5,opt,name=exit_code,json=exitCode,proto3" json:"exit_code,omitempty"` // Exit code (only set on process exit)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *TelemetryExecData) Reset() {
-	*x = TelemetryExecData{}
-	mi := &file_joblet_proto_msgTypes[69]
+func (x *VisibilityExecData) Reset() {
+	*x = VisibilityExecData{}
+	mi := &file_joblet_proto_msgTypes[71]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *TelemetryExecData) String() string {
+func (x *VisibilityExecData) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*TelemetryExecData) ProtoMessage() {}
+func (*VisibilityExecData) ProtoMessage() {}
 
-func (x *TelemetryExecData) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[69]
+func (x *VisibilityExecData) ProtoReflect() protoreflect.Message {
+	mi := &file_joblet_proto_msgTypes[71]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5386,74 +5564,74 @@ func (x *TelemetryExecData) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TelemetryExecData.ProtoReflect.Descriptor instead.
-func (*TelemetryExecData) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{69}
+// Deprecated: Use VisibilityExecData.ProtoReflect.Descriptor instead.
+func (*VisibilityExecData) Descriptor() ([]byte, []int) {
+	return file_joblet_proto_rawDescGZIP(), []int{71}
 }
 
-func (x *TelemetryExecData) GetPid() uint32 {
+func (x *VisibilityExecData) GetPid() uint32 {
 	if x != nil {
 		return x.Pid
 	}
 	return 0
 }
 
-func (x *TelemetryExecData) GetBinary() string {
-	if x != nil {
-		return x.Binary
-	}
-	return ""
-}
-
-func (x *TelemetryExecData) GetArgs() []string {
-	if x != nil {
-		return x.Args
-	}
-	return nil
-}
-
-func (x *TelemetryExecData) GetExitCode() int32 {
-	if x != nil {
-		return x.ExitCode
-	}
-	return 0
-}
-
-func (x *TelemetryExecData) GetPpid() uint32 {
+func (x *VisibilityExecData) GetPpid() uint32 {
 	if x != nil {
 		return x.Ppid
 	}
 	return 0
 }
 
-// Network connection event from eBPF (connect tracing)
-type TelemetryConnectData struct {
+func (x *VisibilityExecData) GetBinary() string {
+	if x != nil {
+		return x.Binary
+	}
+	return ""
+}
+
+func (x *VisibilityExecData) GetArgs() []string {
+	if x != nil {
+		return x.Args
+	}
+	return nil
+}
+
+func (x *VisibilityExecData) GetExitCode() int32 {
+	if x != nil {
+		return x.ExitCode
+	}
+	return 0
+}
+
+// Outgoing network connection event (connect syscall)
+type VisibilityConnectData struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Pid           uint32                 `protobuf:"varint,1,opt,name=pid,proto3" json:"pid,omitempty"`                                      // Process ID that initiated connection
-	Address       string                 `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`                               // Remote IP address (IPv4 or IPv6)
-	Port          uint32                 `protobuf:"varint,3,opt,name=port,proto3" json:"port,omitempty"`                                    // Remote port number
-	Protocol      string                 `protobuf:"bytes,4,opt,name=protocol,proto3" json:"protocol,omitempty"`                             // Protocol: "tcp" or "udp"
-	LocalAddress  string                 `protobuf:"bytes,5,opt,name=local_address,json=localAddress,proto3" json:"local_address,omitempty"` // Local IP address (optional)
-	LocalPort     uint32                 `protobuf:"varint,6,opt,name=local_port,json=localPort,proto3" json:"local_port,omitempty"`         // Local port number (optional)
+	Pid           uint32                 `protobuf:"varint,1,opt,name=pid,proto3" json:"pid,omitempty"`                        // Process ID that initiated connection
+	DstAddr       string                 `protobuf:"bytes,2,opt,name=dst_addr,json=dstAddr,proto3" json:"dst_addr,omitempty"`  // Destination IP address (IPv4 or IPv6)
+	DstPort       uint32                 `protobuf:"varint,3,opt,name=dst_port,json=dstPort,proto3" json:"dst_port,omitempty"` // Destination port number
+	Protocol      string                 `protobuf:"bytes,4,opt,name=protocol,proto3" json:"protocol,omitempty"`               // Protocol: "tcp" or "udp"
+	SrcAddr       string                 `protobuf:"bytes,5,opt,name=src_addr,json=srcAddr,proto3" json:"src_addr,omitempty"`  // Source IP address
+	SrcPort       uint32                 `protobuf:"varint,6,opt,name=src_port,json=srcPort,proto3" json:"src_port,omitempty"` // Source port number
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *TelemetryConnectData) Reset() {
-	*x = TelemetryConnectData{}
-	mi := &file_joblet_proto_msgTypes[70]
+func (x *VisibilityConnectData) Reset() {
+	*x = VisibilityConnectData{}
+	mi := &file_joblet_proto_msgTypes[72]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *TelemetryConnectData) String() string {
+func (x *VisibilityConnectData) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*TelemetryConnectData) ProtoMessage() {}
+func (*VisibilityConnectData) ProtoMessage() {}
 
-func (x *TelemetryConnectData) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[70]
+func (x *VisibilityConnectData) ProtoReflect() protoreflect.Message {
+	mi := &file_joblet_proto_msgTypes[72]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5464,79 +5642,81 @@ func (x *TelemetryConnectData) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TelemetryConnectData.ProtoReflect.Descriptor instead.
-func (*TelemetryConnectData) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{70}
+// Deprecated: Use VisibilityConnectData.ProtoReflect.Descriptor instead.
+func (*VisibilityConnectData) Descriptor() ([]byte, []int) {
+	return file_joblet_proto_rawDescGZIP(), []int{72}
 }
 
-func (x *TelemetryConnectData) GetPid() uint32 {
+func (x *VisibilityConnectData) GetPid() uint32 {
 	if x != nil {
 		return x.Pid
 	}
 	return 0
 }
 
-func (x *TelemetryConnectData) GetAddress() string {
+func (x *VisibilityConnectData) GetDstAddr() string {
 	if x != nil {
-		return x.Address
+		return x.DstAddr
 	}
 	return ""
 }
 
-func (x *TelemetryConnectData) GetPort() uint32 {
+func (x *VisibilityConnectData) GetDstPort() uint32 {
 	if x != nil {
-		return x.Port
+		return x.DstPort
 	}
 	return 0
 }
 
-func (x *TelemetryConnectData) GetProtocol() string {
+func (x *VisibilityConnectData) GetProtocol() string {
 	if x != nil {
 		return x.Protocol
 	}
 	return ""
 }
 
-func (x *TelemetryConnectData) GetLocalAddress() string {
+func (x *VisibilityConnectData) GetSrcAddr() string {
 	if x != nil {
-		return x.LocalAddress
+		return x.SrcAddr
 	}
 	return ""
 }
 
-func (x *TelemetryConnectData) GetLocalPort() uint32 {
+func (x *VisibilityConnectData) GetSrcPort() uint32 {
 	if x != nil {
-		return x.LocalPort
+		return x.SrcPort
 	}
 	return 0
 }
 
-// File access event from eBPF (open/read/write tracing)
-type TelemetryFileData struct {
+// Incoming connection accept event (accept syscall)
+type VisibilityAcceptData struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Pid           uint32                 `protobuf:"varint,1,opt,name=pid,proto3" json:"pid,omitempty"`            // Process ID
-	Path          string                 `protobuf:"bytes,2,opt,name=path,proto3" json:"path,omitempty"`           // File path
-	Operation     string                 `protobuf:"bytes,3,opt,name=operation,proto3" json:"operation,omitempty"` // Operation: "read", "write", "create", "delete"
-	Bytes         int64                  `protobuf:"varint,4,opt,name=bytes,proto3" json:"bytes,omitempty"`        // Bytes read/written (if applicable)
+	Pid           uint32                 `protobuf:"varint,1,opt,name=pid,proto3" json:"pid,omitempty"`                        // Server process ID
+	SrcAddr       string                 `protobuf:"bytes,2,opt,name=src_addr,json=srcAddr,proto3" json:"src_addr,omitempty"`  // Client IP address
+	SrcPort       uint32                 `protobuf:"varint,3,opt,name=src_port,json=srcPort,proto3" json:"src_port,omitempty"` // Client port
+	DstAddr       string                 `protobuf:"bytes,4,opt,name=dst_addr,json=dstAddr,proto3" json:"dst_addr,omitempty"`  // Server IP address
+	DstPort       uint32                 `protobuf:"varint,5,opt,name=dst_port,json=dstPort,proto3" json:"dst_port,omitempty"` // Server port (listening port)
+	Protocol      string                 `protobuf:"bytes,6,opt,name=protocol,proto3" json:"protocol,omitempty"`               // Protocol: "tcp"
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *TelemetryFileData) Reset() {
-	*x = TelemetryFileData{}
-	mi := &file_joblet_proto_msgTypes[71]
+func (x *VisibilityAcceptData) Reset() {
+	*x = VisibilityAcceptData{}
+	mi := &file_joblet_proto_msgTypes[73]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *TelemetryFileData) String() string {
+func (x *VisibilityAcceptData) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*TelemetryFileData) ProtoMessage() {}
+func (*VisibilityAcceptData) ProtoMessage() {}
 
-func (x *TelemetryFileData) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[71]
+func (x *VisibilityAcceptData) ProtoReflect() protoreflect.Message {
+	mi := &file_joblet_proto_msgTypes[73]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5547,33 +5727,379 @@ func (x *TelemetryFileData) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TelemetryFileData.ProtoReflect.Descriptor instead.
-func (*TelemetryFileData) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{71}
+// Deprecated: Use VisibilityAcceptData.ProtoReflect.Descriptor instead.
+func (*VisibilityAcceptData) Descriptor() ([]byte, []int) {
+	return file_joblet_proto_rawDescGZIP(), []int{73}
 }
 
-func (x *TelemetryFileData) GetPid() uint32 {
+func (x *VisibilityAcceptData) GetPid() uint32 {
 	if x != nil {
 		return x.Pid
 	}
 	return 0
 }
 
-func (x *TelemetryFileData) GetPath() string {
+func (x *VisibilityAcceptData) GetSrcAddr() string {
+	if x != nil {
+		return x.SrcAddr
+	}
+	return ""
+}
+
+func (x *VisibilityAcceptData) GetSrcPort() uint32 {
+	if x != nil {
+		return x.SrcPort
+	}
+	return 0
+}
+
+func (x *VisibilityAcceptData) GetDstAddr() string {
+	if x != nil {
+		return x.DstAddr
+	}
+	return ""
+}
+
+func (x *VisibilityAcceptData) GetDstPort() uint32 {
+	if x != nil {
+		return x.DstPort
+	}
+	return 0
+}
+
+func (x *VisibilityAcceptData) GetProtocol() string {
+	if x != nil {
+		return x.Protocol
+	}
+	return ""
+}
+
+// File access event (open/read/write syscalls)
+type VisibilityFileData struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Pid           uint32                 `protobuf:"varint,1,opt,name=pid,proto3" json:"pid,omitempty"`            // Process ID
+	Path          string                 `protobuf:"bytes,2,opt,name=path,proto3" json:"path,omitempty"`           // File path
+	Operation     string                 `protobuf:"bytes,3,opt,name=operation,proto3" json:"operation,omitempty"` // Operation: "open", "read", "write", "create", "delete"
+	Bytes         int64                  `protobuf:"varint,4,opt,name=bytes,proto3" json:"bytes,omitempty"`        // Bytes read/written (if applicable)
+	Flags         uint32                 `protobuf:"varint,5,opt,name=flags,proto3" json:"flags,omitempty"`        // Open flags
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *VisibilityFileData) Reset() {
+	*x = VisibilityFileData{}
+	mi := &file_joblet_proto_msgTypes[74]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *VisibilityFileData) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*VisibilityFileData) ProtoMessage() {}
+
+func (x *VisibilityFileData) ProtoReflect() protoreflect.Message {
+	mi := &file_joblet_proto_msgTypes[74]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use VisibilityFileData.ProtoReflect.Descriptor instead.
+func (*VisibilityFileData) Descriptor() ([]byte, []int) {
+	return file_joblet_proto_rawDescGZIP(), []int{74}
+}
+
+func (x *VisibilityFileData) GetPid() uint32 {
+	if x != nil {
+		return x.Pid
+	}
+	return 0
+}
+
+func (x *VisibilityFileData) GetPath() string {
 	if x != nil {
 		return x.Path
 	}
 	return ""
 }
 
-func (x *TelemetryFileData) GetOperation() string {
+func (x *VisibilityFileData) GetOperation() string {
 	if x != nil {
 		return x.Operation
 	}
 	return ""
 }
 
-func (x *TelemetryFileData) GetBytes() int64 {
+func (x *VisibilityFileData) GetBytes() int64 {
+	if x != nil {
+		return x.Bytes
+	}
+	return 0
+}
+
+func (x *VisibilityFileData) GetFlags() uint32 {
+	if x != nil {
+		return x.Flags
+	}
+	return 0
+}
+
+// Memory mapping event (mmap syscall)
+type VisibilityMmapData struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Pid           uint32                 `protobuf:"varint,1,opt,name=pid,proto3" json:"pid,omitempty"`                          // Process ID
+	Addr          uint64                 `protobuf:"varint,2,opt,name=addr,proto3" json:"addr,omitempty"`                        // Mapped address
+	Length        uint64                 `protobuf:"varint,3,opt,name=length,proto3" json:"length,omitempty"`                    // Mapping length
+	Prot          uint32                 `protobuf:"varint,4,opt,name=prot,proto3" json:"prot,omitempty"`                        // Protection flags (PROT_READ|PROT_WRITE|PROT_EXEC)
+	Flags         uint32                 `protobuf:"varint,5,opt,name=flags,proto3" json:"flags,omitempty"`                      // Mapping flags (MAP_SHARED|MAP_PRIVATE|etc)
+	FilePath      string                 `protobuf:"bytes,6,opt,name=file_path,json=filePath,proto3" json:"file_path,omitempty"` // File path if file-backed mapping
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *VisibilityMmapData) Reset() {
+	*x = VisibilityMmapData{}
+	mi := &file_joblet_proto_msgTypes[75]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *VisibilityMmapData) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*VisibilityMmapData) ProtoMessage() {}
+
+func (x *VisibilityMmapData) ProtoReflect() protoreflect.Message {
+	mi := &file_joblet_proto_msgTypes[75]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use VisibilityMmapData.ProtoReflect.Descriptor instead.
+func (*VisibilityMmapData) Descriptor() ([]byte, []int) {
+	return file_joblet_proto_rawDescGZIP(), []int{75}
+}
+
+func (x *VisibilityMmapData) GetPid() uint32 {
+	if x != nil {
+		return x.Pid
+	}
+	return 0
+}
+
+func (x *VisibilityMmapData) GetAddr() uint64 {
+	if x != nil {
+		return x.Addr
+	}
+	return 0
+}
+
+func (x *VisibilityMmapData) GetLength() uint64 {
+	if x != nil {
+		return x.Length
+	}
+	return 0
+}
+
+func (x *VisibilityMmapData) GetProt() uint32 {
+	if x != nil {
+		return x.Prot
+	}
+	return 0
+}
+
+func (x *VisibilityMmapData) GetFlags() uint32 {
+	if x != nil {
+		return x.Flags
+	}
+	return 0
+}
+
+func (x *VisibilityMmapData) GetFilePath() string {
+	if x != nil {
+		return x.FilePath
+	}
+	return ""
+}
+
+// Memory protection change event (mprotect syscall)
+type VisibilityMprotectData struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Pid           uint32                 `protobuf:"varint,1,opt,name=pid,proto3" json:"pid,omitempty"`       // Process ID
+	Addr          uint64                 `protobuf:"varint,2,opt,name=addr,proto3" json:"addr,omitempty"`     // Start address
+	Length        uint64                 `protobuf:"varint,3,opt,name=length,proto3" json:"length,omitempty"` // Length of region
+	Prot          uint32                 `protobuf:"varint,4,opt,name=prot,proto3" json:"prot,omitempty"`     // New protection flags
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *VisibilityMprotectData) Reset() {
+	*x = VisibilityMprotectData{}
+	mi := &file_joblet_proto_msgTypes[76]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *VisibilityMprotectData) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*VisibilityMprotectData) ProtoMessage() {}
+
+func (x *VisibilityMprotectData) ProtoReflect() protoreflect.Message {
+	mi := &file_joblet_proto_msgTypes[76]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use VisibilityMprotectData.ProtoReflect.Descriptor instead.
+func (*VisibilityMprotectData) Descriptor() ([]byte, []int) {
+	return file_joblet_proto_rawDescGZIP(), []int{76}
+}
+
+func (x *VisibilityMprotectData) GetPid() uint32 {
+	if x != nil {
+		return x.Pid
+	}
+	return 0
+}
+
+func (x *VisibilityMprotectData) GetAddr() uint64 {
+	if x != nil {
+		return x.Addr
+	}
+	return 0
+}
+
+func (x *VisibilityMprotectData) GetLength() uint64 {
+	if x != nil {
+		return x.Length
+	}
+	return 0
+}
+
+func (x *VisibilityMprotectData) GetProt() uint32 {
+	if x != nil {
+		return x.Prot
+	}
+	return 0
+}
+
+// Socket data event (sendto/recvfrom syscalls)
+type VisibilitySocketDataData struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Pid           uint32                 `protobuf:"varint,1,opt,name=pid,proto3" json:"pid,omitempty"`                        // Process ID
+	Direction     string                 `protobuf:"bytes,2,opt,name=direction,proto3" json:"direction,omitempty"`             // "send" or "recv"
+	DstAddr       string                 `protobuf:"bytes,3,opt,name=dst_addr,json=dstAddr,proto3" json:"dst_addr,omitempty"`  // Remote address
+	DstPort       uint32                 `protobuf:"varint,4,opt,name=dst_port,json=dstPort,proto3" json:"dst_port,omitempty"` // Remote port
+	SrcAddr       string                 `protobuf:"bytes,5,opt,name=src_addr,json=srcAddr,proto3" json:"src_addr,omitempty"`  // Local address
+	SrcPort       uint32                 `protobuf:"varint,6,opt,name=src_port,json=srcPort,proto3" json:"src_port,omitempty"` // Local port
+	Protocol      string                 `protobuf:"bytes,7,opt,name=protocol,proto3" json:"protocol,omitempty"`               // Protocol: "tcp" or "udp"
+	Bytes         int64                  `protobuf:"varint,8,opt,name=bytes,proto3" json:"bytes,omitempty"`                    // Bytes sent/received
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *VisibilitySocketDataData) Reset() {
+	*x = VisibilitySocketDataData{}
+	mi := &file_joblet_proto_msgTypes[77]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *VisibilitySocketDataData) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*VisibilitySocketDataData) ProtoMessage() {}
+
+func (x *VisibilitySocketDataData) ProtoReflect() protoreflect.Message {
+	mi := &file_joblet_proto_msgTypes[77]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use VisibilitySocketDataData.ProtoReflect.Descriptor instead.
+func (*VisibilitySocketDataData) Descriptor() ([]byte, []int) {
+	return file_joblet_proto_rawDescGZIP(), []int{77}
+}
+
+func (x *VisibilitySocketDataData) GetPid() uint32 {
+	if x != nil {
+		return x.Pid
+	}
+	return 0
+}
+
+func (x *VisibilitySocketDataData) GetDirection() string {
+	if x != nil {
+		return x.Direction
+	}
+	return ""
+}
+
+func (x *VisibilitySocketDataData) GetDstAddr() string {
+	if x != nil {
+		return x.DstAddr
+	}
+	return ""
+}
+
+func (x *VisibilitySocketDataData) GetDstPort() uint32 {
+	if x != nil {
+		return x.DstPort
+	}
+	return 0
+}
+
+func (x *VisibilitySocketDataData) GetSrcAddr() string {
+	if x != nil {
+		return x.SrcAddr
+	}
+	return ""
+}
+
+func (x *VisibilitySocketDataData) GetSrcPort() uint32 {
+	if x != nil {
+		return x.SrcPort
+	}
+	return 0
+}
+
+func (x *VisibilitySocketDataData) GetProtocol() string {
+	if x != nil {
+		return x.Protocol
+	}
+	return ""
+}
+
+func (x *VisibilitySocketDataData) GetBytes() int64 {
 	if x != nil {
 		return x.Bytes
 	}
@@ -6048,58 +6574,101 @@ const file_joblet_proto_rawDesc = "" +
 	"\blanguage\x18\x01 \x01(\tR\blanguage\x12\x18\n" +
 	"\aversion\x18\x02 \x01(\tR\aversion\x12\x1a\n" +
 	"\bvariants\x18\x03 \x03(\tR\bvariants\x12\"\n" +
-	"\farchitecture\x18\x04 \x01(\tR\farchitecture\"I\n" +
-	"\x16StreamTelemetryRequest\x12\x19\n" +
+	"\farchitecture\x18\x04 \x01(\tR\farchitecture\"4\n" +
+	"\x17StreamJobMetricsRequest\x12\x19\n" +
+	"\bjob_uuid\x18\x01 \x01(\tR\ajobUuid\"\x81\x01\n" +
+	"\x14GetJobMetricsRequest\x12\x19\n" +
+	"\bjob_uuid\x18\x01 \x01(\tR\ajobUuid\x12\x1d\n" +
+	"\n" +
+	"start_time\x18\x02 \x01(\x03R\tstartTime\x12\x19\n" +
+	"\bend_time\x18\x03 \x01(\x03R\aendTime\x12\x14\n" +
+	"\x05limit\x18\x04 \x01(\x05R\x05limit\"\x96\x03\n" +
+	"\x0fJobMetricsEvent\x12\x1c\n" +
+	"\ttimestamp\x18\x01 \x01(\x03R\ttimestamp\x12\x15\n" +
+	"\x06job_id\x18\x02 \x01(\tR\x05jobId\x12\x1f\n" +
+	"\vcpu_percent\x18\x03 \x01(\x01R\n" +
+	"cpuPercent\x12!\n" +
+	"\fmemory_bytes\x18\x04 \x01(\x03R\vmemoryBytes\x12!\n" +
+	"\fmemory_limit\x18\x05 \x01(\x03R\vmemoryLimit\x12&\n" +
+	"\x0fdisk_read_bytes\x18\x06 \x01(\x03R\rdiskReadBytes\x12(\n" +
+	"\x10disk_write_bytes\x18\a \x01(\x03R\x0ediskWriteBytes\x12$\n" +
+	"\x0enet_recv_bytes\x18\b \x01(\x03R\fnetRecvBytes\x12$\n" +
+	"\x0enet_sent_bytes\x18\t \x01(\x03R\fnetSentBytes\x12\x1f\n" +
+	"\vgpu_percent\x18\n" +
+	" \x01(\x01R\n" +
+	"gpuPercent\x12(\n" +
+	"\x10gpu_memory_bytes\x18\v \x01(\x03R\x0egpuMemoryBytes\"M\n" +
+	"\x1aStreamJobVisibilityRequest\x12\x19\n" +
 	"\bjob_uuid\x18\x01 \x01(\tR\ajobUuid\x12\x14\n" +
-	"\x05types\x18\x02 \x03(\tR\x05types\"\x96\x01\n" +
-	"\x13GetTelemetryRequest\x12\x19\n" +
+	"\x05types\x18\x02 \x03(\tR\x05types\"\x9a\x01\n" +
+	"\x17GetJobVisibilityRequest\x12\x19\n" +
 	"\bjob_uuid\x18\x01 \x01(\tR\ajobUuid\x12\x14\n" +
 	"\x05types\x18\x02 \x03(\tR\x05types\x12\x1d\n" +
 	"\n" +
 	"start_time\x18\x03 \x01(\x03R\tstartTime\x12\x19\n" +
 	"\bend_time\x18\x04 \x01(\x03R\aendTime\x12\x14\n" +
-	"\x05limit\x18\x05 \x01(\x05R\x05limit\"\xb7\x02\n" +
-	"\x0eTelemetryEvent\x12\x1c\n" +
+	"\x05limit\x18\x05 \x01(\x05R\x05limit\"\xee\x03\n" +
+	"\x0fVisibilityEvent\x12\x1c\n" +
 	"\ttimestamp\x18\x01 \x01(\x03R\ttimestamp\x12\x15\n" +
 	"\x06job_id\x18\x02 \x01(\tR\x05jobId\x12\x12\n" +
-	"\x04type\x18\x03 \x01(\tR\x04type\x128\n" +
-	"\ametrics\x18\n" +
-	" \x01(\v2\x1c.joblet.TelemetryMetricsDataH\x00R\ametrics\x12/\n" +
-	"\x04exec\x18\v \x01(\v2\x19.joblet.TelemetryExecDataH\x00R\x04exec\x128\n" +
-	"\aconnect\x18\f \x01(\v2\x1c.joblet.TelemetryConnectDataH\x00R\aconnect\x12/\n" +
-	"\x04file\x18\r \x01(\v2\x19.joblet.TelemetryFileDataH\x00R\x04fileB\x06\n" +
-	"\x04data\"\xe6\x02\n" +
-	"\x14TelemetryMetricsData\x12\x1f\n" +
-	"\vcpu_percent\x18\x01 \x01(\x01R\n" +
-	"cpuPercent\x12!\n" +
-	"\fmemory_bytes\x18\x02 \x01(\x03R\vmemoryBytes\x12!\n" +
-	"\fmemory_limit\x18\x03 \x01(\x03R\vmemoryLimit\x12&\n" +
-	"\x0fdisk_read_bytes\x18\x04 \x01(\x03R\rdiskReadBytes\x12(\n" +
-	"\x10disk_write_bytes\x18\x05 \x01(\x03R\x0ediskWriteBytes\x12$\n" +
-	"\x0enet_recv_bytes\x18\x06 \x01(\x03R\fnetRecvBytes\x12$\n" +
-	"\x0enet_sent_bytes\x18\a \x01(\x03R\fnetSentBytes\x12\x1f\n" +
-	"\vgpu_percent\x18\b \x01(\x01R\n" +
-	"gpuPercent\x12(\n" +
-	"\x10gpu_memory_bytes\x18\t \x01(\x03R\x0egpuMemoryBytes\"\x82\x01\n" +
-	"\x11TelemetryExecData\x12\x10\n" +
-	"\x03pid\x18\x01 \x01(\rR\x03pid\x12\x16\n" +
-	"\x06binary\x18\x02 \x01(\tR\x06binary\x12\x12\n" +
-	"\x04args\x18\x03 \x03(\tR\x04args\x12\x1b\n" +
-	"\texit_code\x18\x04 \x01(\x05R\bexitCode\x12\x12\n" +
-	"\x04ppid\x18\x05 \x01(\rR\x04ppid\"\xb6\x01\n" +
-	"\x14TelemetryConnectData\x12\x10\n" +
-	"\x03pid\x18\x01 \x01(\rR\x03pid\x12\x18\n" +
-	"\aaddress\x18\x02 \x01(\tR\aaddress\x12\x12\n" +
-	"\x04port\x18\x03 \x01(\rR\x04port\x12\x1a\n" +
-	"\bprotocol\x18\x04 \x01(\tR\bprotocol\x12#\n" +
-	"\rlocal_address\x18\x05 \x01(\tR\flocalAddress\x12\x1d\n" +
-	"\n" +
-	"local_port\x18\x06 \x01(\rR\tlocalPort\"m\n" +
-	"\x11TelemetryFileData\x12\x10\n" +
+	"\x04type\x18\x03 \x01(\tR\x04type\x120\n" +
+	"\x04exec\x18\n" +
+	" \x01(\v2\x1a.joblet.VisibilityExecDataH\x00R\x04exec\x129\n" +
+	"\aconnect\x18\v \x01(\v2\x1d.joblet.VisibilityConnectDataH\x00R\aconnect\x126\n" +
+	"\x06accept\x18\f \x01(\v2\x1c.joblet.VisibilityAcceptDataH\x00R\x06accept\x120\n" +
+	"\x04file\x18\r \x01(\v2\x1a.joblet.VisibilityFileDataH\x00R\x04file\x120\n" +
+	"\x04mmap\x18\x0e \x01(\v2\x1a.joblet.VisibilityMmapDataH\x00R\x04mmap\x12<\n" +
+	"\bmprotect\x18\x0f \x01(\v2\x1e.joblet.VisibilityMprotectDataH\x00R\bmprotect\x12C\n" +
+	"\vsocket_data\x18\x10 \x01(\v2 .joblet.VisibilitySocketDataDataH\x00R\n" +
+	"socketDataB\x06\n" +
+	"\x04data\"\x83\x01\n" +
+	"\x12VisibilityExecData\x12\x10\n" +
+	"\x03pid\x18\x01 \x01(\rR\x03pid\x12\x12\n" +
+	"\x04ppid\x18\x02 \x01(\rR\x04ppid\x12\x16\n" +
+	"\x06binary\x18\x03 \x01(\tR\x06binary\x12\x12\n" +
+	"\x04args\x18\x04 \x03(\tR\x04args\x12\x1b\n" +
+	"\texit_code\x18\x05 \x01(\x05R\bexitCode\"\xb1\x01\n" +
+	"\x15VisibilityConnectData\x12\x10\n" +
+	"\x03pid\x18\x01 \x01(\rR\x03pid\x12\x19\n" +
+	"\bdst_addr\x18\x02 \x01(\tR\adstAddr\x12\x19\n" +
+	"\bdst_port\x18\x03 \x01(\rR\adstPort\x12\x1a\n" +
+	"\bprotocol\x18\x04 \x01(\tR\bprotocol\x12\x19\n" +
+	"\bsrc_addr\x18\x05 \x01(\tR\asrcAddr\x12\x19\n" +
+	"\bsrc_port\x18\x06 \x01(\rR\asrcPort\"\xb0\x01\n" +
+	"\x14VisibilityAcceptData\x12\x10\n" +
+	"\x03pid\x18\x01 \x01(\rR\x03pid\x12\x19\n" +
+	"\bsrc_addr\x18\x02 \x01(\tR\asrcAddr\x12\x19\n" +
+	"\bsrc_port\x18\x03 \x01(\rR\asrcPort\x12\x19\n" +
+	"\bdst_addr\x18\x04 \x01(\tR\adstAddr\x12\x19\n" +
+	"\bdst_port\x18\x05 \x01(\rR\adstPort\x12\x1a\n" +
+	"\bprotocol\x18\x06 \x01(\tR\bprotocol\"\x84\x01\n" +
+	"\x12VisibilityFileData\x12\x10\n" +
 	"\x03pid\x18\x01 \x01(\rR\x03pid\x12\x12\n" +
 	"\x04path\x18\x02 \x01(\tR\x04path\x12\x1c\n" +
 	"\toperation\x18\x03 \x01(\tR\toperation\x12\x14\n" +
-	"\x05bytes\x18\x04 \x01(\x03R\x05bytes2\x87\x05\n" +
+	"\x05bytes\x18\x04 \x01(\x03R\x05bytes\x12\x14\n" +
+	"\x05flags\x18\x05 \x01(\rR\x05flags\"\x99\x01\n" +
+	"\x12VisibilityMmapData\x12\x10\n" +
+	"\x03pid\x18\x01 \x01(\rR\x03pid\x12\x12\n" +
+	"\x04addr\x18\x02 \x01(\x04R\x04addr\x12\x16\n" +
+	"\x06length\x18\x03 \x01(\x04R\x06length\x12\x12\n" +
+	"\x04prot\x18\x04 \x01(\rR\x04prot\x12\x14\n" +
+	"\x05flags\x18\x05 \x01(\rR\x05flags\x12\x1b\n" +
+	"\tfile_path\x18\x06 \x01(\tR\bfilePath\"j\n" +
+	"\x16VisibilityMprotectData\x12\x10\n" +
+	"\x03pid\x18\x01 \x01(\rR\x03pid\x12\x12\n" +
+	"\x04addr\x18\x02 \x01(\x04R\x04addr\x12\x16\n" +
+	"\x06length\x18\x03 \x01(\x04R\x06length\x12\x12\n" +
+	"\x04prot\x18\x04 \x01(\rR\x04prot\"\xe8\x01\n" +
+	"\x18VisibilitySocketDataData\x12\x10\n" +
+	"\x03pid\x18\x01 \x01(\rR\x03pid\x12\x1c\n" +
+	"\tdirection\x18\x02 \x01(\tR\tdirection\x12\x19\n" +
+	"\bdst_addr\x18\x03 \x01(\tR\adstAddr\x12\x19\n" +
+	"\bdst_port\x18\x04 \x01(\rR\adstPort\x12\x19\n" +
+	"\bsrc_addr\x18\x05 \x01(\tR\asrcAddr\x12\x19\n" +
+	"\bsrc_port\x18\x06 \x01(\rR\asrcPort\x12\x1a\n" +
+	"\bprotocol\x18\a \x01(\tR\bprotocol\x12\x14\n" +
+	"\x05bytes\x18\b \x01(\x03R\x05bytes2\xb1\x06\n" +
 	"\n" +
 	"JobService\x129\n" +
 	"\x06RunJob\x12\x15.joblet.RunJobRequest\x1a\x16.joblet.RunJobResponse\"\x00\x12B\n" +
@@ -6111,8 +6680,10 @@ const file_joblet_proto_rawDesc = "" +
 	"\n" +
 	"GetJobLogs\x12\x15.joblet.GetJobLogsReq\x1a\x11.joblet.DataChunk0\x01\x120\n" +
 	"\bListJobs\x12\x14.joblet.EmptyRequest\x1a\f.joblet.Jobs\"\x00\x12P\n" +
-	"\x12StreamJobTelemetry\x12\x1e.joblet.StreamTelemetryRequest\x1a\x16.joblet.TelemetryEvent\"\x000\x01\x12J\n" +
-	"\x0fGetJobTelemetry\x12\x1b.joblet.GetTelemetryRequest\x1a\x16.joblet.TelemetryEvent\"\x000\x012\xd8\x01\n" +
+	"\x10StreamJobMetrics\x12\x1f.joblet.StreamJobMetricsRequest\x1a\x17.joblet.JobMetricsEvent\"\x000\x01\x12J\n" +
+	"\rGetJobMetrics\x12\x1c.joblet.GetJobMetricsRequest\x1a\x17.joblet.JobMetricsEvent\"\x000\x01\x12V\n" +
+	"\x13StreamJobVisibility\x12\".joblet.StreamJobVisibilityRequest\x1a\x17.joblet.VisibilityEvent\"\x000\x01\x12P\n" +
+	"\x10GetJobVisibility\x12\x1f.joblet.GetJobVisibilityRequest\x1a\x17.joblet.VisibilityEvent\"\x000\x012\xd8\x01\n" +
 	"\x0eNetworkService\x12E\n" +
 	"\rCreateNetwork\x12\x18.joblet.CreateNetworkReq\x1a\x18.joblet.CreateNetworkRes\"\x00\x128\n" +
 	"\fListNetworks\x12\x14.joblet.EmptyRequest\x1a\x10.joblet.Networks\"\x00\x12E\n" +
@@ -6147,7 +6718,7 @@ func file_joblet_proto_rawDescGZIP() []byte {
 	return file_joblet_proto_rawDescData
 }
 
-var file_joblet_proto_msgTypes = make([]protoimpl.MessageInfo, 79)
+var file_joblet_proto_msgTypes = make([]protoimpl.MessageInfo, 85)
 var file_joblet_proto_goTypes = []any{
 	(*Jobs)(nil),                           // 0: joblet.Jobs
 	(*Job)(nil),                            // 1: joblet.Job
@@ -6214,27 +6785,33 @@ var file_joblet_proto_goTypes = []any{
 	(*RuntimeRemoveReq)(nil),               // 62: joblet.RuntimeRemoveReq
 	(*RuntimeRemoveRes)(nil),               // 63: joblet.RuntimeRemoveRes
 	(*RuntimeSpecInfo)(nil),                // 64: joblet.RuntimeSpecInfo
-	(*StreamTelemetryRequest)(nil),         // 65: joblet.StreamTelemetryRequest
-	(*GetTelemetryRequest)(nil),            // 66: joblet.GetTelemetryRequest
-	(*TelemetryEvent)(nil),                 // 67: joblet.TelemetryEvent
-	(*TelemetryMetricsData)(nil),           // 68: joblet.TelemetryMetricsData
-	(*TelemetryExecData)(nil),              // 69: joblet.TelemetryExecData
-	(*TelemetryConnectData)(nil),           // 70: joblet.TelemetryConnectData
-	(*TelemetryFileData)(nil),              // 71: joblet.TelemetryFileData
-	nil,                                    // 72: joblet.Job.EnvironmentEntry
-	nil,                                    // 73: joblet.Job.SecretEnvironmentEntry
-	nil,                                    // 74: joblet.GetJobStatusRes.EnvironmentEntry
-	nil,                                    // 75: joblet.GetJobStatusRes.SecretEnvironmentEntry
-	nil,                                    // 76: joblet.CloudInfo.MetadataEntry
-	nil,                                    // 77: joblet.RunJobRequest.EnvironmentEntry
-	nil,                                    // 78: joblet.RunJobRequest.SecretEnvironmentEntry
+	(*StreamJobMetricsRequest)(nil),        // 65: joblet.StreamJobMetricsRequest
+	(*GetJobMetricsRequest)(nil),           // 66: joblet.GetJobMetricsRequest
+	(*JobMetricsEvent)(nil),                // 67: joblet.JobMetricsEvent
+	(*StreamJobVisibilityRequest)(nil),     // 68: joblet.StreamJobVisibilityRequest
+	(*GetJobVisibilityRequest)(nil),        // 69: joblet.GetJobVisibilityRequest
+	(*VisibilityEvent)(nil),                // 70: joblet.VisibilityEvent
+	(*VisibilityExecData)(nil),             // 71: joblet.VisibilityExecData
+	(*VisibilityConnectData)(nil),          // 72: joblet.VisibilityConnectData
+	(*VisibilityAcceptData)(nil),           // 73: joblet.VisibilityAcceptData
+	(*VisibilityFileData)(nil),             // 74: joblet.VisibilityFileData
+	(*VisibilityMmapData)(nil),             // 75: joblet.VisibilityMmapData
+	(*VisibilityMprotectData)(nil),         // 76: joblet.VisibilityMprotectData
+	(*VisibilitySocketDataData)(nil),       // 77: joblet.VisibilitySocketDataData
+	nil,                                    // 78: joblet.Job.EnvironmentEntry
+	nil,                                    // 79: joblet.Job.SecretEnvironmentEntry
+	nil,                                    // 80: joblet.GetJobStatusRes.EnvironmentEntry
+	nil,                                    // 81: joblet.GetJobStatusRes.SecretEnvironmentEntry
+	nil,                                    // 82: joblet.CloudInfo.MetadataEntry
+	nil,                                    // 83: joblet.RunJobRequest.EnvironmentEntry
+	nil,                                    // 84: joblet.RunJobRequest.SecretEnvironmentEntry
 }
 var file_joblet_proto_depIdxs = []int32{
 	1,  // 0: joblet.Jobs.jobs:type_name -> joblet.Job
-	72, // 1: joblet.Job.environment:type_name -> joblet.Job.EnvironmentEntry
-	73, // 2: joblet.Job.secret_environment:type_name -> joblet.Job.SecretEnvironmentEntry
-	74, // 3: joblet.GetJobStatusRes.environment:type_name -> joblet.GetJobStatusRes.EnvironmentEntry
-	75, // 4: joblet.GetJobStatusRes.secret_environment:type_name -> joblet.GetJobStatusRes.SecretEnvironmentEntry
+	78, // 1: joblet.Job.environment:type_name -> joblet.Job.EnvironmentEntry
+	79, // 2: joblet.Job.secret_environment:type_name -> joblet.Job.SecretEnvironmentEntry
+	80, // 3: joblet.GetJobStatusRes.environment:type_name -> joblet.GetJobStatusRes.EnvironmentEntry
+	81, // 4: joblet.GetJobStatusRes.secret_environment:type_name -> joblet.GetJobStatusRes.SecretEnvironmentEntry
 	17, // 5: joblet.RuntimeInstallationChunk.progress:type_name -> joblet.RuntimeInstallationProgress
 	18, // 6: joblet.RuntimeInstallationChunk.log:type_name -> joblet.RuntimeInstallationLog
 	19, // 7: joblet.RuntimeInstallationChunk.result:type_name -> joblet.RuntimeInstallationResult
@@ -6260,78 +6837,85 @@ var file_joblet_proto_depIdxs = []int32{
 	41, // 27: joblet.IOMetrics.diskIO:type_name -> joblet.DiskIOMetrics
 	43, // 28: joblet.ProcessMetrics.topByCPU:type_name -> joblet.ProcessInfo
 	43, // 29: joblet.ProcessMetrics.topByMemory:type_name -> joblet.ProcessInfo
-	76, // 30: joblet.CloudInfo.metadata:type_name -> joblet.CloudInfo.MetadataEntry
+	82, // 30: joblet.CloudInfo.metadata:type_name -> joblet.CloudInfo.MetadataEntry
 	47, // 31: joblet.RuntimesRes.runtimes:type_name -> joblet.RuntimeInfo
 	48, // 32: joblet.RuntimeInfo.requirements:type_name -> joblet.RuntimeRequirements
 	47, // 33: joblet.RuntimeInfoRes.runtime:type_name -> joblet.RuntimeInfo
 	3,  // 34: joblet.RunJobRequest.uploads:type_name -> joblet.FileUpload
-	77, // 35: joblet.RunJobRequest.environment:type_name -> joblet.RunJobRequest.EnvironmentEntry
-	78, // 36: joblet.RunJobRequest.secret_environment:type_name -> joblet.RunJobRequest.SecretEnvironmentEntry
+	83, // 35: joblet.RunJobRequest.environment:type_name -> joblet.RunJobRequest.EnvironmentEntry
+	84, // 36: joblet.RunJobRequest.secret_environment:type_name -> joblet.RunJobRequest.SecretEnvironmentEntry
 	59, // 37: joblet.InstallRuntimeFromLocalRequest.files:type_name -> joblet.RuntimeFile
 	64, // 38: joblet.ValidateRuntimeSpecResponse.specInfo:type_name -> joblet.RuntimeSpecInfo
-	68, // 39: joblet.TelemetryEvent.metrics:type_name -> joblet.TelemetryMetricsData
-	69, // 40: joblet.TelemetryEvent.exec:type_name -> joblet.TelemetryExecData
-	70, // 41: joblet.TelemetryEvent.connect:type_name -> joblet.TelemetryConnectData
-	71, // 42: joblet.TelemetryEvent.file:type_name -> joblet.TelemetryFileData
-	53, // 43: joblet.JobService.RunJob:input_type -> joblet.RunJobRequest
-	4,  // 44: joblet.JobService.GetJobStatus:input_type -> joblet.GetJobStatusReq
-	6,  // 45: joblet.JobService.StopJob:input_type -> joblet.StopJobReq
-	8,  // 46: joblet.JobService.CancelJob:input_type -> joblet.CancelJobReq
-	10, // 47: joblet.JobService.DeleteJob:input_type -> joblet.DeleteJobReq
-	12, // 48: joblet.JobService.DeleteAllJobs:input_type -> joblet.DeleteAllJobsReq
-	14, // 49: joblet.JobService.GetJobLogs:input_type -> joblet.GetJobLogsReq
-	2,  // 50: joblet.JobService.ListJobs:input_type -> joblet.EmptyRequest
-	65, // 51: joblet.JobService.StreamJobTelemetry:input_type -> joblet.StreamTelemetryRequest
-	66, // 52: joblet.JobService.GetJobTelemetry:input_type -> joblet.GetTelemetryRequest
-	20, // 53: joblet.NetworkService.CreateNetwork:input_type -> joblet.CreateNetworkReq
-	2,  // 54: joblet.NetworkService.ListNetworks:input_type -> joblet.EmptyRequest
-	22, // 55: joblet.NetworkService.RemoveNetwork:input_type -> joblet.RemoveNetworkReq
-	26, // 56: joblet.VolumeService.CreateVolume:input_type -> joblet.CreateVolumeReq
-	2,  // 57: joblet.VolumeService.ListVolumes:input_type -> joblet.EmptyRequest
-	28, // 58: joblet.VolumeService.RemoveVolume:input_type -> joblet.RemoveVolumeReq
-	2,  // 59: joblet.MonitoringService.GetSystemStatus:input_type -> joblet.EmptyRequest
-	34, // 60: joblet.MonitoringService.StreamSystemMetrics:input_type -> joblet.StreamMetricsReq
-	2,  // 61: joblet.RuntimeService.ListRuntimes:input_type -> joblet.EmptyRequest
-	49, // 62: joblet.RuntimeService.GetRuntimeInfo:input_type -> joblet.RuntimeInfoReq
-	51, // 63: joblet.RuntimeService.TestRuntime:input_type -> joblet.RuntimeTestReq
-	56, // 64: joblet.RuntimeService.InstallRuntimeFromGithub:input_type -> joblet.InstallRuntimeRequest
-	58, // 65: joblet.RuntimeService.InstallRuntimeFromLocal:input_type -> joblet.InstallRuntimeFromLocalRequest
-	56, // 66: joblet.RuntimeService.StreamingInstallRuntimeFromGithub:input_type -> joblet.InstallRuntimeRequest
-	58, // 67: joblet.RuntimeService.StreamingInstallRuntimeFromLocal:input_type -> joblet.InstallRuntimeFromLocalRequest
-	60, // 68: joblet.RuntimeService.ValidateRuntimeSpec:input_type -> joblet.ValidateRuntimeSpecRequest
-	62, // 69: joblet.RuntimeService.RemoveRuntime:input_type -> joblet.RuntimeRemoveReq
-	54, // 70: joblet.JobService.RunJob:output_type -> joblet.RunJobResponse
-	5,  // 71: joblet.JobService.GetJobStatus:output_type -> joblet.GetJobStatusRes
-	7,  // 72: joblet.JobService.StopJob:output_type -> joblet.StopJobRes
-	9,  // 73: joblet.JobService.CancelJob:output_type -> joblet.CancelJobRes
-	11, // 74: joblet.JobService.DeleteJob:output_type -> joblet.DeleteJobRes
-	13, // 75: joblet.JobService.DeleteAllJobs:output_type -> joblet.DeleteAllJobsRes
-	15, // 76: joblet.JobService.GetJobLogs:output_type -> joblet.DataChunk
-	0,  // 77: joblet.JobService.ListJobs:output_type -> joblet.Jobs
-	67, // 78: joblet.JobService.StreamJobTelemetry:output_type -> joblet.TelemetryEvent
-	67, // 79: joblet.JobService.GetJobTelemetry:output_type -> joblet.TelemetryEvent
-	21, // 80: joblet.NetworkService.CreateNetwork:output_type -> joblet.CreateNetworkRes
-	25, // 81: joblet.NetworkService.ListNetworks:output_type -> joblet.Networks
-	23, // 82: joblet.NetworkService.RemoveNetwork:output_type -> joblet.RemoveNetworkRes
-	27, // 83: joblet.VolumeService.CreateVolume:output_type -> joblet.CreateVolumeRes
-	31, // 84: joblet.VolumeService.ListVolumes:output_type -> joblet.Volumes
-	29, // 85: joblet.VolumeService.RemoveVolume:output_type -> joblet.RemoveVolumeRes
-	32, // 86: joblet.MonitoringService.GetSystemStatus:output_type -> joblet.SystemStatusRes
-	33, // 87: joblet.MonitoringService.StreamSystemMetrics:output_type -> joblet.SystemMetricsRes
-	46, // 88: joblet.RuntimeService.ListRuntimes:output_type -> joblet.RuntimesRes
-	50, // 89: joblet.RuntimeService.GetRuntimeInfo:output_type -> joblet.RuntimeInfoRes
-	52, // 90: joblet.RuntimeService.TestRuntime:output_type -> joblet.RuntimeTestRes
-	57, // 91: joblet.RuntimeService.InstallRuntimeFromGithub:output_type -> joblet.InstallRuntimeResponse
-	57, // 92: joblet.RuntimeService.InstallRuntimeFromLocal:output_type -> joblet.InstallRuntimeResponse
-	16, // 93: joblet.RuntimeService.StreamingInstallRuntimeFromGithub:output_type -> joblet.RuntimeInstallationChunk
-	16, // 94: joblet.RuntimeService.StreamingInstallRuntimeFromLocal:output_type -> joblet.RuntimeInstallationChunk
-	61, // 95: joblet.RuntimeService.ValidateRuntimeSpec:output_type -> joblet.ValidateRuntimeSpecResponse
-	63, // 96: joblet.RuntimeService.RemoveRuntime:output_type -> joblet.RuntimeRemoveRes
-	70, // [70:97] is the sub-list for method output_type
-	43, // [43:70] is the sub-list for method input_type
-	43, // [43:43] is the sub-list for extension type_name
-	43, // [43:43] is the sub-list for extension extendee
-	0,  // [0:43] is the sub-list for field type_name
+	71, // 39: joblet.VisibilityEvent.exec:type_name -> joblet.VisibilityExecData
+	72, // 40: joblet.VisibilityEvent.connect:type_name -> joblet.VisibilityConnectData
+	73, // 41: joblet.VisibilityEvent.accept:type_name -> joblet.VisibilityAcceptData
+	74, // 42: joblet.VisibilityEvent.file:type_name -> joblet.VisibilityFileData
+	75, // 43: joblet.VisibilityEvent.mmap:type_name -> joblet.VisibilityMmapData
+	76, // 44: joblet.VisibilityEvent.mprotect:type_name -> joblet.VisibilityMprotectData
+	77, // 45: joblet.VisibilityEvent.socket_data:type_name -> joblet.VisibilitySocketDataData
+	53, // 46: joblet.JobService.RunJob:input_type -> joblet.RunJobRequest
+	4,  // 47: joblet.JobService.GetJobStatus:input_type -> joblet.GetJobStatusReq
+	6,  // 48: joblet.JobService.StopJob:input_type -> joblet.StopJobReq
+	8,  // 49: joblet.JobService.CancelJob:input_type -> joblet.CancelJobReq
+	10, // 50: joblet.JobService.DeleteJob:input_type -> joblet.DeleteJobReq
+	12, // 51: joblet.JobService.DeleteAllJobs:input_type -> joblet.DeleteAllJobsReq
+	14, // 52: joblet.JobService.GetJobLogs:input_type -> joblet.GetJobLogsReq
+	2,  // 53: joblet.JobService.ListJobs:input_type -> joblet.EmptyRequest
+	65, // 54: joblet.JobService.StreamJobMetrics:input_type -> joblet.StreamJobMetricsRequest
+	66, // 55: joblet.JobService.GetJobMetrics:input_type -> joblet.GetJobMetricsRequest
+	68, // 56: joblet.JobService.StreamJobVisibility:input_type -> joblet.StreamJobVisibilityRequest
+	69, // 57: joblet.JobService.GetJobVisibility:input_type -> joblet.GetJobVisibilityRequest
+	20, // 58: joblet.NetworkService.CreateNetwork:input_type -> joblet.CreateNetworkReq
+	2,  // 59: joblet.NetworkService.ListNetworks:input_type -> joblet.EmptyRequest
+	22, // 60: joblet.NetworkService.RemoveNetwork:input_type -> joblet.RemoveNetworkReq
+	26, // 61: joblet.VolumeService.CreateVolume:input_type -> joblet.CreateVolumeReq
+	2,  // 62: joblet.VolumeService.ListVolumes:input_type -> joblet.EmptyRequest
+	28, // 63: joblet.VolumeService.RemoveVolume:input_type -> joblet.RemoveVolumeReq
+	2,  // 64: joblet.MonitoringService.GetSystemStatus:input_type -> joblet.EmptyRequest
+	34, // 65: joblet.MonitoringService.StreamSystemMetrics:input_type -> joblet.StreamMetricsReq
+	2,  // 66: joblet.RuntimeService.ListRuntimes:input_type -> joblet.EmptyRequest
+	49, // 67: joblet.RuntimeService.GetRuntimeInfo:input_type -> joblet.RuntimeInfoReq
+	51, // 68: joblet.RuntimeService.TestRuntime:input_type -> joblet.RuntimeTestReq
+	56, // 69: joblet.RuntimeService.InstallRuntimeFromGithub:input_type -> joblet.InstallRuntimeRequest
+	58, // 70: joblet.RuntimeService.InstallRuntimeFromLocal:input_type -> joblet.InstallRuntimeFromLocalRequest
+	56, // 71: joblet.RuntimeService.StreamingInstallRuntimeFromGithub:input_type -> joblet.InstallRuntimeRequest
+	58, // 72: joblet.RuntimeService.StreamingInstallRuntimeFromLocal:input_type -> joblet.InstallRuntimeFromLocalRequest
+	60, // 73: joblet.RuntimeService.ValidateRuntimeSpec:input_type -> joblet.ValidateRuntimeSpecRequest
+	62, // 74: joblet.RuntimeService.RemoveRuntime:input_type -> joblet.RuntimeRemoveReq
+	54, // 75: joblet.JobService.RunJob:output_type -> joblet.RunJobResponse
+	5,  // 76: joblet.JobService.GetJobStatus:output_type -> joblet.GetJobStatusRes
+	7,  // 77: joblet.JobService.StopJob:output_type -> joblet.StopJobRes
+	9,  // 78: joblet.JobService.CancelJob:output_type -> joblet.CancelJobRes
+	11, // 79: joblet.JobService.DeleteJob:output_type -> joblet.DeleteJobRes
+	13, // 80: joblet.JobService.DeleteAllJobs:output_type -> joblet.DeleteAllJobsRes
+	15, // 81: joblet.JobService.GetJobLogs:output_type -> joblet.DataChunk
+	0,  // 82: joblet.JobService.ListJobs:output_type -> joblet.Jobs
+	67, // 83: joblet.JobService.StreamJobMetrics:output_type -> joblet.JobMetricsEvent
+	67, // 84: joblet.JobService.GetJobMetrics:output_type -> joblet.JobMetricsEvent
+	70, // 85: joblet.JobService.StreamJobVisibility:output_type -> joblet.VisibilityEvent
+	70, // 86: joblet.JobService.GetJobVisibility:output_type -> joblet.VisibilityEvent
+	21, // 87: joblet.NetworkService.CreateNetwork:output_type -> joblet.CreateNetworkRes
+	25, // 88: joblet.NetworkService.ListNetworks:output_type -> joblet.Networks
+	23, // 89: joblet.NetworkService.RemoveNetwork:output_type -> joblet.RemoveNetworkRes
+	27, // 90: joblet.VolumeService.CreateVolume:output_type -> joblet.CreateVolumeRes
+	31, // 91: joblet.VolumeService.ListVolumes:output_type -> joblet.Volumes
+	29, // 92: joblet.VolumeService.RemoveVolume:output_type -> joblet.RemoveVolumeRes
+	32, // 93: joblet.MonitoringService.GetSystemStatus:output_type -> joblet.SystemStatusRes
+	33, // 94: joblet.MonitoringService.StreamSystemMetrics:output_type -> joblet.SystemMetricsRes
+	46, // 95: joblet.RuntimeService.ListRuntimes:output_type -> joblet.RuntimesRes
+	50, // 96: joblet.RuntimeService.GetRuntimeInfo:output_type -> joblet.RuntimeInfoRes
+	52, // 97: joblet.RuntimeService.TestRuntime:output_type -> joblet.RuntimeTestRes
+	57, // 98: joblet.RuntimeService.InstallRuntimeFromGithub:output_type -> joblet.InstallRuntimeResponse
+	57, // 99: joblet.RuntimeService.InstallRuntimeFromLocal:output_type -> joblet.InstallRuntimeResponse
+	16, // 100: joblet.RuntimeService.StreamingInstallRuntimeFromGithub:output_type -> joblet.RuntimeInstallationChunk
+	16, // 101: joblet.RuntimeService.StreamingInstallRuntimeFromLocal:output_type -> joblet.RuntimeInstallationChunk
+	61, // 102: joblet.RuntimeService.ValidateRuntimeSpec:output_type -> joblet.ValidateRuntimeSpecResponse
+	63, // 103: joblet.RuntimeService.RemoveRuntime:output_type -> joblet.RuntimeRemoveRes
+	75, // [75:104] is the sub-list for method output_type
+	46, // [46:75] is the sub-list for method input_type
+	46, // [46:46] is the sub-list for extension type_name
+	46, // [46:46] is the sub-list for extension extendee
+	0,  // [0:46] is the sub-list for field type_name
 }
 
 func init() { file_joblet_proto_init() }
@@ -6344,11 +6928,14 @@ func file_joblet_proto_init() {
 		(*RuntimeInstallationChunk_Log)(nil),
 		(*RuntimeInstallationChunk_Result)(nil),
 	}
-	file_joblet_proto_msgTypes[67].OneofWrappers = []any{
-		(*TelemetryEvent_Metrics)(nil),
-		(*TelemetryEvent_Exec)(nil),
-		(*TelemetryEvent_Connect)(nil),
-		(*TelemetryEvent_File)(nil),
+	file_joblet_proto_msgTypes[70].OneofWrappers = []any{
+		(*VisibilityEvent_Exec)(nil),
+		(*VisibilityEvent_Connect)(nil),
+		(*VisibilityEvent_Accept)(nil),
+		(*VisibilityEvent_File)(nil),
+		(*VisibilityEvent_Mmap)(nil),
+		(*VisibilityEvent_Mprotect)(nil),
+		(*VisibilityEvent_SocketData)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -6356,7 +6943,7 @@ func file_joblet_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_joblet_proto_rawDesc), len(file_joblet_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   79,
+			NumMessages:   85,
 			NumExtensions: 0,
 			NumServices:   5,
 		},

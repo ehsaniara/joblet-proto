@@ -16,11 +16,17 @@ service JobService {
   rpc GetJobLogs(GetJobLogsReq) returns (stream DataChunk);
   rpc ListJobs(EmptyRequest) returns (Jobs){}
 
-  // Unified telemetry (metrics + eBPF activity events)
-  // Stream live telemetry for a running job
-  rpc StreamJobTelemetry(StreamTelemetryRequest) returns (stream TelemetryEvent){}
-  // Get historical telemetry for a completed job
-  rpc GetJobTelemetry(GetTelemetryRequest) returns (stream TelemetryEvent){}
+  // Job Metrics (resource usage from cgroups - sampled every 5s)
+  // Stream live metrics for a running job
+  rpc StreamJobMetrics(StreamJobMetricsRequest) returns (stream JobMetricsEvent){}
+  // Get historical metrics for a completed job
+  rpc GetJobMetrics(GetJobMetricsRequest) returns (stream JobMetricsEvent){}
+
+  // Job Visibility (eBPF security events - event-driven)
+  // Stream live visibility events for a running job
+  rpc StreamJobVisibility(StreamJobVisibilityRequest) returns (stream VisibilityEvent){}
+  // Get historical visibility events for a completed job
+  rpc GetJobVisibility(GetJobVisibilityRequest) returns (stream VisibilityEvent){}
 }
 
 // Network service
@@ -596,74 +602,137 @@ message RuntimeSpecInfo {
 }
 
 // =============================================================================
-// Unified Telemetry Messages (Metrics + eBPF Activity Events)
+// Job Metrics Messages (Resource Usage - Time-based Sampling)
 // =============================================================================
 
-// Request to stream live telemetry for a running job
-message StreamTelemetryRequest {
+// Request to stream live metrics for a running job
+message StreamJobMetricsRequest {
   string job_uuid = 1;             // Job UUID identifier
-  repeated string types = 2;       // Filter by types: ["metrics", "exec", "connect", "file"] or empty for all
 }
 
-// Request to get historical telemetry for a completed job
-message GetTelemetryRequest {
+// Request to get historical metrics for a completed job
+message GetJobMetricsRequest {
   string job_uuid = 1;             // Job UUID identifier
-  repeated string types = 2;       // Filter by types: ["metrics", "exec", "connect", "file"] or empty for all
+  int64 start_time = 2;            // Start time in Unix nanoseconds (0 = beginning)
+  int64 end_time = 3;              // End time in Unix nanoseconds (0 = now)
+  int32 limit = 4;                 // Maximum events to return (0 = no limit)
+}
+
+// Job metrics event (resource usage from cgroups v2)
+message JobMetricsEvent {
+  int64 timestamp = 1;             // Unix timestamp in nanoseconds
+  string job_id = 2;               // Job UUID
+  double cpu_percent = 3;          // CPU usage percentage
+  int64 memory_bytes = 4;          // Current memory usage in bytes
+  int64 memory_limit = 5;          // Memory limit in bytes
+  int64 disk_read_bytes = 6;       // Total disk bytes read
+  int64 disk_write_bytes = 7;      // Total disk bytes written
+  int64 net_recv_bytes = 8;        // Total network bytes received
+  int64 net_sent_bytes = 9;        // Total network bytes sent
+  double gpu_percent = 10;         // GPU utilization percentage (0 if no GPU)
+  int64 gpu_memory_bytes = 11;     // GPU memory usage in bytes (0 if no GPU)
+}
+
+// =============================================================================
+// Job Visibility Messages (eBPF Security Events - Event-driven)
+// =============================================================================
+
+// Request to stream live visibility events for a running job
+message StreamJobVisibilityRequest {
+  string job_uuid = 1;             // Job UUID identifier
+  repeated string types = 2;       // Filter by types: ["exec", "connect", "accept", "file", "mmap", "mprotect"] or empty for all
+}
+
+// Request to get historical visibility events for a completed job
+message GetJobVisibilityRequest {
+  string job_uuid = 1;             // Job UUID identifier
+  repeated string types = 2;       // Filter by types: ["exec", "connect", "accept", "file", "mmap", "mprotect"] or empty for all
   int64 start_time = 3;            // Start time in Unix nanoseconds (0 = beginning)
   int64 end_time = 4;              // End time in Unix nanoseconds (0 = now)
   int32 limit = 5;                 // Maximum events to return (0 = no limit)
 }
 
-// Unified telemetry event containing either metrics or activity data
-message TelemetryEvent {
+// Visibility event from eBPF tracing
+message VisibilityEvent {
   int64 timestamp = 1;             // Unix timestamp in nanoseconds
   string job_id = 2;               // Job UUID
-  string type = 3;                 // Event type: "metrics", "exec", "connect", "file"
+  string type = 3;                 // Event type: "exec", "connect", "accept", "file", "mmap", "mprotect"
 
   oneof data {
-    TelemetryMetricsData metrics = 10;
-    TelemetryExecData exec = 11;
-    TelemetryConnectData connect = 12;
-    TelemetryFileData file = 13;
+    VisibilityExecData exec = 10;
+    VisibilityConnectData connect = 11;
+    VisibilityAcceptData accept = 12;
+    VisibilityFileData file = 13;
+    VisibilityMmapData mmap = 14;
+    VisibilityMprotectData mprotect = 15;
+    VisibilitySocketDataData socket_data = 16;
   }
 }
 
-// Metrics data from cgroups v2 (periodic sampling)
-message TelemetryMetricsData {
-  double cpu_percent = 1;          // CPU usage percentage
-  int64 memory_bytes = 2;          // Current memory usage in bytes
-  int64 memory_limit = 3;          // Memory limit in bytes
-  int64 disk_read_bytes = 4;       // Total disk bytes read
-  int64 disk_write_bytes = 5;      // Total disk bytes written
-  int64 net_recv_bytes = 6;        // Total network bytes received
-  int64 net_sent_bytes = 7;        // Total network bytes sent
-  double gpu_percent = 8;          // GPU utilization percentage (0 if no GPU)
-  int64 gpu_memory_bytes = 9;      // GPU memory usage in bytes (0 if no GPU)
-}
-
-// Process execution event from eBPF (execve tracing)
-message TelemetryExecData {
+// Process execution event (execve syscall)
+message VisibilityExecData {
   uint32 pid = 1;                  // Process ID
-  string binary = 2;               // Binary path (e.g., "/usr/bin/python")
-  repeated string args = 3;        // Command arguments
-  int32 exit_code = 4;             // Exit code (only set on process exit)
-  uint32 ppid = 5;                 // Parent process ID
+  uint32 ppid = 2;                 // Parent process ID
+  string binary = 3;               // Binary path (e.g., "/usr/bin/python")
+  repeated string args = 4;        // Command arguments
+  int32 exit_code = 5;             // Exit code (only set on process exit)
 }
 
-// Network connection event from eBPF (connect tracing)
-message TelemetryConnectData {
+// Outgoing network connection event (connect syscall)
+message VisibilityConnectData {
   uint32 pid = 1;                  // Process ID that initiated connection
-  string address = 2;              // Remote IP address (IPv4 or IPv6)
-  uint32 port = 3;                 // Remote port number
+  string dst_addr = 2;             // Destination IP address (IPv4 or IPv6)
+  uint32 dst_port = 3;             // Destination port number
   string protocol = 4;             // Protocol: "tcp" or "udp"
-  string local_address = 5;        // Local IP address (optional)
-  uint32 local_port = 6;           // Local port number (optional)
+  string src_addr = 5;             // Source IP address
+  uint32 src_port = 6;             // Source port number
 }
 
-// File access event from eBPF (open/read/write tracing)
-message TelemetryFileData {
+// Incoming connection accept event (accept syscall)
+message VisibilityAcceptData {
+  uint32 pid = 1;                  // Server process ID
+  string src_addr = 2;             // Client IP address
+  uint32 src_port = 3;             // Client port
+  string dst_addr = 4;             // Server IP address
+  uint32 dst_port = 5;             // Server port (listening port)
+  string protocol = 6;             // Protocol: "tcp"
+}
+
+// File access event (open/read/write syscalls)
+message VisibilityFileData {
   uint32 pid = 1;                  // Process ID
   string path = 2;                 // File path
-  string operation = 3;            // Operation: "read", "write", "create", "delete"
+  string operation = 3;            // Operation: "open", "read", "write", "create", "delete"
   int64 bytes = 4;                 // Bytes read/written (if applicable)
+  uint32 flags = 5;                // Open flags
+}
+
+// Memory mapping event (mmap syscall)
+message VisibilityMmapData {
+  uint32 pid = 1;                  // Process ID
+  uint64 addr = 2;                 // Mapped address
+  uint64 length = 3;               // Mapping length
+  uint32 prot = 4;                 // Protection flags (PROT_READ|PROT_WRITE|PROT_EXEC)
+  uint32 flags = 5;                // Mapping flags (MAP_SHARED|MAP_PRIVATE|etc)
+  string file_path = 6;            // File path if file-backed mapping
+}
+
+// Memory protection change event (mprotect syscall)
+message VisibilityMprotectData {
+  uint32 pid = 1;                  // Process ID
+  uint64 addr = 2;                 // Start address
+  uint64 length = 3;               // Length of region
+  uint32 prot = 4;                 // New protection flags
+}
+
+// Socket data event (sendto/recvfrom syscalls)
+message VisibilitySocketDataData {
+  uint32 pid = 1;                  // Process ID
+  string direction = 2;            // "send" or "recv"
+  string dst_addr = 3;             // Remote address
+  uint32 dst_port = 4;             // Remote port
+  string src_addr = 5;             // Local address
+  uint32 src_port = 6;             // Local port
+  string protocol = 7;             // Protocol: "tcp" or "udp"
+  int64 bytes = 8;                 // Bytes sent/received
 }
