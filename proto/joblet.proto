@@ -22,11 +22,11 @@ service JobService {
   // Get historical metrics for a completed job
   rpc GetJobMetrics(GetJobMetricsRequest) returns (stream JobMetricsEvent){}
 
-  // Job Visibility (eBPF security events - event-driven)
-  // Stream live visibility events for a running job
-  rpc StreamJobVisibility(StreamJobVisibilityRequest) returns (stream VisibilityEvent){}
-  // Get historical visibility events for a completed job
-  rpc GetJobVisibility(GetJobVisibilityRequest) returns (stream VisibilityEvent){}
+  // Job Telematics (eBPF security events - event-driven)
+  // Stream live telematics events for a running job
+  rpc StreamJobTelematics(StreamJobTelematicsRequest) returns (stream TelematicsEvent){}
+  // Get historical telematics events for a completed job
+  rpc GetJobTelematics(GetJobTelematicsRequest) returns (stream TelematicsEvent){}
 }
 
 // Network service
@@ -634,17 +634,17 @@ message JobMetricsEvent {
 }
 
 // =============================================================================
-// Job Visibility Messages (eBPF Security Events - Event-driven)
+// Job Telematics Messages (eBPF Security Events - Event-driven)
 // =============================================================================
 
-// Request to stream live visibility events for a running job
-message StreamJobVisibilityRequest {
+// Request to stream live telematics events for a running job
+message StreamJobTelematicsRequest {
   string job_uuid = 1;             // Job UUID identifier
   repeated string types = 2;       // Filter by types: ["exec", "connect", "accept", "file", "mmap", "mprotect"] or empty for all
 }
 
-// Request to get historical visibility events for a completed job
-message GetJobVisibilityRequest {
+// Request to get historical telematics events for a completed job
+message GetJobTelematicsRequest {
   string job_uuid = 1;             // Job UUID identifier
   repeated string types = 2;       // Filter by types: ["exec", "connect", "accept", "file", "mmap", "mprotect"] or empty for all
   int64 start_time = 3;            // Start time in Unix nanoseconds (0 = beginning)
@@ -652,25 +652,25 @@ message GetJobVisibilityRequest {
   int32 limit = 5;                 // Maximum events to return (0 = no limit)
 }
 
-// Visibility event from eBPF tracing
-message VisibilityEvent {
+// Telematics event from eBPF tracing
+message TelematicsEvent {
   int64 timestamp = 1;             // Unix timestamp in nanoseconds
   string job_id = 2;               // Job UUID
   string type = 3;                 // Event type: "exec", "connect", "accept", "file", "mmap", "mprotect"
 
   oneof data {
-    VisibilityExecData exec = 10;
-    VisibilityConnectData connect = 11;
-    VisibilityAcceptData accept = 12;
-    VisibilityFileData file = 13;
-    VisibilityMmapData mmap = 14;
-    VisibilityMprotectData mprotect = 15;
-    VisibilitySocketDataData socket_data = 16;
+    TelematicsExecData exec = 10;
+    TelematicsConnectData connect = 11;
+    TelematicsAcceptData accept = 12;
+    TelematicsFileData file = 13;
+    TelematicsMmapData mmap = 14;
+    TelematicsMprotectData mprotect = 15;
+    TelematicsSocketDataData socket_data = 16;
   }
 }
 
 // Process execution event (execve syscall)
-message VisibilityExecData {
+message TelematicsExecData {
   uint32 pid = 1;                  // Process ID
   uint32 ppid = 2;                 // Parent process ID
   string binary = 3;               // Binary path (e.g., "/usr/bin/python")
@@ -679,7 +679,7 @@ message VisibilityExecData {
 }
 
 // Outgoing network connection event (connect syscall)
-message VisibilityConnectData {
+message TelematicsConnectData {
   uint32 pid = 1;                  // Process ID that initiated connection
   string dst_addr = 2;             // Destination IP address (IPv4 or IPv6)
   uint32 dst_port = 3;             // Destination port number
@@ -689,7 +689,7 @@ message VisibilityConnectData {
 }
 
 // Incoming connection accept event (accept syscall)
-message VisibilityAcceptData {
+message TelematicsAcceptData {
   uint32 pid = 1;                  // Server process ID
   string src_addr = 2;             // Client IP address
   uint32 src_port = 3;             // Client port
@@ -699,7 +699,7 @@ message VisibilityAcceptData {
 }
 
 // File access event (open/read/write syscalls)
-message VisibilityFileData {
+message TelematicsFileData {
   uint32 pid = 1;                  // Process ID
   string path = 2;                 // File path
   string operation = 3;            // Operation: "open", "read", "write", "create", "delete"
@@ -708,7 +708,7 @@ message VisibilityFileData {
 }
 
 // Memory mapping event (mmap syscall)
-message VisibilityMmapData {
+message TelematicsMmapData {
   uint32 pid = 1;                  // Process ID
   uint64 addr = 2;                 // Mapped address
   uint64 length = 3;               // Mapping length
@@ -718,7 +718,7 @@ message VisibilityMmapData {
 }
 
 // Memory protection change event (mprotect syscall)
-message VisibilityMprotectData {
+message TelematicsMprotectData {
   uint32 pid = 1;                  // Process ID
   uint64 addr = 2;                 // Start address
   uint64 length = 3;               // Length of region
@@ -726,7 +726,7 @@ message VisibilityMprotectData {
 }
 
 // Socket data event (sendto/recvfrom syscalls)
-message VisibilitySocketDataData {
+message TelematicsSocketDataData {
   uint32 pid = 1;                  // Process ID
   string direction = 2;            // "send" or "recv"
   string dst_addr = 3;             // Remote address

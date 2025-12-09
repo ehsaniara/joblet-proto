@@ -29,8 +29,8 @@ const (
 	JobService_ListJobs_FullMethodName            = "/joblet.JobService/ListJobs"
 	JobService_StreamJobMetrics_FullMethodName    = "/joblet.JobService/StreamJobMetrics"
 	JobService_GetJobMetrics_FullMethodName       = "/joblet.JobService/GetJobMetrics"
-	JobService_StreamJobVisibility_FullMethodName = "/joblet.JobService/StreamJobVisibility"
-	JobService_GetJobVisibility_FullMethodName    = "/joblet.JobService/GetJobVisibility"
+	JobService_StreamJobTelematics_FullMethodName = "/joblet.JobService/StreamJobTelematics"
+	JobService_GetJobTelematics_FullMethodName    = "/joblet.JobService/GetJobTelematics"
 )
 
 // JobServiceClient is the client API for JobService service.
@@ -53,11 +53,11 @@ type JobServiceClient interface {
 	StreamJobMetrics(ctx context.Context, in *StreamJobMetricsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[JobMetricsEvent], error)
 	// Get historical metrics for a completed job
 	GetJobMetrics(ctx context.Context, in *GetJobMetricsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[JobMetricsEvent], error)
-	// Job Visibility (eBPF security events - event-driven)
-	// Stream live visibility events for a running job
-	StreamJobVisibility(ctx context.Context, in *StreamJobVisibilityRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[VisibilityEvent], error)
-	// Get historical visibility events for a completed job
-	GetJobVisibility(ctx context.Context, in *GetJobVisibilityRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[VisibilityEvent], error)
+	// Job Telematics (eBPF security events - event-driven)
+	// Stream live telematics events for a running job
+	StreamJobTelematics(ctx context.Context, in *StreamJobTelematicsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[TelematicsEvent], error)
+	// Get historical telematics events for a completed job
+	GetJobTelematics(ctx context.Context, in *GetJobTelematicsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[TelematicsEvent], error)
 }
 
 type jobServiceClient struct {
@@ -195,13 +195,13 @@ func (c *jobServiceClient) GetJobMetrics(ctx context.Context, in *GetJobMetricsR
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type JobService_GetJobMetricsClient = grpc.ServerStreamingClient[JobMetricsEvent]
 
-func (c *jobServiceClient) StreamJobVisibility(ctx context.Context, in *StreamJobVisibilityRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[VisibilityEvent], error) {
+func (c *jobServiceClient) StreamJobTelematics(ctx context.Context, in *StreamJobTelematicsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[TelematicsEvent], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &JobService_ServiceDesc.Streams[3], JobService_StreamJobVisibility_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &JobService_ServiceDesc.Streams[3], JobService_StreamJobTelematics_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &grpc.GenericClientStream[StreamJobVisibilityRequest, VisibilityEvent]{ClientStream: stream}
+	x := &grpc.GenericClientStream[StreamJobTelematicsRequest, TelematicsEvent]{ClientStream: stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -212,15 +212,15 @@ func (c *jobServiceClient) StreamJobVisibility(ctx context.Context, in *StreamJo
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type JobService_StreamJobVisibilityClient = grpc.ServerStreamingClient[VisibilityEvent]
+type JobService_StreamJobTelematicsClient = grpc.ServerStreamingClient[TelematicsEvent]
 
-func (c *jobServiceClient) GetJobVisibility(ctx context.Context, in *GetJobVisibilityRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[VisibilityEvent], error) {
+func (c *jobServiceClient) GetJobTelematics(ctx context.Context, in *GetJobTelematicsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[TelematicsEvent], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &JobService_ServiceDesc.Streams[4], JobService_GetJobVisibility_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &JobService_ServiceDesc.Streams[4], JobService_GetJobTelematics_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &grpc.GenericClientStream[GetJobVisibilityRequest, VisibilityEvent]{ClientStream: stream}
+	x := &grpc.GenericClientStream[GetJobTelematicsRequest, TelematicsEvent]{ClientStream: stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -231,7 +231,7 @@ func (c *jobServiceClient) GetJobVisibility(ctx context.Context, in *GetJobVisib
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type JobService_GetJobVisibilityClient = grpc.ServerStreamingClient[VisibilityEvent]
+type JobService_GetJobTelematicsClient = grpc.ServerStreamingClient[TelematicsEvent]
 
 // JobServiceServer is the server API for JobService service.
 // All implementations must embed UnimplementedJobServiceServer
@@ -253,11 +253,11 @@ type JobServiceServer interface {
 	StreamJobMetrics(*StreamJobMetricsRequest, grpc.ServerStreamingServer[JobMetricsEvent]) error
 	// Get historical metrics for a completed job
 	GetJobMetrics(*GetJobMetricsRequest, grpc.ServerStreamingServer[JobMetricsEvent]) error
-	// Job Visibility (eBPF security events - event-driven)
-	// Stream live visibility events for a running job
-	StreamJobVisibility(*StreamJobVisibilityRequest, grpc.ServerStreamingServer[VisibilityEvent]) error
-	// Get historical visibility events for a completed job
-	GetJobVisibility(*GetJobVisibilityRequest, grpc.ServerStreamingServer[VisibilityEvent]) error
+	// Job Telematics (eBPF security events - event-driven)
+	// Stream live telematics events for a running job
+	StreamJobTelematics(*StreamJobTelematicsRequest, grpc.ServerStreamingServer[TelematicsEvent]) error
+	// Get historical telematics events for a completed job
+	GetJobTelematics(*GetJobTelematicsRequest, grpc.ServerStreamingServer[TelematicsEvent]) error
 	mustEmbedUnimplementedJobServiceServer()
 }
 
@@ -298,11 +298,11 @@ func (UnimplementedJobServiceServer) StreamJobMetrics(*StreamJobMetricsRequest, 
 func (UnimplementedJobServiceServer) GetJobMetrics(*GetJobMetricsRequest, grpc.ServerStreamingServer[JobMetricsEvent]) error {
 	return status.Errorf(codes.Unimplemented, "method GetJobMetrics not implemented")
 }
-func (UnimplementedJobServiceServer) StreamJobVisibility(*StreamJobVisibilityRequest, grpc.ServerStreamingServer[VisibilityEvent]) error {
-	return status.Errorf(codes.Unimplemented, "method StreamJobVisibility not implemented")
+func (UnimplementedJobServiceServer) StreamJobTelematics(*StreamJobTelematicsRequest, grpc.ServerStreamingServer[TelematicsEvent]) error {
+	return status.Errorf(codes.Unimplemented, "method StreamJobTelematics not implemented")
 }
-func (UnimplementedJobServiceServer) GetJobVisibility(*GetJobVisibilityRequest, grpc.ServerStreamingServer[VisibilityEvent]) error {
-	return status.Errorf(codes.Unimplemented, "method GetJobVisibility not implemented")
+func (UnimplementedJobServiceServer) GetJobTelematics(*GetJobTelematicsRequest, grpc.ServerStreamingServer[TelematicsEvent]) error {
+	return status.Errorf(codes.Unimplemented, "method GetJobTelematics not implemented")
 }
 func (UnimplementedJobServiceServer) mustEmbedUnimplementedJobServiceServer() {}
 func (UnimplementedJobServiceServer) testEmbeddedByValue()                    {}
@@ -484,27 +484,27 @@ func _JobService_GetJobMetrics_Handler(srv interface{}, stream grpc.ServerStream
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type JobService_GetJobMetricsServer = grpc.ServerStreamingServer[JobMetricsEvent]
 
-func _JobService_StreamJobVisibility_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(StreamJobVisibilityRequest)
+func _JobService_StreamJobTelematics_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(StreamJobTelematicsRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(JobServiceServer).StreamJobVisibility(m, &grpc.GenericServerStream[StreamJobVisibilityRequest, VisibilityEvent]{ServerStream: stream})
+	return srv.(JobServiceServer).StreamJobTelematics(m, &grpc.GenericServerStream[StreamJobTelematicsRequest, TelematicsEvent]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type JobService_StreamJobVisibilityServer = grpc.ServerStreamingServer[VisibilityEvent]
+type JobService_StreamJobTelematicsServer = grpc.ServerStreamingServer[TelematicsEvent]
 
-func _JobService_GetJobVisibility_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(GetJobVisibilityRequest)
+func _JobService_GetJobTelematics_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetJobTelematicsRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(JobServiceServer).GetJobVisibility(m, &grpc.GenericServerStream[GetJobVisibilityRequest, VisibilityEvent]{ServerStream: stream})
+	return srv.(JobServiceServer).GetJobTelematics(m, &grpc.GenericServerStream[GetJobTelematicsRequest, TelematicsEvent]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type JobService_GetJobVisibilityServer = grpc.ServerStreamingServer[VisibilityEvent]
+type JobService_GetJobTelematicsServer = grpc.ServerStreamingServer[TelematicsEvent]
 
 // JobService_ServiceDesc is the grpc.ServiceDesc for JobService service.
 // It's only intended for direct use with grpc.RegisterService,
@@ -559,13 +559,13 @@ var JobService_ServiceDesc = grpc.ServiceDesc{
 			ServerStreams: true,
 		},
 		{
-			StreamName:    "StreamJobVisibility",
-			Handler:       _JobService_StreamJobVisibility_Handler,
+			StreamName:    "StreamJobTelematics",
+			Handler:       _JobService_StreamJobTelematics_Handler,
 			ServerStreams: true,
 		},
 		{
-			StreamName:    "GetJobVisibility",
-			Handler:       _JobService_GetJobVisibility_Handler,
+			StreamName:    "GetJobTelematics",
+			Handler:       _JobService_GetJobTelematics_Handler,
 			ServerStreams: true,
 		},
 	},

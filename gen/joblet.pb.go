@@ -5210,8 +5210,8 @@ func (x *JobMetricsEvent) GetGpuMemoryBytes() int64 {
 	return 0
 }
 
-// Request to stream live visibility events for a running job
-type StreamJobVisibilityRequest struct {
+// Request to stream live telematics events for a running job
+type StreamJobTelematicsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	JobUuid       string                 `protobuf:"bytes,1,opt,name=job_uuid,json=jobUuid,proto3" json:"job_uuid,omitempty"` // Job UUID identifier
 	Types         []string               `protobuf:"bytes,2,rep,name=types,proto3" json:"types,omitempty"`                    // Filter by types: ["exec", "connect", "accept", "file", "mmap", "mprotect"] or empty for all
@@ -5219,20 +5219,20 @@ type StreamJobVisibilityRequest struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *StreamJobVisibilityRequest) Reset() {
-	*x = StreamJobVisibilityRequest{}
+func (x *StreamJobTelematicsRequest) Reset() {
+	*x = StreamJobTelematicsRequest{}
 	mi := &file_joblet_proto_msgTypes[68]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *StreamJobVisibilityRequest) String() string {
+func (x *StreamJobTelematicsRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*StreamJobVisibilityRequest) ProtoMessage() {}
+func (*StreamJobTelematicsRequest) ProtoMessage() {}
 
-func (x *StreamJobVisibilityRequest) ProtoReflect() protoreflect.Message {
+func (x *StreamJobTelematicsRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[68]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -5244,27 +5244,27 @@ func (x *StreamJobVisibilityRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use StreamJobVisibilityRequest.ProtoReflect.Descriptor instead.
-func (*StreamJobVisibilityRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use StreamJobTelematicsRequest.ProtoReflect.Descriptor instead.
+func (*StreamJobTelematicsRequest) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{68}
 }
 
-func (x *StreamJobVisibilityRequest) GetJobUuid() string {
+func (x *StreamJobTelematicsRequest) GetJobUuid() string {
 	if x != nil {
 		return x.JobUuid
 	}
 	return ""
 }
 
-func (x *StreamJobVisibilityRequest) GetTypes() []string {
+func (x *StreamJobTelematicsRequest) GetTypes() []string {
 	if x != nil {
 		return x.Types
 	}
 	return nil
 }
 
-// Request to get historical visibility events for a completed job
-type GetJobVisibilityRequest struct {
+// Request to get historical telematics events for a completed job
+type GetJobTelematicsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	JobUuid       string                 `protobuf:"bytes,1,opt,name=job_uuid,json=jobUuid,proto3" json:"job_uuid,omitempty"`        // Job UUID identifier
 	Types         []string               `protobuf:"bytes,2,rep,name=types,proto3" json:"types,omitempty"`                           // Filter by types: ["exec", "connect", "accept", "file", "mmap", "mprotect"] or empty for all
@@ -5275,20 +5275,20 @@ type GetJobVisibilityRequest struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetJobVisibilityRequest) Reset() {
-	*x = GetJobVisibilityRequest{}
+func (x *GetJobTelematicsRequest) Reset() {
+	*x = GetJobTelematicsRequest{}
 	mi := &file_joblet_proto_msgTypes[69]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetJobVisibilityRequest) String() string {
+func (x *GetJobTelematicsRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetJobVisibilityRequest) ProtoMessage() {}
+func (*GetJobTelematicsRequest) ProtoMessage() {}
 
-func (x *GetJobVisibilityRequest) ProtoReflect() protoreflect.Message {
+func (x *GetJobTelematicsRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[69]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -5300,80 +5300,80 @@ func (x *GetJobVisibilityRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetJobVisibilityRequest.ProtoReflect.Descriptor instead.
-func (*GetJobVisibilityRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetJobTelematicsRequest.ProtoReflect.Descriptor instead.
+func (*GetJobTelematicsRequest) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{69}
 }
 
-func (x *GetJobVisibilityRequest) GetJobUuid() string {
+func (x *GetJobTelematicsRequest) GetJobUuid() string {
 	if x != nil {
 		return x.JobUuid
 	}
 	return ""
 }
 
-func (x *GetJobVisibilityRequest) GetTypes() []string {
+func (x *GetJobTelematicsRequest) GetTypes() []string {
 	if x != nil {
 		return x.Types
 	}
 	return nil
 }
 
-func (x *GetJobVisibilityRequest) GetStartTime() int64 {
+func (x *GetJobTelematicsRequest) GetStartTime() int64 {
 	if x != nil {
 		return x.StartTime
 	}
 	return 0
 }
 
-func (x *GetJobVisibilityRequest) GetEndTime() int64 {
+func (x *GetJobTelematicsRequest) GetEndTime() int64 {
 	if x != nil {
 		return x.EndTime
 	}
 	return 0
 }
 
-func (x *GetJobVisibilityRequest) GetLimit() int32 {
+func (x *GetJobTelematicsRequest) GetLimit() int32 {
 	if x != nil {
 		return x.Limit
 	}
 	return 0
 }
 
-// Visibility event from eBPF tracing
-type VisibilityEvent struct {
+// Telematics event from eBPF tracing
+type TelematicsEvent struct {
 	state     protoimpl.MessageState `protogen:"open.v1"`
 	Timestamp int64                  `protobuf:"varint,1,opt,name=timestamp,proto3" json:"timestamp,omitempty"`     // Unix timestamp in nanoseconds
 	JobId     string                 `protobuf:"bytes,2,opt,name=job_id,json=jobId,proto3" json:"job_id,omitempty"` // Job UUID
 	Type      string                 `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`                // Event type: "exec", "connect", "accept", "file", "mmap", "mprotect"
 	// Types that are valid to be assigned to Data:
 	//
-	//	*VisibilityEvent_Exec
-	//	*VisibilityEvent_Connect
-	//	*VisibilityEvent_Accept
-	//	*VisibilityEvent_File
-	//	*VisibilityEvent_Mmap
-	//	*VisibilityEvent_Mprotect
-	//	*VisibilityEvent_SocketData
-	Data          isVisibilityEvent_Data `protobuf_oneof:"data"`
+	//	*TelematicsEvent_Exec
+	//	*TelematicsEvent_Connect
+	//	*TelematicsEvent_Accept
+	//	*TelematicsEvent_File
+	//	*TelematicsEvent_Mmap
+	//	*TelematicsEvent_Mprotect
+	//	*TelematicsEvent_SocketData
+	Data          isTelematicsEvent_Data `protobuf_oneof:"data"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *VisibilityEvent) Reset() {
-	*x = VisibilityEvent{}
+func (x *TelematicsEvent) Reset() {
+	*x = TelematicsEvent{}
 	mi := &file_joblet_proto_msgTypes[70]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *VisibilityEvent) String() string {
+func (x *TelematicsEvent) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*VisibilityEvent) ProtoMessage() {}
+func (*TelematicsEvent) ProtoMessage() {}
 
-func (x *VisibilityEvent) ProtoReflect() protoreflect.Message {
+func (x *TelematicsEvent) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[70]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -5385,150 +5385,150 @@ func (x *VisibilityEvent) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use VisibilityEvent.ProtoReflect.Descriptor instead.
-func (*VisibilityEvent) Descriptor() ([]byte, []int) {
+// Deprecated: Use TelematicsEvent.ProtoReflect.Descriptor instead.
+func (*TelematicsEvent) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{70}
 }
 
-func (x *VisibilityEvent) GetTimestamp() int64 {
+func (x *TelematicsEvent) GetTimestamp() int64 {
 	if x != nil {
 		return x.Timestamp
 	}
 	return 0
 }
 
-func (x *VisibilityEvent) GetJobId() string {
+func (x *TelematicsEvent) GetJobId() string {
 	if x != nil {
 		return x.JobId
 	}
 	return ""
 }
 
-func (x *VisibilityEvent) GetType() string {
+func (x *TelematicsEvent) GetType() string {
 	if x != nil {
 		return x.Type
 	}
 	return ""
 }
 
-func (x *VisibilityEvent) GetData() isVisibilityEvent_Data {
+func (x *TelematicsEvent) GetData() isTelematicsEvent_Data {
 	if x != nil {
 		return x.Data
 	}
 	return nil
 }
 
-func (x *VisibilityEvent) GetExec() *VisibilityExecData {
+func (x *TelematicsEvent) GetExec() *TelematicsExecData {
 	if x != nil {
-		if x, ok := x.Data.(*VisibilityEvent_Exec); ok {
+		if x, ok := x.Data.(*TelematicsEvent_Exec); ok {
 			return x.Exec
 		}
 	}
 	return nil
 }
 
-func (x *VisibilityEvent) GetConnect() *VisibilityConnectData {
+func (x *TelematicsEvent) GetConnect() *TelematicsConnectData {
 	if x != nil {
-		if x, ok := x.Data.(*VisibilityEvent_Connect); ok {
+		if x, ok := x.Data.(*TelematicsEvent_Connect); ok {
 			return x.Connect
 		}
 	}
 	return nil
 }
 
-func (x *VisibilityEvent) GetAccept() *VisibilityAcceptData {
+func (x *TelematicsEvent) GetAccept() *TelematicsAcceptData {
 	if x != nil {
-		if x, ok := x.Data.(*VisibilityEvent_Accept); ok {
+		if x, ok := x.Data.(*TelematicsEvent_Accept); ok {
 			return x.Accept
 		}
 	}
 	return nil
 }
 
-func (x *VisibilityEvent) GetFile() *VisibilityFileData {
+func (x *TelematicsEvent) GetFile() *TelematicsFileData {
 	if x != nil {
-		if x, ok := x.Data.(*VisibilityEvent_File); ok {
+		if x, ok := x.Data.(*TelematicsEvent_File); ok {
 			return x.File
 		}
 	}
 	return nil
 }
 
-func (x *VisibilityEvent) GetMmap() *VisibilityMmapData {
+func (x *TelematicsEvent) GetMmap() *TelematicsMmapData {
 	if x != nil {
-		if x, ok := x.Data.(*VisibilityEvent_Mmap); ok {
+		if x, ok := x.Data.(*TelematicsEvent_Mmap); ok {
 			return x.Mmap
 		}
 	}
 	return nil
 }
 
-func (x *VisibilityEvent) GetMprotect() *VisibilityMprotectData {
+func (x *TelematicsEvent) GetMprotect() *TelematicsMprotectData {
 	if x != nil {
-		if x, ok := x.Data.(*VisibilityEvent_Mprotect); ok {
+		if x, ok := x.Data.(*TelematicsEvent_Mprotect); ok {
 			return x.Mprotect
 		}
 	}
 	return nil
 }
 
-func (x *VisibilityEvent) GetSocketData() *VisibilitySocketDataData {
+func (x *TelematicsEvent) GetSocketData() *TelematicsSocketDataData {
 	if x != nil {
-		if x, ok := x.Data.(*VisibilityEvent_SocketData); ok {
+		if x, ok := x.Data.(*TelematicsEvent_SocketData); ok {
 			return x.SocketData
 		}
 	}
 	return nil
 }
 
-type isVisibilityEvent_Data interface {
-	isVisibilityEvent_Data()
+type isTelematicsEvent_Data interface {
+	isTelematicsEvent_Data()
 }
 
-type VisibilityEvent_Exec struct {
-	Exec *VisibilityExecData `protobuf:"bytes,10,opt,name=exec,proto3,oneof"`
+type TelematicsEvent_Exec struct {
+	Exec *TelematicsExecData `protobuf:"bytes,10,opt,name=exec,proto3,oneof"`
 }
 
-type VisibilityEvent_Connect struct {
-	Connect *VisibilityConnectData `protobuf:"bytes,11,opt,name=connect,proto3,oneof"`
+type TelematicsEvent_Connect struct {
+	Connect *TelematicsConnectData `protobuf:"bytes,11,opt,name=connect,proto3,oneof"`
 }
 
-type VisibilityEvent_Accept struct {
-	Accept *VisibilityAcceptData `protobuf:"bytes,12,opt,name=accept,proto3,oneof"`
+type TelematicsEvent_Accept struct {
+	Accept *TelematicsAcceptData `protobuf:"bytes,12,opt,name=accept,proto3,oneof"`
 }
 
-type VisibilityEvent_File struct {
-	File *VisibilityFileData `protobuf:"bytes,13,opt,name=file,proto3,oneof"`
+type TelematicsEvent_File struct {
+	File *TelematicsFileData `protobuf:"bytes,13,opt,name=file,proto3,oneof"`
 }
 
-type VisibilityEvent_Mmap struct {
-	Mmap *VisibilityMmapData `protobuf:"bytes,14,opt,name=mmap,proto3,oneof"`
+type TelematicsEvent_Mmap struct {
+	Mmap *TelematicsMmapData `protobuf:"bytes,14,opt,name=mmap,proto3,oneof"`
 }
 
-type VisibilityEvent_Mprotect struct {
-	Mprotect *VisibilityMprotectData `protobuf:"bytes,15,opt,name=mprotect,proto3,oneof"`
+type TelematicsEvent_Mprotect struct {
+	Mprotect *TelematicsMprotectData `protobuf:"bytes,15,opt,name=mprotect,proto3,oneof"`
 }
 
-type VisibilityEvent_SocketData struct {
-	SocketData *VisibilitySocketDataData `protobuf:"bytes,16,opt,name=socket_data,json=socketData,proto3,oneof"`
+type TelematicsEvent_SocketData struct {
+	SocketData *TelematicsSocketDataData `protobuf:"bytes,16,opt,name=socket_data,json=socketData,proto3,oneof"`
 }
 
-func (*VisibilityEvent_Exec) isVisibilityEvent_Data() {}
+func (*TelematicsEvent_Exec) isTelematicsEvent_Data() {}
 
-func (*VisibilityEvent_Connect) isVisibilityEvent_Data() {}
+func (*TelematicsEvent_Connect) isTelematicsEvent_Data() {}
 
-func (*VisibilityEvent_Accept) isVisibilityEvent_Data() {}
+func (*TelematicsEvent_Accept) isTelematicsEvent_Data() {}
 
-func (*VisibilityEvent_File) isVisibilityEvent_Data() {}
+func (*TelematicsEvent_File) isTelematicsEvent_Data() {}
 
-func (*VisibilityEvent_Mmap) isVisibilityEvent_Data() {}
+func (*TelematicsEvent_Mmap) isTelematicsEvent_Data() {}
 
-func (*VisibilityEvent_Mprotect) isVisibilityEvent_Data() {}
+func (*TelematicsEvent_Mprotect) isTelematicsEvent_Data() {}
 
-func (*VisibilityEvent_SocketData) isVisibilityEvent_Data() {}
+func (*TelematicsEvent_SocketData) isTelematicsEvent_Data() {}
 
 // Process execution event (execve syscall)
-type VisibilityExecData struct {
+type TelematicsExecData struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Pid           uint32                 `protobuf:"varint,1,opt,name=pid,proto3" json:"pid,omitempty"`                           // Process ID
 	Ppid          uint32                 `protobuf:"varint,2,opt,name=ppid,proto3" json:"ppid,omitempty"`                         // Parent process ID
@@ -5539,20 +5539,20 @@ type VisibilityExecData struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *VisibilityExecData) Reset() {
-	*x = VisibilityExecData{}
+func (x *TelematicsExecData) Reset() {
+	*x = TelematicsExecData{}
 	mi := &file_joblet_proto_msgTypes[71]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *VisibilityExecData) String() string {
+func (x *TelematicsExecData) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*VisibilityExecData) ProtoMessage() {}
+func (*TelematicsExecData) ProtoMessage() {}
 
-func (x *VisibilityExecData) ProtoReflect() protoreflect.Message {
+func (x *TelematicsExecData) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[71]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -5564,40 +5564,40 @@ func (x *VisibilityExecData) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use VisibilityExecData.ProtoReflect.Descriptor instead.
-func (*VisibilityExecData) Descriptor() ([]byte, []int) {
+// Deprecated: Use TelematicsExecData.ProtoReflect.Descriptor instead.
+func (*TelematicsExecData) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{71}
 }
 
-func (x *VisibilityExecData) GetPid() uint32 {
+func (x *TelematicsExecData) GetPid() uint32 {
 	if x != nil {
 		return x.Pid
 	}
 	return 0
 }
 
-func (x *VisibilityExecData) GetPpid() uint32 {
+func (x *TelematicsExecData) GetPpid() uint32 {
 	if x != nil {
 		return x.Ppid
 	}
 	return 0
 }
 
-func (x *VisibilityExecData) GetBinary() string {
+func (x *TelematicsExecData) GetBinary() string {
 	if x != nil {
 		return x.Binary
 	}
 	return ""
 }
 
-func (x *VisibilityExecData) GetArgs() []string {
+func (x *TelematicsExecData) GetArgs() []string {
 	if x != nil {
 		return x.Args
 	}
 	return nil
 }
 
-func (x *VisibilityExecData) GetExitCode() int32 {
+func (x *TelematicsExecData) GetExitCode() int32 {
 	if x != nil {
 		return x.ExitCode
 	}
@@ -5605,7 +5605,7 @@ func (x *VisibilityExecData) GetExitCode() int32 {
 }
 
 // Outgoing network connection event (connect syscall)
-type VisibilityConnectData struct {
+type TelematicsConnectData struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Pid           uint32                 `protobuf:"varint,1,opt,name=pid,proto3" json:"pid,omitempty"`                        // Process ID that initiated connection
 	DstAddr       string                 `protobuf:"bytes,2,opt,name=dst_addr,json=dstAddr,proto3" json:"dst_addr,omitempty"`  // Destination IP address (IPv4 or IPv6)
@@ -5617,20 +5617,20 @@ type VisibilityConnectData struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *VisibilityConnectData) Reset() {
-	*x = VisibilityConnectData{}
+func (x *TelematicsConnectData) Reset() {
+	*x = TelematicsConnectData{}
 	mi := &file_joblet_proto_msgTypes[72]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *VisibilityConnectData) String() string {
+func (x *TelematicsConnectData) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*VisibilityConnectData) ProtoMessage() {}
+func (*TelematicsConnectData) ProtoMessage() {}
 
-func (x *VisibilityConnectData) ProtoReflect() protoreflect.Message {
+func (x *TelematicsConnectData) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[72]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -5642,47 +5642,47 @@ func (x *VisibilityConnectData) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use VisibilityConnectData.ProtoReflect.Descriptor instead.
-func (*VisibilityConnectData) Descriptor() ([]byte, []int) {
+// Deprecated: Use TelematicsConnectData.ProtoReflect.Descriptor instead.
+func (*TelematicsConnectData) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{72}
 }
 
-func (x *VisibilityConnectData) GetPid() uint32 {
+func (x *TelematicsConnectData) GetPid() uint32 {
 	if x != nil {
 		return x.Pid
 	}
 	return 0
 }
 
-func (x *VisibilityConnectData) GetDstAddr() string {
+func (x *TelematicsConnectData) GetDstAddr() string {
 	if x != nil {
 		return x.DstAddr
 	}
 	return ""
 }
 
-func (x *VisibilityConnectData) GetDstPort() uint32 {
+func (x *TelematicsConnectData) GetDstPort() uint32 {
 	if x != nil {
 		return x.DstPort
 	}
 	return 0
 }
 
-func (x *VisibilityConnectData) GetProtocol() string {
+func (x *TelematicsConnectData) GetProtocol() string {
 	if x != nil {
 		return x.Protocol
 	}
 	return ""
 }
 
-func (x *VisibilityConnectData) GetSrcAddr() string {
+func (x *TelematicsConnectData) GetSrcAddr() string {
 	if x != nil {
 		return x.SrcAddr
 	}
 	return ""
 }
 
-func (x *VisibilityConnectData) GetSrcPort() uint32 {
+func (x *TelematicsConnectData) GetSrcPort() uint32 {
 	if x != nil {
 		return x.SrcPort
 	}
@@ -5690,7 +5690,7 @@ func (x *VisibilityConnectData) GetSrcPort() uint32 {
 }
 
 // Incoming connection accept event (accept syscall)
-type VisibilityAcceptData struct {
+type TelematicsAcceptData struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Pid           uint32                 `protobuf:"varint,1,opt,name=pid,proto3" json:"pid,omitempty"`                        // Server process ID
 	SrcAddr       string                 `protobuf:"bytes,2,opt,name=src_addr,json=srcAddr,proto3" json:"src_addr,omitempty"`  // Client IP address
@@ -5702,20 +5702,20 @@ type VisibilityAcceptData struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *VisibilityAcceptData) Reset() {
-	*x = VisibilityAcceptData{}
+func (x *TelematicsAcceptData) Reset() {
+	*x = TelematicsAcceptData{}
 	mi := &file_joblet_proto_msgTypes[73]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *VisibilityAcceptData) String() string {
+func (x *TelematicsAcceptData) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*VisibilityAcceptData) ProtoMessage() {}
+func (*TelematicsAcceptData) ProtoMessage() {}
 
-func (x *VisibilityAcceptData) ProtoReflect() protoreflect.Message {
+func (x *TelematicsAcceptData) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[73]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -5727,47 +5727,47 @@ func (x *VisibilityAcceptData) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use VisibilityAcceptData.ProtoReflect.Descriptor instead.
-func (*VisibilityAcceptData) Descriptor() ([]byte, []int) {
+// Deprecated: Use TelematicsAcceptData.ProtoReflect.Descriptor instead.
+func (*TelematicsAcceptData) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{73}
 }
 
-func (x *VisibilityAcceptData) GetPid() uint32 {
+func (x *TelematicsAcceptData) GetPid() uint32 {
 	if x != nil {
 		return x.Pid
 	}
 	return 0
 }
 
-func (x *VisibilityAcceptData) GetSrcAddr() string {
+func (x *TelematicsAcceptData) GetSrcAddr() string {
 	if x != nil {
 		return x.SrcAddr
 	}
 	return ""
 }
 
-func (x *VisibilityAcceptData) GetSrcPort() uint32 {
+func (x *TelematicsAcceptData) GetSrcPort() uint32 {
 	if x != nil {
 		return x.SrcPort
 	}
 	return 0
 }
 
-func (x *VisibilityAcceptData) GetDstAddr() string {
+func (x *TelematicsAcceptData) GetDstAddr() string {
 	if x != nil {
 		return x.DstAddr
 	}
 	return ""
 }
 
-func (x *VisibilityAcceptData) GetDstPort() uint32 {
+func (x *TelematicsAcceptData) GetDstPort() uint32 {
 	if x != nil {
 		return x.DstPort
 	}
 	return 0
 }
 
-func (x *VisibilityAcceptData) GetProtocol() string {
+func (x *TelematicsAcceptData) GetProtocol() string {
 	if x != nil {
 		return x.Protocol
 	}
@@ -5775,7 +5775,7 @@ func (x *VisibilityAcceptData) GetProtocol() string {
 }
 
 // File access event (open/read/write syscalls)
-type VisibilityFileData struct {
+type TelematicsFileData struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Pid           uint32                 `protobuf:"varint,1,opt,name=pid,proto3" json:"pid,omitempty"`            // Process ID
 	Path          string                 `protobuf:"bytes,2,opt,name=path,proto3" json:"path,omitempty"`           // File path
@@ -5786,20 +5786,20 @@ type VisibilityFileData struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *VisibilityFileData) Reset() {
-	*x = VisibilityFileData{}
+func (x *TelematicsFileData) Reset() {
+	*x = TelematicsFileData{}
 	mi := &file_joblet_proto_msgTypes[74]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *VisibilityFileData) String() string {
+func (x *TelematicsFileData) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*VisibilityFileData) ProtoMessage() {}
+func (*TelematicsFileData) ProtoMessage() {}
 
-func (x *VisibilityFileData) ProtoReflect() protoreflect.Message {
+func (x *TelematicsFileData) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[74]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -5811,40 +5811,40 @@ func (x *VisibilityFileData) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use VisibilityFileData.ProtoReflect.Descriptor instead.
-func (*VisibilityFileData) Descriptor() ([]byte, []int) {
+// Deprecated: Use TelematicsFileData.ProtoReflect.Descriptor instead.
+func (*TelematicsFileData) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{74}
 }
 
-func (x *VisibilityFileData) GetPid() uint32 {
+func (x *TelematicsFileData) GetPid() uint32 {
 	if x != nil {
 		return x.Pid
 	}
 	return 0
 }
 
-func (x *VisibilityFileData) GetPath() string {
+func (x *TelematicsFileData) GetPath() string {
 	if x != nil {
 		return x.Path
 	}
 	return ""
 }
 
-func (x *VisibilityFileData) GetOperation() string {
+func (x *TelematicsFileData) GetOperation() string {
 	if x != nil {
 		return x.Operation
 	}
 	return ""
 }
 
-func (x *VisibilityFileData) GetBytes() int64 {
+func (x *TelematicsFileData) GetBytes() int64 {
 	if x != nil {
 		return x.Bytes
 	}
 	return 0
 }
 
-func (x *VisibilityFileData) GetFlags() uint32 {
+func (x *TelematicsFileData) GetFlags() uint32 {
 	if x != nil {
 		return x.Flags
 	}
@@ -5852,7 +5852,7 @@ func (x *VisibilityFileData) GetFlags() uint32 {
 }
 
 // Memory mapping event (mmap syscall)
-type VisibilityMmapData struct {
+type TelematicsMmapData struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Pid           uint32                 `protobuf:"varint,1,opt,name=pid,proto3" json:"pid,omitempty"`                          // Process ID
 	Addr          uint64                 `protobuf:"varint,2,opt,name=addr,proto3" json:"addr,omitempty"`                        // Mapped address
@@ -5864,20 +5864,20 @@ type VisibilityMmapData struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *VisibilityMmapData) Reset() {
-	*x = VisibilityMmapData{}
+func (x *TelematicsMmapData) Reset() {
+	*x = TelematicsMmapData{}
 	mi := &file_joblet_proto_msgTypes[75]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *VisibilityMmapData) String() string {
+func (x *TelematicsMmapData) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*VisibilityMmapData) ProtoMessage() {}
+func (*TelematicsMmapData) ProtoMessage() {}
 
-func (x *VisibilityMmapData) ProtoReflect() protoreflect.Message {
+func (x *TelematicsMmapData) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[75]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -5889,47 +5889,47 @@ func (x *VisibilityMmapData) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use VisibilityMmapData.ProtoReflect.Descriptor instead.
-func (*VisibilityMmapData) Descriptor() ([]byte, []int) {
+// Deprecated: Use TelematicsMmapData.ProtoReflect.Descriptor instead.
+func (*TelematicsMmapData) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{75}
 }
 
-func (x *VisibilityMmapData) GetPid() uint32 {
+func (x *TelematicsMmapData) GetPid() uint32 {
 	if x != nil {
 		return x.Pid
 	}
 	return 0
 }
 
-func (x *VisibilityMmapData) GetAddr() uint64 {
+func (x *TelematicsMmapData) GetAddr() uint64 {
 	if x != nil {
 		return x.Addr
 	}
 	return 0
 }
 
-func (x *VisibilityMmapData) GetLength() uint64 {
+func (x *TelematicsMmapData) GetLength() uint64 {
 	if x != nil {
 		return x.Length
 	}
 	return 0
 }
 
-func (x *VisibilityMmapData) GetProt() uint32 {
+func (x *TelematicsMmapData) GetProt() uint32 {
 	if x != nil {
 		return x.Prot
 	}
 	return 0
 }
 
-func (x *VisibilityMmapData) GetFlags() uint32 {
+func (x *TelematicsMmapData) GetFlags() uint32 {
 	if x != nil {
 		return x.Flags
 	}
 	return 0
 }
 
-func (x *VisibilityMmapData) GetFilePath() string {
+func (x *TelematicsMmapData) GetFilePath() string {
 	if x != nil {
 		return x.FilePath
 	}
@@ -5937,7 +5937,7 @@ func (x *VisibilityMmapData) GetFilePath() string {
 }
 
 // Memory protection change event (mprotect syscall)
-type VisibilityMprotectData struct {
+type TelematicsMprotectData struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Pid           uint32                 `protobuf:"varint,1,opt,name=pid,proto3" json:"pid,omitempty"`       // Process ID
 	Addr          uint64                 `protobuf:"varint,2,opt,name=addr,proto3" json:"addr,omitempty"`     // Start address
@@ -5947,20 +5947,20 @@ type VisibilityMprotectData struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *VisibilityMprotectData) Reset() {
-	*x = VisibilityMprotectData{}
+func (x *TelematicsMprotectData) Reset() {
+	*x = TelematicsMprotectData{}
 	mi := &file_joblet_proto_msgTypes[76]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *VisibilityMprotectData) String() string {
+func (x *TelematicsMprotectData) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*VisibilityMprotectData) ProtoMessage() {}
+func (*TelematicsMprotectData) ProtoMessage() {}
 
-func (x *VisibilityMprotectData) ProtoReflect() protoreflect.Message {
+func (x *TelematicsMprotectData) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[76]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -5972,33 +5972,33 @@ func (x *VisibilityMprotectData) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use VisibilityMprotectData.ProtoReflect.Descriptor instead.
-func (*VisibilityMprotectData) Descriptor() ([]byte, []int) {
+// Deprecated: Use TelematicsMprotectData.ProtoReflect.Descriptor instead.
+func (*TelematicsMprotectData) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{76}
 }
 
-func (x *VisibilityMprotectData) GetPid() uint32 {
+func (x *TelematicsMprotectData) GetPid() uint32 {
 	if x != nil {
 		return x.Pid
 	}
 	return 0
 }
 
-func (x *VisibilityMprotectData) GetAddr() uint64 {
+func (x *TelematicsMprotectData) GetAddr() uint64 {
 	if x != nil {
 		return x.Addr
 	}
 	return 0
 }
 
-func (x *VisibilityMprotectData) GetLength() uint64 {
+func (x *TelematicsMprotectData) GetLength() uint64 {
 	if x != nil {
 		return x.Length
 	}
 	return 0
 }
 
-func (x *VisibilityMprotectData) GetProt() uint32 {
+func (x *TelematicsMprotectData) GetProt() uint32 {
 	if x != nil {
 		return x.Prot
 	}
@@ -6006,7 +6006,7 @@ func (x *VisibilityMprotectData) GetProt() uint32 {
 }
 
 // Socket data event (sendto/recvfrom syscalls)
-type VisibilitySocketDataData struct {
+type TelematicsSocketDataData struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Pid           uint32                 `protobuf:"varint,1,opt,name=pid,proto3" json:"pid,omitempty"`                        // Process ID
 	Direction     string                 `protobuf:"bytes,2,opt,name=direction,proto3" json:"direction,omitempty"`             // "send" or "recv"
@@ -6020,20 +6020,20 @@ type VisibilitySocketDataData struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *VisibilitySocketDataData) Reset() {
-	*x = VisibilitySocketDataData{}
+func (x *TelematicsSocketDataData) Reset() {
+	*x = TelematicsSocketDataData{}
 	mi := &file_joblet_proto_msgTypes[77]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *VisibilitySocketDataData) String() string {
+func (x *TelematicsSocketDataData) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*VisibilitySocketDataData) ProtoMessage() {}
+func (*TelematicsSocketDataData) ProtoMessage() {}
 
-func (x *VisibilitySocketDataData) ProtoReflect() protoreflect.Message {
+func (x *TelematicsSocketDataData) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[77]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -6045,61 +6045,61 @@ func (x *VisibilitySocketDataData) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use VisibilitySocketDataData.ProtoReflect.Descriptor instead.
-func (*VisibilitySocketDataData) Descriptor() ([]byte, []int) {
+// Deprecated: Use TelematicsSocketDataData.ProtoReflect.Descriptor instead.
+func (*TelematicsSocketDataData) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{77}
 }
 
-func (x *VisibilitySocketDataData) GetPid() uint32 {
+func (x *TelematicsSocketDataData) GetPid() uint32 {
 	if x != nil {
 		return x.Pid
 	}
 	return 0
 }
 
-func (x *VisibilitySocketDataData) GetDirection() string {
+func (x *TelematicsSocketDataData) GetDirection() string {
 	if x != nil {
 		return x.Direction
 	}
 	return ""
 }
 
-func (x *VisibilitySocketDataData) GetDstAddr() string {
+func (x *TelematicsSocketDataData) GetDstAddr() string {
 	if x != nil {
 		return x.DstAddr
 	}
 	return ""
 }
 
-func (x *VisibilitySocketDataData) GetDstPort() uint32 {
+func (x *TelematicsSocketDataData) GetDstPort() uint32 {
 	if x != nil {
 		return x.DstPort
 	}
 	return 0
 }
 
-func (x *VisibilitySocketDataData) GetSrcAddr() string {
+func (x *TelematicsSocketDataData) GetSrcAddr() string {
 	if x != nil {
 		return x.SrcAddr
 	}
 	return ""
 }
 
-func (x *VisibilitySocketDataData) GetSrcPort() uint32 {
+func (x *TelematicsSocketDataData) GetSrcPort() uint32 {
 	if x != nil {
 		return x.SrcPort
 	}
 	return 0
 }
 
-func (x *VisibilitySocketDataData) GetProtocol() string {
+func (x *TelematicsSocketDataData) GetProtocol() string {
 	if x != nil {
 		return x.Protocol
 	}
 	return ""
 }
 
-func (x *VisibilitySocketDataData) GetBytes() int64 {
+func (x *TelematicsSocketDataData) GetBytes() int64 {
 	if x != nil {
 		return x.Bytes
 	}
@@ -6598,69 +6598,69 @@ const file_joblet_proto_rawDesc = "" +
 	" \x01(\x01R\n" +
 	"gpuPercent\x12(\n" +
 	"\x10gpu_memory_bytes\x18\v \x01(\x03R\x0egpuMemoryBytes\"M\n" +
-	"\x1aStreamJobVisibilityRequest\x12\x19\n" +
+	"\x1aStreamJobTelematicsRequest\x12\x19\n" +
 	"\bjob_uuid\x18\x01 \x01(\tR\ajobUuid\x12\x14\n" +
 	"\x05types\x18\x02 \x03(\tR\x05types\"\x9a\x01\n" +
-	"\x17GetJobVisibilityRequest\x12\x19\n" +
+	"\x17GetJobTelematicsRequest\x12\x19\n" +
 	"\bjob_uuid\x18\x01 \x01(\tR\ajobUuid\x12\x14\n" +
 	"\x05types\x18\x02 \x03(\tR\x05types\x12\x1d\n" +
 	"\n" +
 	"start_time\x18\x03 \x01(\x03R\tstartTime\x12\x19\n" +
 	"\bend_time\x18\x04 \x01(\x03R\aendTime\x12\x14\n" +
 	"\x05limit\x18\x05 \x01(\x05R\x05limit\"\xee\x03\n" +
-	"\x0fVisibilityEvent\x12\x1c\n" +
+	"\x0fTelematicsEvent\x12\x1c\n" +
 	"\ttimestamp\x18\x01 \x01(\x03R\ttimestamp\x12\x15\n" +
 	"\x06job_id\x18\x02 \x01(\tR\x05jobId\x12\x12\n" +
 	"\x04type\x18\x03 \x01(\tR\x04type\x120\n" +
 	"\x04exec\x18\n" +
-	" \x01(\v2\x1a.joblet.VisibilityExecDataH\x00R\x04exec\x129\n" +
-	"\aconnect\x18\v \x01(\v2\x1d.joblet.VisibilityConnectDataH\x00R\aconnect\x126\n" +
-	"\x06accept\x18\f \x01(\v2\x1c.joblet.VisibilityAcceptDataH\x00R\x06accept\x120\n" +
-	"\x04file\x18\r \x01(\v2\x1a.joblet.VisibilityFileDataH\x00R\x04file\x120\n" +
-	"\x04mmap\x18\x0e \x01(\v2\x1a.joblet.VisibilityMmapDataH\x00R\x04mmap\x12<\n" +
-	"\bmprotect\x18\x0f \x01(\v2\x1e.joblet.VisibilityMprotectDataH\x00R\bmprotect\x12C\n" +
-	"\vsocket_data\x18\x10 \x01(\v2 .joblet.VisibilitySocketDataDataH\x00R\n" +
+	" \x01(\v2\x1a.joblet.TelematicsExecDataH\x00R\x04exec\x129\n" +
+	"\aconnect\x18\v \x01(\v2\x1d.joblet.TelematicsConnectDataH\x00R\aconnect\x126\n" +
+	"\x06accept\x18\f \x01(\v2\x1c.joblet.TelematicsAcceptDataH\x00R\x06accept\x120\n" +
+	"\x04file\x18\r \x01(\v2\x1a.joblet.TelematicsFileDataH\x00R\x04file\x120\n" +
+	"\x04mmap\x18\x0e \x01(\v2\x1a.joblet.TelematicsMmapDataH\x00R\x04mmap\x12<\n" +
+	"\bmprotect\x18\x0f \x01(\v2\x1e.joblet.TelematicsMprotectDataH\x00R\bmprotect\x12C\n" +
+	"\vsocket_data\x18\x10 \x01(\v2 .joblet.TelematicsSocketDataDataH\x00R\n" +
 	"socketDataB\x06\n" +
 	"\x04data\"\x83\x01\n" +
-	"\x12VisibilityExecData\x12\x10\n" +
+	"\x12TelematicsExecData\x12\x10\n" +
 	"\x03pid\x18\x01 \x01(\rR\x03pid\x12\x12\n" +
 	"\x04ppid\x18\x02 \x01(\rR\x04ppid\x12\x16\n" +
 	"\x06binary\x18\x03 \x01(\tR\x06binary\x12\x12\n" +
 	"\x04args\x18\x04 \x03(\tR\x04args\x12\x1b\n" +
 	"\texit_code\x18\x05 \x01(\x05R\bexitCode\"\xb1\x01\n" +
-	"\x15VisibilityConnectData\x12\x10\n" +
+	"\x15TelematicsConnectData\x12\x10\n" +
 	"\x03pid\x18\x01 \x01(\rR\x03pid\x12\x19\n" +
 	"\bdst_addr\x18\x02 \x01(\tR\adstAddr\x12\x19\n" +
 	"\bdst_port\x18\x03 \x01(\rR\adstPort\x12\x1a\n" +
 	"\bprotocol\x18\x04 \x01(\tR\bprotocol\x12\x19\n" +
 	"\bsrc_addr\x18\x05 \x01(\tR\asrcAddr\x12\x19\n" +
 	"\bsrc_port\x18\x06 \x01(\rR\asrcPort\"\xb0\x01\n" +
-	"\x14VisibilityAcceptData\x12\x10\n" +
+	"\x14TelematicsAcceptData\x12\x10\n" +
 	"\x03pid\x18\x01 \x01(\rR\x03pid\x12\x19\n" +
 	"\bsrc_addr\x18\x02 \x01(\tR\asrcAddr\x12\x19\n" +
 	"\bsrc_port\x18\x03 \x01(\rR\asrcPort\x12\x19\n" +
 	"\bdst_addr\x18\x04 \x01(\tR\adstAddr\x12\x19\n" +
 	"\bdst_port\x18\x05 \x01(\rR\adstPort\x12\x1a\n" +
 	"\bprotocol\x18\x06 \x01(\tR\bprotocol\"\x84\x01\n" +
-	"\x12VisibilityFileData\x12\x10\n" +
+	"\x12TelematicsFileData\x12\x10\n" +
 	"\x03pid\x18\x01 \x01(\rR\x03pid\x12\x12\n" +
 	"\x04path\x18\x02 \x01(\tR\x04path\x12\x1c\n" +
 	"\toperation\x18\x03 \x01(\tR\toperation\x12\x14\n" +
 	"\x05bytes\x18\x04 \x01(\x03R\x05bytes\x12\x14\n" +
 	"\x05flags\x18\x05 \x01(\rR\x05flags\"\x99\x01\n" +
-	"\x12VisibilityMmapData\x12\x10\n" +
+	"\x12TelematicsMmapData\x12\x10\n" +
 	"\x03pid\x18\x01 \x01(\rR\x03pid\x12\x12\n" +
 	"\x04addr\x18\x02 \x01(\x04R\x04addr\x12\x16\n" +
 	"\x06length\x18\x03 \x01(\x04R\x06length\x12\x12\n" +
 	"\x04prot\x18\x04 \x01(\rR\x04prot\x12\x14\n" +
 	"\x05flags\x18\x05 \x01(\rR\x05flags\x12\x1b\n" +
 	"\tfile_path\x18\x06 \x01(\tR\bfilePath\"j\n" +
-	"\x16VisibilityMprotectData\x12\x10\n" +
+	"\x16TelematicsMprotectData\x12\x10\n" +
 	"\x03pid\x18\x01 \x01(\rR\x03pid\x12\x12\n" +
 	"\x04addr\x18\x02 \x01(\x04R\x04addr\x12\x16\n" +
 	"\x06length\x18\x03 \x01(\x04R\x06length\x12\x12\n" +
 	"\x04prot\x18\x04 \x01(\rR\x04prot\"\xe8\x01\n" +
-	"\x18VisibilitySocketDataData\x12\x10\n" +
+	"\x18TelematicsSocketDataData\x12\x10\n" +
 	"\x03pid\x18\x01 \x01(\rR\x03pid\x12\x1c\n" +
 	"\tdirection\x18\x02 \x01(\tR\tdirection\x12\x19\n" +
 	"\bdst_addr\x18\x03 \x01(\tR\adstAddr\x12\x19\n" +
@@ -6682,8 +6682,8 @@ const file_joblet_proto_rawDesc = "" +
 	"\bListJobs\x12\x14.joblet.EmptyRequest\x1a\f.joblet.Jobs\"\x00\x12P\n" +
 	"\x10StreamJobMetrics\x12\x1f.joblet.StreamJobMetricsRequest\x1a\x17.joblet.JobMetricsEvent\"\x000\x01\x12J\n" +
 	"\rGetJobMetrics\x12\x1c.joblet.GetJobMetricsRequest\x1a\x17.joblet.JobMetricsEvent\"\x000\x01\x12V\n" +
-	"\x13StreamJobVisibility\x12\".joblet.StreamJobVisibilityRequest\x1a\x17.joblet.VisibilityEvent\"\x000\x01\x12P\n" +
-	"\x10GetJobVisibility\x12\x1f.joblet.GetJobVisibilityRequest\x1a\x17.joblet.VisibilityEvent\"\x000\x012\xd8\x01\n" +
+	"\x13StreamJobTelematics\x12\".joblet.StreamJobTelematicsRequest\x1a\x17.joblet.TelematicsEvent\"\x000\x01\x12P\n" +
+	"\x10GetJobTelematics\x12\x1f.joblet.GetJobTelematicsRequest\x1a\x17.joblet.TelematicsEvent\"\x000\x012\xd8\x01\n" +
 	"\x0eNetworkService\x12E\n" +
 	"\rCreateNetwork\x12\x18.joblet.CreateNetworkReq\x1a\x18.joblet.CreateNetworkRes\"\x00\x128\n" +
 	"\fListNetworks\x12\x14.joblet.EmptyRequest\x1a\x10.joblet.Networks\"\x00\x12E\n" +
@@ -6788,16 +6788,16 @@ var file_joblet_proto_goTypes = []any{
 	(*StreamJobMetricsRequest)(nil),        // 65: joblet.StreamJobMetricsRequest
 	(*GetJobMetricsRequest)(nil),           // 66: joblet.GetJobMetricsRequest
 	(*JobMetricsEvent)(nil),                // 67: joblet.JobMetricsEvent
-	(*StreamJobVisibilityRequest)(nil),     // 68: joblet.StreamJobVisibilityRequest
-	(*GetJobVisibilityRequest)(nil),        // 69: joblet.GetJobVisibilityRequest
-	(*VisibilityEvent)(nil),                // 70: joblet.VisibilityEvent
-	(*VisibilityExecData)(nil),             // 71: joblet.VisibilityExecData
-	(*VisibilityConnectData)(nil),          // 72: joblet.VisibilityConnectData
-	(*VisibilityAcceptData)(nil),           // 73: joblet.VisibilityAcceptData
-	(*VisibilityFileData)(nil),             // 74: joblet.VisibilityFileData
-	(*VisibilityMmapData)(nil),             // 75: joblet.VisibilityMmapData
-	(*VisibilityMprotectData)(nil),         // 76: joblet.VisibilityMprotectData
-	(*VisibilitySocketDataData)(nil),       // 77: joblet.VisibilitySocketDataData
+	(*StreamJobTelematicsRequest)(nil),     // 68: joblet.StreamJobTelematicsRequest
+	(*GetJobTelematicsRequest)(nil),        // 69: joblet.GetJobTelematicsRequest
+	(*TelematicsEvent)(nil),                // 70: joblet.TelematicsEvent
+	(*TelematicsExecData)(nil),             // 71: joblet.TelematicsExecData
+	(*TelematicsConnectData)(nil),          // 72: joblet.TelematicsConnectData
+	(*TelematicsAcceptData)(nil),           // 73: joblet.TelematicsAcceptData
+	(*TelematicsFileData)(nil),             // 74: joblet.TelematicsFileData
+	(*TelematicsMmapData)(nil),             // 75: joblet.TelematicsMmapData
+	(*TelematicsMprotectData)(nil),         // 76: joblet.TelematicsMprotectData
+	(*TelematicsSocketDataData)(nil),       // 77: joblet.TelematicsSocketDataData
 	nil,                                    // 78: joblet.Job.EnvironmentEntry
 	nil,                                    // 79: joblet.Job.SecretEnvironmentEntry
 	nil,                                    // 80: joblet.GetJobStatusRes.EnvironmentEntry
@@ -6846,13 +6846,13 @@ var file_joblet_proto_depIdxs = []int32{
 	84, // 36: joblet.RunJobRequest.secret_environment:type_name -> joblet.RunJobRequest.SecretEnvironmentEntry
 	59, // 37: joblet.InstallRuntimeFromLocalRequest.files:type_name -> joblet.RuntimeFile
 	64, // 38: joblet.ValidateRuntimeSpecResponse.specInfo:type_name -> joblet.RuntimeSpecInfo
-	71, // 39: joblet.VisibilityEvent.exec:type_name -> joblet.VisibilityExecData
-	72, // 40: joblet.VisibilityEvent.connect:type_name -> joblet.VisibilityConnectData
-	73, // 41: joblet.VisibilityEvent.accept:type_name -> joblet.VisibilityAcceptData
-	74, // 42: joblet.VisibilityEvent.file:type_name -> joblet.VisibilityFileData
-	75, // 43: joblet.VisibilityEvent.mmap:type_name -> joblet.VisibilityMmapData
-	76, // 44: joblet.VisibilityEvent.mprotect:type_name -> joblet.VisibilityMprotectData
-	77, // 45: joblet.VisibilityEvent.socket_data:type_name -> joblet.VisibilitySocketDataData
+	71, // 39: joblet.TelematicsEvent.exec:type_name -> joblet.TelematicsExecData
+	72, // 40: joblet.TelematicsEvent.connect:type_name -> joblet.TelematicsConnectData
+	73, // 41: joblet.TelematicsEvent.accept:type_name -> joblet.TelematicsAcceptData
+	74, // 42: joblet.TelematicsEvent.file:type_name -> joblet.TelematicsFileData
+	75, // 43: joblet.TelematicsEvent.mmap:type_name -> joblet.TelematicsMmapData
+	76, // 44: joblet.TelematicsEvent.mprotect:type_name -> joblet.TelematicsMprotectData
+	77, // 45: joblet.TelematicsEvent.socket_data:type_name -> joblet.TelematicsSocketDataData
 	53, // 46: joblet.JobService.RunJob:input_type -> joblet.RunJobRequest
 	4,  // 47: joblet.JobService.GetJobStatus:input_type -> joblet.GetJobStatusReq
 	6,  // 48: joblet.JobService.StopJob:input_type -> joblet.StopJobReq
@@ -6863,8 +6863,8 @@ var file_joblet_proto_depIdxs = []int32{
 	2,  // 53: joblet.JobService.ListJobs:input_type -> joblet.EmptyRequest
 	65, // 54: joblet.JobService.StreamJobMetrics:input_type -> joblet.StreamJobMetricsRequest
 	66, // 55: joblet.JobService.GetJobMetrics:input_type -> joblet.GetJobMetricsRequest
-	68, // 56: joblet.JobService.StreamJobVisibility:input_type -> joblet.StreamJobVisibilityRequest
-	69, // 57: joblet.JobService.GetJobVisibility:input_type -> joblet.GetJobVisibilityRequest
+	68, // 56: joblet.JobService.StreamJobTelematics:input_type -> joblet.StreamJobTelematicsRequest
+	69, // 57: joblet.JobService.GetJobTelematics:input_type -> joblet.GetJobTelematicsRequest
 	20, // 58: joblet.NetworkService.CreateNetwork:input_type -> joblet.CreateNetworkReq
 	2,  // 59: joblet.NetworkService.ListNetworks:input_type -> joblet.EmptyRequest
 	22, // 60: joblet.NetworkService.RemoveNetwork:input_type -> joblet.RemoveNetworkReq
@@ -6892,8 +6892,8 @@ var file_joblet_proto_depIdxs = []int32{
 	0,  // 82: joblet.JobService.ListJobs:output_type -> joblet.Jobs
 	67, // 83: joblet.JobService.StreamJobMetrics:output_type -> joblet.JobMetricsEvent
 	67, // 84: joblet.JobService.GetJobMetrics:output_type -> joblet.JobMetricsEvent
-	70, // 85: joblet.JobService.StreamJobVisibility:output_type -> joblet.VisibilityEvent
-	70, // 86: joblet.JobService.GetJobVisibility:output_type -> joblet.VisibilityEvent
+	70, // 85: joblet.JobService.StreamJobTelematics:output_type -> joblet.TelematicsEvent
+	70, // 86: joblet.JobService.GetJobTelematics:output_type -> joblet.TelematicsEvent
 	21, // 87: joblet.NetworkService.CreateNetwork:output_type -> joblet.CreateNetworkRes
 	25, // 88: joblet.NetworkService.ListNetworks:output_type -> joblet.Networks
 	23, // 89: joblet.NetworkService.RemoveNetwork:output_type -> joblet.RemoveNetworkRes
@@ -6929,13 +6929,13 @@ func file_joblet_proto_init() {
 		(*RuntimeInstallationChunk_Result)(nil),
 	}
 	file_joblet_proto_msgTypes[70].OneofWrappers = []any{
-		(*VisibilityEvent_Exec)(nil),
-		(*VisibilityEvent_Connect)(nil),
-		(*VisibilityEvent_Accept)(nil),
-		(*VisibilityEvent_File)(nil),
-		(*VisibilityEvent_Mmap)(nil),
-		(*VisibilityEvent_Mprotect)(nil),
-		(*VisibilityEvent_SocketData)(nil),
+		(*TelematicsEvent_Exec)(nil),
+		(*TelematicsEvent_Connect)(nil),
+		(*TelematicsEvent_Accept)(nil),
+		(*TelematicsEvent_File)(nil),
+		(*TelematicsEvent_Mmap)(nil),
+		(*TelematicsEvent_Mprotect)(nil),
+		(*TelematicsEvent_SocketData)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
