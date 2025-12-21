@@ -4,6 +4,28 @@
 var grpc = require('@grpc/grpc-js');
 var joblet_pb = require('./joblet_pb.js');
 
+function serialize_joblet_BuildRuntimeProgress(arg) {
+  if (!(arg instanceof joblet_pb.BuildRuntimeProgress)) {
+    throw new Error('Expected argument of type joblet.BuildRuntimeProgress');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_joblet_BuildRuntimeProgress(buffer_arg) {
+  return joblet_pb.BuildRuntimeProgress.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_joblet_BuildRuntimeRequest(arg) {
+  if (!(arg instanceof joblet_pb.BuildRuntimeRequest)) {
+    throw new Error('Expected argument of type joblet.BuildRuntimeRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_joblet_BuildRuntimeRequest(buffer_arg) {
+  return joblet_pb.BuildRuntimeRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_joblet_CancelJobReq(arg) {
   if (!(arg instanceof joblet_pb.CancelJobReq)) {
     throw new Error('Expected argument of type joblet.CancelJobReq');
@@ -147,6 +169,17 @@ function deserialize_joblet_GetJobLogsReq(buffer_arg) {
   return joblet_pb.GetJobLogsReq.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_joblet_GetJobMetricsRequest(arg) {
+  if (!(arg instanceof joblet_pb.GetJobMetricsRequest)) {
+    throw new Error('Expected argument of type joblet.GetJobMetricsRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_joblet_GetJobMetricsRequest(buffer_arg) {
+  return joblet_pb.GetJobMetricsRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_joblet_GetJobStatusReq(arg) {
   if (!(arg instanceof joblet_pb.GetJobStatusReq)) {
     throw new Error('Expected argument of type joblet.GetJobStatusReq');
@@ -169,48 +202,26 @@ function deserialize_joblet_GetJobStatusRes(buffer_arg) {
   return joblet_pb.GetJobStatusRes.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_joblet_GetTelemetryRequest(arg) {
-  if (!(arg instanceof joblet_pb.GetTelemetryRequest)) {
-    throw new Error('Expected argument of type joblet.GetTelemetryRequest');
+function serialize_joblet_GetJobTelematicsRequest(arg) {
+  if (!(arg instanceof joblet_pb.GetJobTelematicsRequest)) {
+    throw new Error('Expected argument of type joblet.GetJobTelematicsRequest');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_joblet_GetTelemetryRequest(buffer_arg) {
-  return joblet_pb.GetTelemetryRequest.deserializeBinary(new Uint8Array(buffer_arg));
+function deserialize_joblet_GetJobTelematicsRequest(buffer_arg) {
+  return joblet_pb.GetJobTelematicsRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_joblet_InstallRuntimeFromLocalRequest(arg) {
-  if (!(arg instanceof joblet_pb.InstallRuntimeFromLocalRequest)) {
-    throw new Error('Expected argument of type joblet.InstallRuntimeFromLocalRequest');
+function serialize_joblet_JobMetricsEvent(arg) {
+  if (!(arg instanceof joblet_pb.JobMetricsEvent)) {
+    throw new Error('Expected argument of type joblet.JobMetricsEvent');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_joblet_InstallRuntimeFromLocalRequest(buffer_arg) {
-  return joblet_pb.InstallRuntimeFromLocalRequest.deserializeBinary(new Uint8Array(buffer_arg));
-}
-
-function serialize_joblet_InstallRuntimeRequest(arg) {
-  if (!(arg instanceof joblet_pb.InstallRuntimeRequest)) {
-    throw new Error('Expected argument of type joblet.InstallRuntimeRequest');
-  }
-  return Buffer.from(arg.serializeBinary());
-}
-
-function deserialize_joblet_InstallRuntimeRequest(buffer_arg) {
-  return joblet_pb.InstallRuntimeRequest.deserializeBinary(new Uint8Array(buffer_arg));
-}
-
-function serialize_joblet_InstallRuntimeResponse(arg) {
-  if (!(arg instanceof joblet_pb.InstallRuntimeResponse)) {
-    throw new Error('Expected argument of type joblet.InstallRuntimeResponse');
-  }
-  return Buffer.from(arg.serializeBinary());
-}
-
-function deserialize_joblet_InstallRuntimeResponse(buffer_arg) {
-  return joblet_pb.InstallRuntimeResponse.deserializeBinary(new Uint8Array(buffer_arg));
+function deserialize_joblet_JobMetricsEvent(buffer_arg) {
+  return joblet_pb.JobMetricsEvent.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_joblet_Jobs(arg) {
@@ -323,17 +334,6 @@ function deserialize_joblet_RuntimeInfoRes(buffer_arg) {
   return joblet_pb.RuntimeInfoRes.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_joblet_RuntimeInstallationChunk(arg) {
-  if (!(arg instanceof joblet_pb.RuntimeInstallationChunk)) {
-    throw new Error('Expected argument of type joblet.RuntimeInstallationChunk');
-  }
-  return Buffer.from(arg.serializeBinary());
-}
-
-function deserialize_joblet_RuntimeInstallationChunk(buffer_arg) {
-  return joblet_pb.RuntimeInstallationChunk.deserializeBinary(new Uint8Array(buffer_arg));
-}
-
 function serialize_joblet_RuntimeRemoveReq(arg) {
   if (!(arg instanceof joblet_pb.RuntimeRemoveReq)) {
     throw new Error('Expected argument of type joblet.RuntimeRemoveReq');
@@ -411,6 +411,28 @@ function deserialize_joblet_StopJobRes(buffer_arg) {
   return joblet_pb.StopJobRes.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_joblet_StreamJobMetricsRequest(arg) {
+  if (!(arg instanceof joblet_pb.StreamJobMetricsRequest)) {
+    throw new Error('Expected argument of type joblet.StreamJobMetricsRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_joblet_StreamJobMetricsRequest(buffer_arg) {
+  return joblet_pb.StreamJobMetricsRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_joblet_StreamJobTelematicsRequest(arg) {
+  if (!(arg instanceof joblet_pb.StreamJobTelematicsRequest)) {
+    throw new Error('Expected argument of type joblet.StreamJobTelematicsRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_joblet_StreamJobTelematicsRequest(buffer_arg) {
+  return joblet_pb.StreamJobTelematicsRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_joblet_StreamMetricsReq(arg) {
   if (!(arg instanceof joblet_pb.StreamMetricsReq)) {
     throw new Error('Expected argument of type joblet.StreamMetricsReq');
@@ -420,17 +442,6 @@ function serialize_joblet_StreamMetricsReq(arg) {
 
 function deserialize_joblet_StreamMetricsReq(buffer_arg) {
   return joblet_pb.StreamMetricsReq.deserializeBinary(new Uint8Array(buffer_arg));
-}
-
-function serialize_joblet_StreamTelemetryRequest(arg) {
-  if (!(arg instanceof joblet_pb.StreamTelemetryRequest)) {
-    throw new Error('Expected argument of type joblet.StreamTelemetryRequest');
-  }
-  return Buffer.from(arg.serializeBinary());
-}
-
-function deserialize_joblet_StreamTelemetryRequest(buffer_arg) {
-  return joblet_pb.StreamTelemetryRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_joblet_SystemMetricsRes(arg) {
@@ -455,37 +466,37 @@ function deserialize_joblet_SystemStatusRes(buffer_arg) {
   return joblet_pb.SystemStatusRes.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_joblet_TelemetryEvent(arg) {
-  if (!(arg instanceof joblet_pb.TelemetryEvent)) {
-    throw new Error('Expected argument of type joblet.TelemetryEvent');
+function serialize_joblet_TelematicsEvent(arg) {
+  if (!(arg instanceof joblet_pb.TelematicsEvent)) {
+    throw new Error('Expected argument of type joblet.TelematicsEvent');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_joblet_TelemetryEvent(buffer_arg) {
-  return joblet_pb.TelemetryEvent.deserializeBinary(new Uint8Array(buffer_arg));
+function deserialize_joblet_TelematicsEvent(buffer_arg) {
+  return joblet_pb.TelematicsEvent.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_joblet_ValidateRuntimeSpecRequest(arg) {
-  if (!(arg instanceof joblet_pb.ValidateRuntimeSpecRequest)) {
-    throw new Error('Expected argument of type joblet.ValidateRuntimeSpecRequest');
+function serialize_joblet_ValidateRuntimeYAMLRequest(arg) {
+  if (!(arg instanceof joblet_pb.ValidateRuntimeYAMLRequest)) {
+    throw new Error('Expected argument of type joblet.ValidateRuntimeYAMLRequest');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_joblet_ValidateRuntimeSpecRequest(buffer_arg) {
-  return joblet_pb.ValidateRuntimeSpecRequest.deserializeBinary(new Uint8Array(buffer_arg));
+function deserialize_joblet_ValidateRuntimeYAMLRequest(buffer_arg) {
+  return joblet_pb.ValidateRuntimeYAMLRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_joblet_ValidateRuntimeSpecResponse(arg) {
-  if (!(arg instanceof joblet_pb.ValidateRuntimeSpecResponse)) {
-    throw new Error('Expected argument of type joblet.ValidateRuntimeSpecResponse');
+function serialize_joblet_ValidateRuntimeYAMLResponse(arg) {
+  if (!(arg instanceof joblet_pb.ValidateRuntimeYAMLResponse)) {
+    throw new Error('Expected argument of type joblet.ValidateRuntimeYAMLResponse');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_joblet_ValidateRuntimeSpecResponse(buffer_arg) {
-  return joblet_pb.ValidateRuntimeSpecResponse.deserializeBinary(new Uint8Array(buffer_arg));
+function deserialize_joblet_ValidateRuntimeYAMLResponse(buffer_arg) {
+  return joblet_pb.ValidateRuntimeYAMLResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_joblet_Volumes(arg) {
@@ -591,30 +602,55 @@ runJob: {
     responseSerialize: serialize_joblet_Jobs,
     responseDeserialize: deserialize_joblet_Jobs,
   },
-  // Unified telemetry (metrics + eBPF activity events)
-// Stream live telemetry for a running job
-streamJobTelemetry: {
-    path: '/joblet.JobService/StreamJobTelemetry',
+  // Job Metrics (resource usage from cgroups - sampled every 5s)
+// Stream live metrics for a running job
+streamJobMetrics: {
+    path: '/joblet.JobService/StreamJobMetrics',
     requestStream: false,
     responseStream: true,
-    requestType: joblet_pb.StreamTelemetryRequest,
-    responseType: joblet_pb.TelemetryEvent,
-    requestSerialize: serialize_joblet_StreamTelemetryRequest,
-    requestDeserialize: deserialize_joblet_StreamTelemetryRequest,
-    responseSerialize: serialize_joblet_TelemetryEvent,
-    responseDeserialize: deserialize_joblet_TelemetryEvent,
+    requestType: joblet_pb.StreamJobMetricsRequest,
+    responseType: joblet_pb.JobMetricsEvent,
+    requestSerialize: serialize_joblet_StreamJobMetricsRequest,
+    requestDeserialize: deserialize_joblet_StreamJobMetricsRequest,
+    responseSerialize: serialize_joblet_JobMetricsEvent,
+    responseDeserialize: deserialize_joblet_JobMetricsEvent,
   },
-  // Get historical telemetry for a completed job
-getJobTelemetry: {
-    path: '/joblet.JobService/GetJobTelemetry',
+  // Get historical metrics for a completed job
+getJobMetrics: {
+    path: '/joblet.JobService/GetJobMetrics',
     requestStream: false,
     responseStream: true,
-    requestType: joblet_pb.GetTelemetryRequest,
-    responseType: joblet_pb.TelemetryEvent,
-    requestSerialize: serialize_joblet_GetTelemetryRequest,
-    requestDeserialize: deserialize_joblet_GetTelemetryRequest,
-    responseSerialize: serialize_joblet_TelemetryEvent,
-    responseDeserialize: deserialize_joblet_TelemetryEvent,
+    requestType: joblet_pb.GetJobMetricsRequest,
+    responseType: joblet_pb.JobMetricsEvent,
+    requestSerialize: serialize_joblet_GetJobMetricsRequest,
+    requestDeserialize: deserialize_joblet_GetJobMetricsRequest,
+    responseSerialize: serialize_joblet_JobMetricsEvent,
+    responseDeserialize: deserialize_joblet_JobMetricsEvent,
+  },
+  // Job Telematics (eBPF security events - event-driven)
+// Stream live telematics events for a running job
+streamJobTelematics: {
+    path: '/joblet.JobService/StreamJobTelematics',
+    requestStream: false,
+    responseStream: true,
+    requestType: joblet_pb.StreamJobTelematicsRequest,
+    responseType: joblet_pb.TelematicsEvent,
+    requestSerialize: serialize_joblet_StreamJobTelematicsRequest,
+    requestDeserialize: deserialize_joblet_StreamJobTelematicsRequest,
+    responseSerialize: serialize_joblet_TelematicsEvent,
+    responseDeserialize: deserialize_joblet_TelematicsEvent,
+  },
+  // Get historical telematics events for a completed job
+getJobTelematics: {
+    path: '/joblet.JobService/GetJobTelematics',
+    requestStream: false,
+    responseStream: true,
+    requestType: joblet_pb.GetJobTelematicsRequest,
+    responseType: joblet_pb.TelematicsEvent,
+    requestSerialize: serialize_joblet_GetJobTelematicsRequest,
+    requestDeserialize: deserialize_joblet_GetJobTelematicsRequest,
+    responseSerialize: serialize_joblet_TelematicsEvent,
+    responseDeserialize: deserialize_joblet_TelematicsEvent,
   },
 };
 
@@ -757,61 +793,6 @@ var RuntimeServiceService = exports.RuntimeServiceService = {
     responseSerialize: serialize_joblet_RuntimeTestRes,
     responseDeserialize: deserialize_joblet_RuntimeTestRes,
   },
-  installRuntimeFromGithub: {
-    path: '/joblet.RuntimeService/InstallRuntimeFromGithub',
-    requestStream: false,
-    responseStream: false,
-    requestType: joblet_pb.InstallRuntimeRequest,
-    responseType: joblet_pb.InstallRuntimeResponse,
-    requestSerialize: serialize_joblet_InstallRuntimeRequest,
-    requestDeserialize: deserialize_joblet_InstallRuntimeRequest,
-    responseSerialize: serialize_joblet_InstallRuntimeResponse,
-    responseDeserialize: deserialize_joblet_InstallRuntimeResponse,
-  },
-  installRuntimeFromLocal: {
-    path: '/joblet.RuntimeService/InstallRuntimeFromLocal',
-    requestStream: false,
-    responseStream: false,
-    requestType: joblet_pb.InstallRuntimeFromLocalRequest,
-    responseType: joblet_pb.InstallRuntimeResponse,
-    requestSerialize: serialize_joblet_InstallRuntimeFromLocalRequest,
-    requestDeserialize: deserialize_joblet_InstallRuntimeFromLocalRequest,
-    responseSerialize: serialize_joblet_InstallRuntimeResponse,
-    responseDeserialize: deserialize_joblet_InstallRuntimeResponse,
-  },
-  streamingInstallRuntimeFromGithub: {
-    path: '/joblet.RuntimeService/StreamingInstallRuntimeFromGithub',
-    requestStream: false,
-    responseStream: true,
-    requestType: joblet_pb.InstallRuntimeRequest,
-    responseType: joblet_pb.RuntimeInstallationChunk,
-    requestSerialize: serialize_joblet_InstallRuntimeRequest,
-    requestDeserialize: deserialize_joblet_InstallRuntimeRequest,
-    responseSerialize: serialize_joblet_RuntimeInstallationChunk,
-    responseDeserialize: deserialize_joblet_RuntimeInstallationChunk,
-  },
-  streamingInstallRuntimeFromLocal: {
-    path: '/joblet.RuntimeService/StreamingInstallRuntimeFromLocal',
-    requestStream: false,
-    responseStream: true,
-    requestType: joblet_pb.InstallRuntimeFromLocalRequest,
-    responseType: joblet_pb.RuntimeInstallationChunk,
-    requestSerialize: serialize_joblet_InstallRuntimeFromLocalRequest,
-    requestDeserialize: deserialize_joblet_InstallRuntimeFromLocalRequest,
-    responseSerialize: serialize_joblet_RuntimeInstallationChunk,
-    responseDeserialize: deserialize_joblet_RuntimeInstallationChunk,
-  },
-  validateRuntimeSpec: {
-    path: '/joblet.RuntimeService/ValidateRuntimeSpec',
-    requestStream: false,
-    responseStream: false,
-    requestType: joblet_pb.ValidateRuntimeSpecRequest,
-    responseType: joblet_pb.ValidateRuntimeSpecResponse,
-    requestSerialize: serialize_joblet_ValidateRuntimeSpecRequest,
-    requestDeserialize: deserialize_joblet_ValidateRuntimeSpecRequest,
-    responseSerialize: serialize_joblet_ValidateRuntimeSpecResponse,
-    responseDeserialize: deserialize_joblet_ValidateRuntimeSpecResponse,
-  },
   removeRuntime: {
     path: '/joblet.RuntimeService/RemoveRuntime',
     requestStream: false,
@@ -822,6 +803,31 @@ var RuntimeServiceService = exports.RuntimeServiceService = {
     requestDeserialize: deserialize_joblet_RuntimeRemoveReq,
     responseSerialize: serialize_joblet_RuntimeRemoveRes,
     responseDeserialize: deserialize_joblet_RuntimeRemoveRes,
+  },
+  // BuildRuntime builds a runtime from a YAML specification
+// The build process runs on the server and streams progress back to the client
+buildRuntime: {
+    path: '/joblet.RuntimeService/BuildRuntime',
+    requestStream: false,
+    responseStream: true,
+    requestType: joblet_pb.BuildRuntimeRequest,
+    responseType: joblet_pb.BuildRuntimeProgress,
+    requestSerialize: serialize_joblet_BuildRuntimeRequest,
+    requestDeserialize: deserialize_joblet_BuildRuntimeRequest,
+    responseSerialize: serialize_joblet_BuildRuntimeProgress,
+    responseDeserialize: deserialize_joblet_BuildRuntimeProgress,
+  },
+  // ValidateRuntimeYAML validates a runtime YAML specification without building
+validateRuntimeYAML: {
+    path: '/joblet.RuntimeService/ValidateRuntimeYAML',
+    requestStream: false,
+    responseStream: false,
+    requestType: joblet_pb.ValidateRuntimeYAMLRequest,
+    responseType: joblet_pb.ValidateRuntimeYAMLResponse,
+    requestSerialize: serialize_joblet_ValidateRuntimeYAMLRequest,
+    requestDeserialize: deserialize_joblet_ValidateRuntimeYAMLRequest,
+    responseSerialize: serialize_joblet_ValidateRuntimeYAMLResponse,
+    responseDeserialize: deserialize_joblet_ValidateRuntimeYAMLResponse,
   },
 };
 

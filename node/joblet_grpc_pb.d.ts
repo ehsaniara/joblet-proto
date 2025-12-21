@@ -16,8 +16,10 @@ interface IJobServiceService extends grpc.ServiceDefinition<grpc.UntypedServiceI
     deleteAllJobs: IJobServiceService_IDeleteAllJobs;
     getJobLogs: IJobServiceService_IGetJobLogs;
     listJobs: IJobServiceService_IListJobs;
-    streamJobTelemetry: IJobServiceService_IStreamJobTelemetry;
-    getJobTelemetry: IJobServiceService_IGetJobTelemetry;
+    streamJobMetrics: IJobServiceService_IStreamJobMetrics;
+    getJobMetrics: IJobServiceService_IGetJobMetrics;
+    streamJobTelematics: IJobServiceService_IStreamJobTelematics;
+    getJobTelematics: IJobServiceService_IGetJobTelematics;
 }
 
 interface IJobServiceService_IRunJob extends grpc.MethodDefinition<joblet_pb.RunJobRequest, joblet_pb.RunJobResponse> {
@@ -92,23 +94,41 @@ interface IJobServiceService_IListJobs extends grpc.MethodDefinition<joblet_pb.E
     responseSerialize: grpc.serialize<joblet_pb.Jobs>;
     responseDeserialize: grpc.deserialize<joblet_pb.Jobs>;
 }
-interface IJobServiceService_IStreamJobTelemetry extends grpc.MethodDefinition<joblet_pb.StreamTelemetryRequest, joblet_pb.TelemetryEvent> {
-    path: "/joblet.JobService/StreamJobTelemetry";
+interface IJobServiceService_IStreamJobMetrics extends grpc.MethodDefinition<joblet_pb.StreamJobMetricsRequest, joblet_pb.JobMetricsEvent> {
+    path: "/joblet.JobService/StreamJobMetrics";
     requestStream: false;
     responseStream: true;
-    requestSerialize: grpc.serialize<joblet_pb.StreamTelemetryRequest>;
-    requestDeserialize: grpc.deserialize<joblet_pb.StreamTelemetryRequest>;
-    responseSerialize: grpc.serialize<joblet_pb.TelemetryEvent>;
-    responseDeserialize: grpc.deserialize<joblet_pb.TelemetryEvent>;
+    requestSerialize: grpc.serialize<joblet_pb.StreamJobMetricsRequest>;
+    requestDeserialize: grpc.deserialize<joblet_pb.StreamJobMetricsRequest>;
+    responseSerialize: grpc.serialize<joblet_pb.JobMetricsEvent>;
+    responseDeserialize: grpc.deserialize<joblet_pb.JobMetricsEvent>;
 }
-interface IJobServiceService_IGetJobTelemetry extends grpc.MethodDefinition<joblet_pb.GetTelemetryRequest, joblet_pb.TelemetryEvent> {
-    path: "/joblet.JobService/GetJobTelemetry";
+interface IJobServiceService_IGetJobMetrics extends grpc.MethodDefinition<joblet_pb.GetJobMetricsRequest, joblet_pb.JobMetricsEvent> {
+    path: "/joblet.JobService/GetJobMetrics";
     requestStream: false;
     responseStream: true;
-    requestSerialize: grpc.serialize<joblet_pb.GetTelemetryRequest>;
-    requestDeserialize: grpc.deserialize<joblet_pb.GetTelemetryRequest>;
-    responseSerialize: grpc.serialize<joblet_pb.TelemetryEvent>;
-    responseDeserialize: grpc.deserialize<joblet_pb.TelemetryEvent>;
+    requestSerialize: grpc.serialize<joblet_pb.GetJobMetricsRequest>;
+    requestDeserialize: grpc.deserialize<joblet_pb.GetJobMetricsRequest>;
+    responseSerialize: grpc.serialize<joblet_pb.JobMetricsEvent>;
+    responseDeserialize: grpc.deserialize<joblet_pb.JobMetricsEvent>;
+}
+interface IJobServiceService_IStreamJobTelematics extends grpc.MethodDefinition<joblet_pb.StreamJobTelematicsRequest, joblet_pb.TelematicsEvent> {
+    path: "/joblet.JobService/StreamJobTelematics";
+    requestStream: false;
+    responseStream: true;
+    requestSerialize: grpc.serialize<joblet_pb.StreamJobTelematicsRequest>;
+    requestDeserialize: grpc.deserialize<joblet_pb.StreamJobTelematicsRequest>;
+    responseSerialize: grpc.serialize<joblet_pb.TelematicsEvent>;
+    responseDeserialize: grpc.deserialize<joblet_pb.TelematicsEvent>;
+}
+interface IJobServiceService_IGetJobTelematics extends grpc.MethodDefinition<joblet_pb.GetJobTelematicsRequest, joblet_pb.TelematicsEvent> {
+    path: "/joblet.JobService/GetJobTelematics";
+    requestStream: false;
+    responseStream: true;
+    requestSerialize: grpc.serialize<joblet_pb.GetJobTelematicsRequest>;
+    requestDeserialize: grpc.deserialize<joblet_pb.GetJobTelematicsRequest>;
+    responseSerialize: grpc.serialize<joblet_pb.TelematicsEvent>;
+    responseDeserialize: grpc.deserialize<joblet_pb.TelematicsEvent>;
 }
 
 export const JobServiceService: IJobServiceService;
@@ -122,8 +142,10 @@ export interface IJobServiceServer extends grpc.UntypedServiceImplementation {
     deleteAllJobs: grpc.handleUnaryCall<joblet_pb.DeleteAllJobsReq, joblet_pb.DeleteAllJobsRes>;
     getJobLogs: grpc.handleServerStreamingCall<joblet_pb.GetJobLogsReq, joblet_pb.DataChunk>;
     listJobs: grpc.handleUnaryCall<joblet_pb.EmptyRequest, joblet_pb.Jobs>;
-    streamJobTelemetry: grpc.handleServerStreamingCall<joblet_pb.StreamTelemetryRequest, joblet_pb.TelemetryEvent>;
-    getJobTelemetry: grpc.handleServerStreamingCall<joblet_pb.GetTelemetryRequest, joblet_pb.TelemetryEvent>;
+    streamJobMetrics: grpc.handleServerStreamingCall<joblet_pb.StreamJobMetricsRequest, joblet_pb.JobMetricsEvent>;
+    getJobMetrics: grpc.handleServerStreamingCall<joblet_pb.GetJobMetricsRequest, joblet_pb.JobMetricsEvent>;
+    streamJobTelematics: grpc.handleServerStreamingCall<joblet_pb.StreamJobTelematicsRequest, joblet_pb.TelematicsEvent>;
+    getJobTelematics: grpc.handleServerStreamingCall<joblet_pb.GetJobTelematicsRequest, joblet_pb.TelematicsEvent>;
 }
 
 export interface IJobServiceClient {
@@ -150,10 +172,14 @@ export interface IJobServiceClient {
     listJobs(request: joblet_pb.EmptyRequest, callback: (error: grpc.ServiceError | null, response: joblet_pb.Jobs) => void): grpc.ClientUnaryCall;
     listJobs(request: joblet_pb.EmptyRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: joblet_pb.Jobs) => void): grpc.ClientUnaryCall;
     listJobs(request: joblet_pb.EmptyRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: joblet_pb.Jobs) => void): grpc.ClientUnaryCall;
-    streamJobTelemetry(request: joblet_pb.StreamTelemetryRequest, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.TelemetryEvent>;
-    streamJobTelemetry(request: joblet_pb.StreamTelemetryRequest, metadata?: grpc.Metadata, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.TelemetryEvent>;
-    getJobTelemetry(request: joblet_pb.GetTelemetryRequest, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.TelemetryEvent>;
-    getJobTelemetry(request: joblet_pb.GetTelemetryRequest, metadata?: grpc.Metadata, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.TelemetryEvent>;
+    streamJobMetrics(request: joblet_pb.StreamJobMetricsRequest, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.JobMetricsEvent>;
+    streamJobMetrics(request: joblet_pb.StreamJobMetricsRequest, metadata?: grpc.Metadata, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.JobMetricsEvent>;
+    getJobMetrics(request: joblet_pb.GetJobMetricsRequest, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.JobMetricsEvent>;
+    getJobMetrics(request: joblet_pb.GetJobMetricsRequest, metadata?: grpc.Metadata, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.JobMetricsEvent>;
+    streamJobTelematics(request: joblet_pb.StreamJobTelematicsRequest, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.TelematicsEvent>;
+    streamJobTelematics(request: joblet_pb.StreamJobTelematicsRequest, metadata?: grpc.Metadata, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.TelematicsEvent>;
+    getJobTelematics(request: joblet_pb.GetJobTelematicsRequest, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.TelematicsEvent>;
+    getJobTelematics(request: joblet_pb.GetJobTelematicsRequest, metadata?: grpc.Metadata, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.TelematicsEvent>;
 }
 
 export class JobServiceClient extends grpc.Client implements IJobServiceClient {
@@ -181,10 +207,14 @@ export class JobServiceClient extends grpc.Client implements IJobServiceClient {
     public listJobs(request: joblet_pb.EmptyRequest, callback: (error: grpc.ServiceError | null, response: joblet_pb.Jobs) => void): grpc.ClientUnaryCall;
     public listJobs(request: joblet_pb.EmptyRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: joblet_pb.Jobs) => void): grpc.ClientUnaryCall;
     public listJobs(request: joblet_pb.EmptyRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: joblet_pb.Jobs) => void): grpc.ClientUnaryCall;
-    public streamJobTelemetry(request: joblet_pb.StreamTelemetryRequest, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.TelemetryEvent>;
-    public streamJobTelemetry(request: joblet_pb.StreamTelemetryRequest, metadata?: grpc.Metadata, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.TelemetryEvent>;
-    public getJobTelemetry(request: joblet_pb.GetTelemetryRequest, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.TelemetryEvent>;
-    public getJobTelemetry(request: joblet_pb.GetTelemetryRequest, metadata?: grpc.Metadata, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.TelemetryEvent>;
+    public streamJobMetrics(request: joblet_pb.StreamJobMetricsRequest, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.JobMetricsEvent>;
+    public streamJobMetrics(request: joblet_pb.StreamJobMetricsRequest, metadata?: grpc.Metadata, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.JobMetricsEvent>;
+    public getJobMetrics(request: joblet_pb.GetJobMetricsRequest, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.JobMetricsEvent>;
+    public getJobMetrics(request: joblet_pb.GetJobMetricsRequest, metadata?: grpc.Metadata, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.JobMetricsEvent>;
+    public streamJobTelematics(request: joblet_pb.StreamJobTelematicsRequest, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.TelematicsEvent>;
+    public streamJobTelematics(request: joblet_pb.StreamJobTelematicsRequest, metadata?: grpc.Metadata, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.TelematicsEvent>;
+    public getJobTelematics(request: joblet_pb.GetJobTelematicsRequest, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.TelematicsEvent>;
+    public getJobTelematics(request: joblet_pb.GetJobTelematicsRequest, metadata?: grpc.Metadata, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.TelematicsEvent>;
 }
 
 interface INetworkServiceService extends grpc.ServiceDefinition<grpc.UntypedServiceImplementation> {
@@ -373,12 +403,9 @@ interface IRuntimeServiceService extends grpc.ServiceDefinition<grpc.UntypedServ
     listRuntimes: IRuntimeServiceService_IListRuntimes;
     getRuntimeInfo: IRuntimeServiceService_IGetRuntimeInfo;
     testRuntime: IRuntimeServiceService_ITestRuntime;
-    installRuntimeFromGithub: IRuntimeServiceService_IInstallRuntimeFromGithub;
-    installRuntimeFromLocal: IRuntimeServiceService_IInstallRuntimeFromLocal;
-    streamingInstallRuntimeFromGithub: IRuntimeServiceService_IStreamingInstallRuntimeFromGithub;
-    streamingInstallRuntimeFromLocal: IRuntimeServiceService_IStreamingInstallRuntimeFromLocal;
-    validateRuntimeSpec: IRuntimeServiceService_IValidateRuntimeSpec;
     removeRuntime: IRuntimeServiceService_IRemoveRuntime;
+    buildRuntime: IRuntimeServiceService_IBuildRuntime;
+    validateRuntimeYAML: IRuntimeServiceService_IValidateRuntimeYAML;
 }
 
 interface IRuntimeServiceService_IListRuntimes extends grpc.MethodDefinition<joblet_pb.EmptyRequest, joblet_pb.RuntimesRes> {
@@ -408,51 +435,6 @@ interface IRuntimeServiceService_ITestRuntime extends grpc.MethodDefinition<jobl
     responseSerialize: grpc.serialize<joblet_pb.RuntimeTestRes>;
     responseDeserialize: grpc.deserialize<joblet_pb.RuntimeTestRes>;
 }
-interface IRuntimeServiceService_IInstallRuntimeFromGithub extends grpc.MethodDefinition<joblet_pb.InstallRuntimeRequest, joblet_pb.InstallRuntimeResponse> {
-    path: "/joblet.RuntimeService/InstallRuntimeFromGithub";
-    requestStream: false;
-    responseStream: false;
-    requestSerialize: grpc.serialize<joblet_pb.InstallRuntimeRequest>;
-    requestDeserialize: grpc.deserialize<joblet_pb.InstallRuntimeRequest>;
-    responseSerialize: grpc.serialize<joblet_pb.InstallRuntimeResponse>;
-    responseDeserialize: grpc.deserialize<joblet_pb.InstallRuntimeResponse>;
-}
-interface IRuntimeServiceService_IInstallRuntimeFromLocal extends grpc.MethodDefinition<joblet_pb.InstallRuntimeFromLocalRequest, joblet_pb.InstallRuntimeResponse> {
-    path: "/joblet.RuntimeService/InstallRuntimeFromLocal";
-    requestStream: false;
-    responseStream: false;
-    requestSerialize: grpc.serialize<joblet_pb.InstallRuntimeFromLocalRequest>;
-    requestDeserialize: grpc.deserialize<joblet_pb.InstallRuntimeFromLocalRequest>;
-    responseSerialize: grpc.serialize<joblet_pb.InstallRuntimeResponse>;
-    responseDeserialize: grpc.deserialize<joblet_pb.InstallRuntimeResponse>;
-}
-interface IRuntimeServiceService_IStreamingInstallRuntimeFromGithub extends grpc.MethodDefinition<joblet_pb.InstallRuntimeRequest, joblet_pb.RuntimeInstallationChunk> {
-    path: "/joblet.RuntimeService/StreamingInstallRuntimeFromGithub";
-    requestStream: false;
-    responseStream: true;
-    requestSerialize: grpc.serialize<joblet_pb.InstallRuntimeRequest>;
-    requestDeserialize: grpc.deserialize<joblet_pb.InstallRuntimeRequest>;
-    responseSerialize: grpc.serialize<joblet_pb.RuntimeInstallationChunk>;
-    responseDeserialize: grpc.deserialize<joblet_pb.RuntimeInstallationChunk>;
-}
-interface IRuntimeServiceService_IStreamingInstallRuntimeFromLocal extends grpc.MethodDefinition<joblet_pb.InstallRuntimeFromLocalRequest, joblet_pb.RuntimeInstallationChunk> {
-    path: "/joblet.RuntimeService/StreamingInstallRuntimeFromLocal";
-    requestStream: false;
-    responseStream: true;
-    requestSerialize: grpc.serialize<joblet_pb.InstallRuntimeFromLocalRequest>;
-    requestDeserialize: grpc.deserialize<joblet_pb.InstallRuntimeFromLocalRequest>;
-    responseSerialize: grpc.serialize<joblet_pb.RuntimeInstallationChunk>;
-    responseDeserialize: grpc.deserialize<joblet_pb.RuntimeInstallationChunk>;
-}
-interface IRuntimeServiceService_IValidateRuntimeSpec extends grpc.MethodDefinition<joblet_pb.ValidateRuntimeSpecRequest, joblet_pb.ValidateRuntimeSpecResponse> {
-    path: "/joblet.RuntimeService/ValidateRuntimeSpec";
-    requestStream: false;
-    responseStream: false;
-    requestSerialize: grpc.serialize<joblet_pb.ValidateRuntimeSpecRequest>;
-    requestDeserialize: grpc.deserialize<joblet_pb.ValidateRuntimeSpecRequest>;
-    responseSerialize: grpc.serialize<joblet_pb.ValidateRuntimeSpecResponse>;
-    responseDeserialize: grpc.deserialize<joblet_pb.ValidateRuntimeSpecResponse>;
-}
 interface IRuntimeServiceService_IRemoveRuntime extends grpc.MethodDefinition<joblet_pb.RuntimeRemoveReq, joblet_pb.RuntimeRemoveRes> {
     path: "/joblet.RuntimeService/RemoveRuntime";
     requestStream: false;
@@ -462,6 +444,24 @@ interface IRuntimeServiceService_IRemoveRuntime extends grpc.MethodDefinition<jo
     responseSerialize: grpc.serialize<joblet_pb.RuntimeRemoveRes>;
     responseDeserialize: grpc.deserialize<joblet_pb.RuntimeRemoveRes>;
 }
+interface IRuntimeServiceService_IBuildRuntime extends grpc.MethodDefinition<joblet_pb.BuildRuntimeRequest, joblet_pb.BuildRuntimeProgress> {
+    path: "/joblet.RuntimeService/BuildRuntime";
+    requestStream: false;
+    responseStream: true;
+    requestSerialize: grpc.serialize<joblet_pb.BuildRuntimeRequest>;
+    requestDeserialize: grpc.deserialize<joblet_pb.BuildRuntimeRequest>;
+    responseSerialize: grpc.serialize<joblet_pb.BuildRuntimeProgress>;
+    responseDeserialize: grpc.deserialize<joblet_pb.BuildRuntimeProgress>;
+}
+interface IRuntimeServiceService_IValidateRuntimeYAML extends grpc.MethodDefinition<joblet_pb.ValidateRuntimeYAMLRequest, joblet_pb.ValidateRuntimeYAMLResponse> {
+    path: "/joblet.RuntimeService/ValidateRuntimeYAML";
+    requestStream: false;
+    responseStream: false;
+    requestSerialize: grpc.serialize<joblet_pb.ValidateRuntimeYAMLRequest>;
+    requestDeserialize: grpc.deserialize<joblet_pb.ValidateRuntimeYAMLRequest>;
+    responseSerialize: grpc.serialize<joblet_pb.ValidateRuntimeYAMLResponse>;
+    responseDeserialize: grpc.deserialize<joblet_pb.ValidateRuntimeYAMLResponse>;
+}
 
 export const RuntimeServiceService: IRuntimeServiceService;
 
@@ -469,12 +469,9 @@ export interface IRuntimeServiceServer extends grpc.UntypedServiceImplementation
     listRuntimes: grpc.handleUnaryCall<joblet_pb.EmptyRequest, joblet_pb.RuntimesRes>;
     getRuntimeInfo: grpc.handleUnaryCall<joblet_pb.RuntimeInfoReq, joblet_pb.RuntimeInfoRes>;
     testRuntime: grpc.handleUnaryCall<joblet_pb.RuntimeTestReq, joblet_pb.RuntimeTestRes>;
-    installRuntimeFromGithub: grpc.handleUnaryCall<joblet_pb.InstallRuntimeRequest, joblet_pb.InstallRuntimeResponse>;
-    installRuntimeFromLocal: grpc.handleUnaryCall<joblet_pb.InstallRuntimeFromLocalRequest, joblet_pb.InstallRuntimeResponse>;
-    streamingInstallRuntimeFromGithub: grpc.handleServerStreamingCall<joblet_pb.InstallRuntimeRequest, joblet_pb.RuntimeInstallationChunk>;
-    streamingInstallRuntimeFromLocal: grpc.handleServerStreamingCall<joblet_pb.InstallRuntimeFromLocalRequest, joblet_pb.RuntimeInstallationChunk>;
-    validateRuntimeSpec: grpc.handleUnaryCall<joblet_pb.ValidateRuntimeSpecRequest, joblet_pb.ValidateRuntimeSpecResponse>;
     removeRuntime: grpc.handleUnaryCall<joblet_pb.RuntimeRemoveReq, joblet_pb.RuntimeRemoveRes>;
+    buildRuntime: grpc.handleServerStreamingCall<joblet_pb.BuildRuntimeRequest, joblet_pb.BuildRuntimeProgress>;
+    validateRuntimeYAML: grpc.handleUnaryCall<joblet_pb.ValidateRuntimeYAMLRequest, joblet_pb.ValidateRuntimeYAMLResponse>;
 }
 
 export interface IRuntimeServiceClient {
@@ -487,22 +484,14 @@ export interface IRuntimeServiceClient {
     testRuntime(request: joblet_pb.RuntimeTestReq, callback: (error: grpc.ServiceError | null, response: joblet_pb.RuntimeTestRes) => void): grpc.ClientUnaryCall;
     testRuntime(request: joblet_pb.RuntimeTestReq, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: joblet_pb.RuntimeTestRes) => void): grpc.ClientUnaryCall;
     testRuntime(request: joblet_pb.RuntimeTestReq, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: joblet_pb.RuntimeTestRes) => void): grpc.ClientUnaryCall;
-    installRuntimeFromGithub(request: joblet_pb.InstallRuntimeRequest, callback: (error: grpc.ServiceError | null, response: joblet_pb.InstallRuntimeResponse) => void): grpc.ClientUnaryCall;
-    installRuntimeFromGithub(request: joblet_pb.InstallRuntimeRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: joblet_pb.InstallRuntimeResponse) => void): grpc.ClientUnaryCall;
-    installRuntimeFromGithub(request: joblet_pb.InstallRuntimeRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: joblet_pb.InstallRuntimeResponse) => void): grpc.ClientUnaryCall;
-    installRuntimeFromLocal(request: joblet_pb.InstallRuntimeFromLocalRequest, callback: (error: grpc.ServiceError | null, response: joblet_pb.InstallRuntimeResponse) => void): grpc.ClientUnaryCall;
-    installRuntimeFromLocal(request: joblet_pb.InstallRuntimeFromLocalRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: joblet_pb.InstallRuntimeResponse) => void): grpc.ClientUnaryCall;
-    installRuntimeFromLocal(request: joblet_pb.InstallRuntimeFromLocalRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: joblet_pb.InstallRuntimeResponse) => void): grpc.ClientUnaryCall;
-    streamingInstallRuntimeFromGithub(request: joblet_pb.InstallRuntimeRequest, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.RuntimeInstallationChunk>;
-    streamingInstallRuntimeFromGithub(request: joblet_pb.InstallRuntimeRequest, metadata?: grpc.Metadata, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.RuntimeInstallationChunk>;
-    streamingInstallRuntimeFromLocal(request: joblet_pb.InstallRuntimeFromLocalRequest, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.RuntimeInstallationChunk>;
-    streamingInstallRuntimeFromLocal(request: joblet_pb.InstallRuntimeFromLocalRequest, metadata?: grpc.Metadata, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.RuntimeInstallationChunk>;
-    validateRuntimeSpec(request: joblet_pb.ValidateRuntimeSpecRequest, callback: (error: grpc.ServiceError | null, response: joblet_pb.ValidateRuntimeSpecResponse) => void): grpc.ClientUnaryCall;
-    validateRuntimeSpec(request: joblet_pb.ValidateRuntimeSpecRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: joblet_pb.ValidateRuntimeSpecResponse) => void): grpc.ClientUnaryCall;
-    validateRuntimeSpec(request: joblet_pb.ValidateRuntimeSpecRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: joblet_pb.ValidateRuntimeSpecResponse) => void): grpc.ClientUnaryCall;
     removeRuntime(request: joblet_pb.RuntimeRemoveReq, callback: (error: grpc.ServiceError | null, response: joblet_pb.RuntimeRemoveRes) => void): grpc.ClientUnaryCall;
     removeRuntime(request: joblet_pb.RuntimeRemoveReq, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: joblet_pb.RuntimeRemoveRes) => void): grpc.ClientUnaryCall;
     removeRuntime(request: joblet_pb.RuntimeRemoveReq, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: joblet_pb.RuntimeRemoveRes) => void): grpc.ClientUnaryCall;
+    buildRuntime(request: joblet_pb.BuildRuntimeRequest, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.BuildRuntimeProgress>;
+    buildRuntime(request: joblet_pb.BuildRuntimeRequest, metadata?: grpc.Metadata, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.BuildRuntimeProgress>;
+    validateRuntimeYAML(request: joblet_pb.ValidateRuntimeYAMLRequest, callback: (error: grpc.ServiceError | null, response: joblet_pb.ValidateRuntimeYAMLResponse) => void): grpc.ClientUnaryCall;
+    validateRuntimeYAML(request: joblet_pb.ValidateRuntimeYAMLRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: joblet_pb.ValidateRuntimeYAMLResponse) => void): grpc.ClientUnaryCall;
+    validateRuntimeYAML(request: joblet_pb.ValidateRuntimeYAMLRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: joblet_pb.ValidateRuntimeYAMLResponse) => void): grpc.ClientUnaryCall;
 }
 
 export class RuntimeServiceClient extends grpc.Client implements IRuntimeServiceClient {
@@ -516,20 +505,12 @@ export class RuntimeServiceClient extends grpc.Client implements IRuntimeService
     public testRuntime(request: joblet_pb.RuntimeTestReq, callback: (error: grpc.ServiceError | null, response: joblet_pb.RuntimeTestRes) => void): grpc.ClientUnaryCall;
     public testRuntime(request: joblet_pb.RuntimeTestReq, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: joblet_pb.RuntimeTestRes) => void): grpc.ClientUnaryCall;
     public testRuntime(request: joblet_pb.RuntimeTestReq, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: joblet_pb.RuntimeTestRes) => void): grpc.ClientUnaryCall;
-    public installRuntimeFromGithub(request: joblet_pb.InstallRuntimeRequest, callback: (error: grpc.ServiceError | null, response: joblet_pb.InstallRuntimeResponse) => void): grpc.ClientUnaryCall;
-    public installRuntimeFromGithub(request: joblet_pb.InstallRuntimeRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: joblet_pb.InstallRuntimeResponse) => void): grpc.ClientUnaryCall;
-    public installRuntimeFromGithub(request: joblet_pb.InstallRuntimeRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: joblet_pb.InstallRuntimeResponse) => void): grpc.ClientUnaryCall;
-    public installRuntimeFromLocal(request: joblet_pb.InstallRuntimeFromLocalRequest, callback: (error: grpc.ServiceError | null, response: joblet_pb.InstallRuntimeResponse) => void): grpc.ClientUnaryCall;
-    public installRuntimeFromLocal(request: joblet_pb.InstallRuntimeFromLocalRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: joblet_pb.InstallRuntimeResponse) => void): grpc.ClientUnaryCall;
-    public installRuntimeFromLocal(request: joblet_pb.InstallRuntimeFromLocalRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: joblet_pb.InstallRuntimeResponse) => void): grpc.ClientUnaryCall;
-    public streamingInstallRuntimeFromGithub(request: joblet_pb.InstallRuntimeRequest, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.RuntimeInstallationChunk>;
-    public streamingInstallRuntimeFromGithub(request: joblet_pb.InstallRuntimeRequest, metadata?: grpc.Metadata, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.RuntimeInstallationChunk>;
-    public streamingInstallRuntimeFromLocal(request: joblet_pb.InstallRuntimeFromLocalRequest, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.RuntimeInstallationChunk>;
-    public streamingInstallRuntimeFromLocal(request: joblet_pb.InstallRuntimeFromLocalRequest, metadata?: grpc.Metadata, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.RuntimeInstallationChunk>;
-    public validateRuntimeSpec(request: joblet_pb.ValidateRuntimeSpecRequest, callback: (error: grpc.ServiceError | null, response: joblet_pb.ValidateRuntimeSpecResponse) => void): grpc.ClientUnaryCall;
-    public validateRuntimeSpec(request: joblet_pb.ValidateRuntimeSpecRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: joblet_pb.ValidateRuntimeSpecResponse) => void): grpc.ClientUnaryCall;
-    public validateRuntimeSpec(request: joblet_pb.ValidateRuntimeSpecRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: joblet_pb.ValidateRuntimeSpecResponse) => void): grpc.ClientUnaryCall;
     public removeRuntime(request: joblet_pb.RuntimeRemoveReq, callback: (error: grpc.ServiceError | null, response: joblet_pb.RuntimeRemoveRes) => void): grpc.ClientUnaryCall;
     public removeRuntime(request: joblet_pb.RuntimeRemoveReq, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: joblet_pb.RuntimeRemoveRes) => void): grpc.ClientUnaryCall;
     public removeRuntime(request: joblet_pb.RuntimeRemoveReq, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: joblet_pb.RuntimeRemoveRes) => void): grpc.ClientUnaryCall;
+    public buildRuntime(request: joblet_pb.BuildRuntimeRequest, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.BuildRuntimeProgress>;
+    public buildRuntime(request: joblet_pb.BuildRuntimeRequest, metadata?: grpc.Metadata, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<joblet_pb.BuildRuntimeProgress>;
+    public validateRuntimeYAML(request: joblet_pb.ValidateRuntimeYAMLRequest, callback: (error: grpc.ServiceError | null, response: joblet_pb.ValidateRuntimeYAMLResponse) => void): grpc.ClientUnaryCall;
+    public validateRuntimeYAML(request: joblet_pb.ValidateRuntimeYAMLRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: joblet_pb.ValidateRuntimeYAMLResponse) => void): grpc.ClientUnaryCall;
+    public validateRuntimeYAML(request: joblet_pb.ValidateRuntimeYAMLRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: joblet_pb.ValidateRuntimeYAMLResponse) => void): grpc.ClientUnaryCall;
 }

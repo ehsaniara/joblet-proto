@@ -21,6 +21,12 @@ var global = (function() {
   return Function('return this')();
 }.call(null));
 
+goog.exportSymbol('proto.joblet.BuildLogLine', null, global);
+goog.exportSymbol('proto.joblet.BuildPhaseProgress', null, global);
+goog.exportSymbol('proto.joblet.BuildResult', null, global);
+goog.exportSymbol('proto.joblet.BuildRuntimeProgress', null, global);
+goog.exportSymbol('proto.joblet.BuildRuntimeProgress.ProgressTypeCase', null, global);
+goog.exportSymbol('proto.joblet.BuildRuntimeRequest', null, global);
 goog.exportSymbol('proto.joblet.CPUMetrics', null, global);
 goog.exportSymbol('proto.joblet.CancelJobReq', null, global);
 goog.exportSymbol('proto.joblet.CancelJobRes', null, global);
@@ -39,15 +45,14 @@ goog.exportSymbol('proto.joblet.DiskMetrics', null, global);
 goog.exportSymbol('proto.joblet.EmptyRequest', null, global);
 goog.exportSymbol('proto.joblet.FileUpload', null, global);
 goog.exportSymbol('proto.joblet.GetJobLogsReq', null, global);
+goog.exportSymbol('proto.joblet.GetJobMetricsRequest', null, global);
 goog.exportSymbol('proto.joblet.GetJobStatusReq', null, global);
 goog.exportSymbol('proto.joblet.GetJobStatusRes', null, global);
-goog.exportSymbol('proto.joblet.GetTelemetryRequest', null, global);
+goog.exportSymbol('proto.joblet.GetJobTelematicsRequest', null, global);
 goog.exportSymbol('proto.joblet.HostInfo', null, global);
 goog.exportSymbol('proto.joblet.IOMetrics', null, global);
-goog.exportSymbol('proto.joblet.InstallRuntimeFromLocalRequest', null, global);
-goog.exportSymbol('proto.joblet.InstallRuntimeRequest', null, global);
-goog.exportSymbol('proto.joblet.InstallRuntimeResponse', null, global);
 goog.exportSymbol('proto.joblet.Job', null, global);
+goog.exportSymbol('proto.joblet.JobMetricsEvent', null, global);
 goog.exportSymbol('proto.joblet.Jobs', null, global);
 goog.exportSymbol('proto.joblet.MemoryMetrics', null, global);
 goog.exportSymbol('proto.joblet.Network', null, global);
@@ -61,38 +66,36 @@ goog.exportSymbol('proto.joblet.RemoveVolumeReq', null, global);
 goog.exportSymbol('proto.joblet.RemoveVolumeRes', null, global);
 goog.exportSymbol('proto.joblet.RunJobRequest', null, global);
 goog.exportSymbol('proto.joblet.RunJobResponse', null, global);
-goog.exportSymbol('proto.joblet.RuntimeFile', null, global);
 goog.exportSymbol('proto.joblet.RuntimeInfo', null, global);
 goog.exportSymbol('proto.joblet.RuntimeInfoReq', null, global);
 goog.exportSymbol('proto.joblet.RuntimeInfoRes', null, global);
-goog.exportSymbol('proto.joblet.RuntimeInstallationChunk', null, global);
-goog.exportSymbol('proto.joblet.RuntimeInstallationChunk.ChunkTypeCase', null, global);
-goog.exportSymbol('proto.joblet.RuntimeInstallationLog', null, global);
-goog.exportSymbol('proto.joblet.RuntimeInstallationProgress', null, global);
-goog.exportSymbol('proto.joblet.RuntimeInstallationResult', null, global);
 goog.exportSymbol('proto.joblet.RuntimeRemoveReq', null, global);
 goog.exportSymbol('proto.joblet.RuntimeRemoveRes', null, global);
 goog.exportSymbol('proto.joblet.RuntimeRequirements', null, global);
-goog.exportSymbol('proto.joblet.RuntimeSpecInfo', null, global);
 goog.exportSymbol('proto.joblet.RuntimeTestReq', null, global);
 goog.exportSymbol('proto.joblet.RuntimeTestRes', null, global);
+goog.exportSymbol('proto.joblet.RuntimeYAMLInfo', null, global);
 goog.exportSymbol('proto.joblet.RuntimesRes', null, global);
 goog.exportSymbol('proto.joblet.ServerVersionInfo', null, global);
 goog.exportSymbol('proto.joblet.StopJobReq', null, global);
 goog.exportSymbol('proto.joblet.StopJobRes', null, global);
+goog.exportSymbol('proto.joblet.StreamJobMetricsRequest', null, global);
+goog.exportSymbol('proto.joblet.StreamJobTelematicsRequest', null, global);
 goog.exportSymbol('proto.joblet.StreamMetricsReq', null, global);
-goog.exportSymbol('proto.joblet.StreamTelemetryRequest', null, global);
 goog.exportSymbol('proto.joblet.SystemMetricsRes', null, global);
 goog.exportSymbol('proto.joblet.SystemStatusRes', null, global);
-goog.exportSymbol('proto.joblet.TelemetryConnectData', null, global);
-goog.exportSymbol('proto.joblet.TelemetryEvent', null, global);
-goog.exportSymbol('proto.joblet.TelemetryEvent.DataCase', null, global);
-goog.exportSymbol('proto.joblet.TelemetryExecData', null, global);
-goog.exportSymbol('proto.joblet.TelemetryFileData', null, global);
-goog.exportSymbol('proto.joblet.TelemetryMetricsData', null, global);
+goog.exportSymbol('proto.joblet.TelematicsAcceptData', null, global);
+goog.exportSymbol('proto.joblet.TelematicsConnectData', null, global);
+goog.exportSymbol('proto.joblet.TelematicsEvent', null, global);
+goog.exportSymbol('proto.joblet.TelematicsEvent.DataCase', null, global);
+goog.exportSymbol('proto.joblet.TelematicsExecData', null, global);
+goog.exportSymbol('proto.joblet.TelematicsFileData', null, global);
+goog.exportSymbol('proto.joblet.TelematicsMmapData', null, global);
+goog.exportSymbol('proto.joblet.TelematicsMprotectData', null, global);
+goog.exportSymbol('proto.joblet.TelematicsSocketDataData', null, global);
 goog.exportSymbol('proto.joblet.Timestamp', null, global);
-goog.exportSymbol('proto.joblet.ValidateRuntimeSpecRequest', null, global);
-goog.exportSymbol('proto.joblet.ValidateRuntimeSpecResponse', null, global);
+goog.exportSymbol('proto.joblet.ValidateRuntimeYAMLRequest', null, global);
+goog.exportSymbol('proto.joblet.ValidateRuntimeYAMLResponse', null, global);
 goog.exportSymbol('proto.joblet.Volume', null, global);
 goog.exportSymbol('proto.joblet.Volumes', null, global);
 /**
@@ -441,16 +444,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.joblet.RuntimeInstallationChunk = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, proto.joblet.RuntimeInstallationChunk.oneofGroups_);
+proto.joblet.BuildRuntimeRequest = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.joblet.RuntimeInstallationChunk, jspb.Message);
+goog.inherits(proto.joblet.BuildRuntimeRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.joblet.RuntimeInstallationChunk.displayName = 'proto.joblet.RuntimeInstallationChunk';
+  proto.joblet.BuildRuntimeRequest.displayName = 'proto.joblet.BuildRuntimeRequest';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -462,16 +465,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.joblet.RuntimeInstallationProgress = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+proto.joblet.BuildRuntimeProgress = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, proto.joblet.BuildRuntimeProgress.oneofGroups_);
 };
-goog.inherits(proto.joblet.RuntimeInstallationProgress, jspb.Message);
+goog.inherits(proto.joblet.BuildRuntimeProgress, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.joblet.RuntimeInstallationProgress.displayName = 'proto.joblet.RuntimeInstallationProgress';
+  proto.joblet.BuildRuntimeProgress.displayName = 'proto.joblet.BuildRuntimeProgress';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -483,16 +486,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.joblet.RuntimeInstallationLog = function(opt_data) {
+proto.joblet.BuildPhaseProgress = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.joblet.RuntimeInstallationLog, jspb.Message);
+goog.inherits(proto.joblet.BuildPhaseProgress, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.joblet.RuntimeInstallationLog.displayName = 'proto.joblet.RuntimeInstallationLog';
+  proto.joblet.BuildPhaseProgress.displayName = 'proto.joblet.BuildPhaseProgress';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -504,16 +507,100 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.joblet.RuntimeInstallationResult = function(opt_data) {
+proto.joblet.BuildLogLine = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.joblet.RuntimeInstallationResult, jspb.Message);
+goog.inherits(proto.joblet.BuildLogLine, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.joblet.RuntimeInstallationResult.displayName = 'proto.joblet.RuntimeInstallationResult';
+  proto.joblet.BuildLogLine.displayName = 'proto.joblet.BuildLogLine';
+}
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.joblet.BuildResult = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.joblet.BuildResult, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  /**
+   * @public
+   * @override
+   */
+  proto.joblet.BuildResult.displayName = 'proto.joblet.BuildResult';
+}
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.joblet.ValidateRuntimeYAMLRequest = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.joblet.ValidateRuntimeYAMLRequest, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  /**
+   * @public
+   * @override
+   */
+  proto.joblet.ValidateRuntimeYAMLRequest.displayName = 'proto.joblet.ValidateRuntimeYAMLRequest';
+}
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.joblet.ValidateRuntimeYAMLResponse = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.joblet.ValidateRuntimeYAMLResponse.repeatedFields_, null);
+};
+goog.inherits(proto.joblet.ValidateRuntimeYAMLResponse, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  /**
+   * @public
+   * @override
+   */
+  proto.joblet.ValidateRuntimeYAMLResponse.displayName = 'proto.joblet.ValidateRuntimeYAMLResponse';
+}
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.joblet.RuntimeYAMLInfo = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.joblet.RuntimeYAMLInfo.repeatedFields_, null);
+};
+goog.inherits(proto.joblet.RuntimeYAMLInfo, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  /**
+   * @public
+   * @override
+   */
+  proto.joblet.RuntimeYAMLInfo.displayName = 'proto.joblet.RuntimeYAMLInfo';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -1281,132 +1368,6 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.joblet.InstallRuntimeRequest = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
-};
-goog.inherits(proto.joblet.InstallRuntimeRequest, jspb.Message);
-if (goog.DEBUG && !COMPILED) {
-  /**
-   * @public
-   * @override
-   */
-  proto.joblet.InstallRuntimeRequest.displayName = 'proto.joblet.InstallRuntimeRequest';
-}
-/**
- * Generated by JsPbCodeGenerator.
- * @param {Array=} opt_data Optional initial data array, typically from a
- * server response, or constructed directly in Javascript. The array is used
- * in place and becomes part of the constructed object. It is not cloned.
- * If no data is provided, the constructed object will be empty, but still
- * valid.
- * @extends {jspb.Message}
- * @constructor
- */
-proto.joblet.InstallRuntimeResponse = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
-};
-goog.inherits(proto.joblet.InstallRuntimeResponse, jspb.Message);
-if (goog.DEBUG && !COMPILED) {
-  /**
-   * @public
-   * @override
-   */
-  proto.joblet.InstallRuntimeResponse.displayName = 'proto.joblet.InstallRuntimeResponse';
-}
-/**
- * Generated by JsPbCodeGenerator.
- * @param {Array=} opt_data Optional initial data array, typically from a
- * server response, or constructed directly in Javascript. The array is used
- * in place and becomes part of the constructed object. It is not cloned.
- * If no data is provided, the constructed object will be empty, but still
- * valid.
- * @extends {jspb.Message}
- * @constructor
- */
-proto.joblet.InstallRuntimeFromLocalRequest = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.joblet.InstallRuntimeFromLocalRequest.repeatedFields_, null);
-};
-goog.inherits(proto.joblet.InstallRuntimeFromLocalRequest, jspb.Message);
-if (goog.DEBUG && !COMPILED) {
-  /**
-   * @public
-   * @override
-   */
-  proto.joblet.InstallRuntimeFromLocalRequest.displayName = 'proto.joblet.InstallRuntimeFromLocalRequest';
-}
-/**
- * Generated by JsPbCodeGenerator.
- * @param {Array=} opt_data Optional initial data array, typically from a
- * server response, or constructed directly in Javascript. The array is used
- * in place and becomes part of the constructed object. It is not cloned.
- * If no data is provided, the constructed object will be empty, but still
- * valid.
- * @extends {jspb.Message}
- * @constructor
- */
-proto.joblet.RuntimeFile = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
-};
-goog.inherits(proto.joblet.RuntimeFile, jspb.Message);
-if (goog.DEBUG && !COMPILED) {
-  /**
-   * @public
-   * @override
-   */
-  proto.joblet.RuntimeFile.displayName = 'proto.joblet.RuntimeFile';
-}
-/**
- * Generated by JsPbCodeGenerator.
- * @param {Array=} opt_data Optional initial data array, typically from a
- * server response, or constructed directly in Javascript. The array is used
- * in place and becomes part of the constructed object. It is not cloned.
- * If no data is provided, the constructed object will be empty, but still
- * valid.
- * @extends {jspb.Message}
- * @constructor
- */
-proto.joblet.ValidateRuntimeSpecRequest = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
-};
-goog.inherits(proto.joblet.ValidateRuntimeSpecRequest, jspb.Message);
-if (goog.DEBUG && !COMPILED) {
-  /**
-   * @public
-   * @override
-   */
-  proto.joblet.ValidateRuntimeSpecRequest.displayName = 'proto.joblet.ValidateRuntimeSpecRequest';
-}
-/**
- * Generated by JsPbCodeGenerator.
- * @param {Array=} opt_data Optional initial data array, typically from a
- * server response, or constructed directly in Javascript. The array is used
- * in place and becomes part of the constructed object. It is not cloned.
- * If no data is provided, the constructed object will be empty, but still
- * valid.
- * @extends {jspb.Message}
- * @constructor
- */
-proto.joblet.ValidateRuntimeSpecResponse = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
-};
-goog.inherits(proto.joblet.ValidateRuntimeSpecResponse, jspb.Message);
-if (goog.DEBUG && !COMPILED) {
-  /**
-   * @public
-   * @override
-   */
-  proto.joblet.ValidateRuntimeSpecResponse.displayName = 'proto.joblet.ValidateRuntimeSpecResponse';
-}
-/**
- * Generated by JsPbCodeGenerator.
- * @param {Array=} opt_data Optional initial data array, typically from a
- * server response, or constructed directly in Javascript. The array is used
- * in place and becomes part of the constructed object. It is not cloned.
- * If no data is provided, the constructed object will be empty, but still
- * valid.
- * @extends {jspb.Message}
- * @constructor
- */
 proto.joblet.RuntimeRemoveReq = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
@@ -1449,100 +1410,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.joblet.RuntimeSpecInfo = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.joblet.RuntimeSpecInfo.repeatedFields_, null);
-};
-goog.inherits(proto.joblet.RuntimeSpecInfo, jspb.Message);
-if (goog.DEBUG && !COMPILED) {
-  /**
-   * @public
-   * @override
-   */
-  proto.joblet.RuntimeSpecInfo.displayName = 'proto.joblet.RuntimeSpecInfo';
-}
-/**
- * Generated by JsPbCodeGenerator.
- * @param {Array=} opt_data Optional initial data array, typically from a
- * server response, or constructed directly in Javascript. The array is used
- * in place and becomes part of the constructed object. It is not cloned.
- * If no data is provided, the constructed object will be empty, but still
- * valid.
- * @extends {jspb.Message}
- * @constructor
- */
-proto.joblet.StreamTelemetryRequest = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.joblet.StreamTelemetryRequest.repeatedFields_, null);
-};
-goog.inherits(proto.joblet.StreamTelemetryRequest, jspb.Message);
-if (goog.DEBUG && !COMPILED) {
-  /**
-   * @public
-   * @override
-   */
-  proto.joblet.StreamTelemetryRequest.displayName = 'proto.joblet.StreamTelemetryRequest';
-}
-/**
- * Generated by JsPbCodeGenerator.
- * @param {Array=} opt_data Optional initial data array, typically from a
- * server response, or constructed directly in Javascript. The array is used
- * in place and becomes part of the constructed object. It is not cloned.
- * If no data is provided, the constructed object will be empty, but still
- * valid.
- * @extends {jspb.Message}
- * @constructor
- */
-proto.joblet.GetTelemetryRequest = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.joblet.GetTelemetryRequest.repeatedFields_, null);
-};
-goog.inherits(proto.joblet.GetTelemetryRequest, jspb.Message);
-if (goog.DEBUG && !COMPILED) {
-  /**
-   * @public
-   * @override
-   */
-  proto.joblet.GetTelemetryRequest.displayName = 'proto.joblet.GetTelemetryRequest';
-}
-/**
- * Generated by JsPbCodeGenerator.
- * @param {Array=} opt_data Optional initial data array, typically from a
- * server response, or constructed directly in Javascript. The array is used
- * in place and becomes part of the constructed object. It is not cloned.
- * If no data is provided, the constructed object will be empty, but still
- * valid.
- * @extends {jspb.Message}
- * @constructor
- */
-proto.joblet.TelemetryEvent = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, proto.joblet.TelemetryEvent.oneofGroups_);
-};
-goog.inherits(proto.joblet.TelemetryEvent, jspb.Message);
-if (goog.DEBUG && !COMPILED) {
-  /**
-   * @public
-   * @override
-   */
-  proto.joblet.TelemetryEvent.displayName = 'proto.joblet.TelemetryEvent';
-}
-/**
- * Generated by JsPbCodeGenerator.
- * @param {Array=} opt_data Optional initial data array, typically from a
- * server response, or constructed directly in Javascript. The array is used
- * in place and becomes part of the constructed object. It is not cloned.
- * If no data is provided, the constructed object will be empty, but still
- * valid.
- * @extends {jspb.Message}
- * @constructor
- */
-proto.joblet.TelemetryMetricsData = function(opt_data) {
+proto.joblet.StreamJobMetricsRequest = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.joblet.TelemetryMetricsData, jspb.Message);
+goog.inherits(proto.joblet.StreamJobMetricsRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.joblet.TelemetryMetricsData.displayName = 'proto.joblet.TelemetryMetricsData';
+  proto.joblet.StreamJobMetricsRequest.displayName = 'proto.joblet.StreamJobMetricsRequest';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -1554,37 +1431,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.joblet.TelemetryExecData = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.joblet.TelemetryExecData.repeatedFields_, null);
-};
-goog.inherits(proto.joblet.TelemetryExecData, jspb.Message);
-if (goog.DEBUG && !COMPILED) {
-  /**
-   * @public
-   * @override
-   */
-  proto.joblet.TelemetryExecData.displayName = 'proto.joblet.TelemetryExecData';
-}
-/**
- * Generated by JsPbCodeGenerator.
- * @param {Array=} opt_data Optional initial data array, typically from a
- * server response, or constructed directly in Javascript. The array is used
- * in place and becomes part of the constructed object. It is not cloned.
- * If no data is provided, the constructed object will be empty, but still
- * valid.
- * @extends {jspb.Message}
- * @constructor
- */
-proto.joblet.TelemetryConnectData = function(opt_data) {
+proto.joblet.GetJobMetricsRequest = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.joblet.TelemetryConnectData, jspb.Message);
+goog.inherits(proto.joblet.GetJobMetricsRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.joblet.TelemetryConnectData.displayName = 'proto.joblet.TelemetryConnectData';
+  proto.joblet.GetJobMetricsRequest.displayName = 'proto.joblet.GetJobMetricsRequest';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -1596,16 +1452,226 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.joblet.TelemetryFileData = function(opt_data) {
+proto.joblet.JobMetricsEvent = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.joblet.TelemetryFileData, jspb.Message);
+goog.inherits(proto.joblet.JobMetricsEvent, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.joblet.TelemetryFileData.displayName = 'proto.joblet.TelemetryFileData';
+  proto.joblet.JobMetricsEvent.displayName = 'proto.joblet.JobMetricsEvent';
+}
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.joblet.StreamJobTelematicsRequest = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.joblet.StreamJobTelematicsRequest.repeatedFields_, null);
+};
+goog.inherits(proto.joblet.StreamJobTelematicsRequest, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  /**
+   * @public
+   * @override
+   */
+  proto.joblet.StreamJobTelematicsRequest.displayName = 'proto.joblet.StreamJobTelematicsRequest';
+}
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.joblet.GetJobTelematicsRequest = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.joblet.GetJobTelematicsRequest.repeatedFields_, null);
+};
+goog.inherits(proto.joblet.GetJobTelematicsRequest, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  /**
+   * @public
+   * @override
+   */
+  proto.joblet.GetJobTelematicsRequest.displayName = 'proto.joblet.GetJobTelematicsRequest';
+}
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.joblet.TelematicsEvent = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, proto.joblet.TelematicsEvent.oneofGroups_);
+};
+goog.inherits(proto.joblet.TelematicsEvent, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  /**
+   * @public
+   * @override
+   */
+  proto.joblet.TelematicsEvent.displayName = 'proto.joblet.TelematicsEvent';
+}
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.joblet.TelematicsExecData = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.joblet.TelematicsExecData.repeatedFields_, null);
+};
+goog.inherits(proto.joblet.TelematicsExecData, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  /**
+   * @public
+   * @override
+   */
+  proto.joblet.TelematicsExecData.displayName = 'proto.joblet.TelematicsExecData';
+}
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.joblet.TelematicsConnectData = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.joblet.TelematicsConnectData, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  /**
+   * @public
+   * @override
+   */
+  proto.joblet.TelematicsConnectData.displayName = 'proto.joblet.TelematicsConnectData';
+}
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.joblet.TelematicsAcceptData = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.joblet.TelematicsAcceptData, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  /**
+   * @public
+   * @override
+   */
+  proto.joblet.TelematicsAcceptData.displayName = 'proto.joblet.TelematicsAcceptData';
+}
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.joblet.TelematicsFileData = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.joblet.TelematicsFileData, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  /**
+   * @public
+   * @override
+   */
+  proto.joblet.TelematicsFileData.displayName = 'proto.joblet.TelematicsFileData';
+}
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.joblet.TelematicsMmapData = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.joblet.TelematicsMmapData, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  /**
+   * @public
+   * @override
+   */
+  proto.joblet.TelematicsMmapData.displayName = 'proto.joblet.TelematicsMmapData';
+}
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.joblet.TelematicsMprotectData = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.joblet.TelematicsMprotectData, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  /**
+   * @public
+   * @override
+   */
+  proto.joblet.TelematicsMprotectData.displayName = 'proto.joblet.TelematicsMprotectData';
+}
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.joblet.TelematicsSocketDataData = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.joblet.TelematicsSocketDataData, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  /**
+   * @public
+   * @override
+   */
+  proto.joblet.TelematicsSocketDataData.displayName = 'proto.joblet.TelematicsSocketDataData';
 }
 
 /**
@@ -5472,6 +5538,226 @@ proto.joblet.DataChunk.prototype.setPayload = function(value) {
 
 
 
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.joblet.BuildRuntimeRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.joblet.BuildRuntimeRequest.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.joblet.BuildRuntimeRequest} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.joblet.BuildRuntimeRequest.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    yamlContent: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    dryRun: jspb.Message.getBooleanFieldWithDefault(msg, 2, false),
+    verbose: jspb.Message.getBooleanFieldWithDefault(msg, 3, false),
+    forceRebuild: jspb.Message.getBooleanFieldWithDefault(msg, 4, false)
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.joblet.BuildRuntimeRequest}
+ */
+proto.joblet.BuildRuntimeRequest.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.joblet.BuildRuntimeRequest;
+  return proto.joblet.BuildRuntimeRequest.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.joblet.BuildRuntimeRequest} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.joblet.BuildRuntimeRequest}
+ */
+proto.joblet.BuildRuntimeRequest.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setYamlContent(value);
+      break;
+    case 2:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setDryRun(value);
+      break;
+    case 3:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setVerbose(value);
+      break;
+    case 4:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setForceRebuild(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.joblet.BuildRuntimeRequest.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.joblet.BuildRuntimeRequest.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.joblet.BuildRuntimeRequest} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.joblet.BuildRuntimeRequest.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getYamlContent();
+  if (f.length > 0) {
+    writer.writeString(
+      1,
+      f
+    );
+  }
+  f = message.getDryRun();
+  if (f) {
+    writer.writeBool(
+      2,
+      f
+    );
+  }
+  f = message.getVerbose();
+  if (f) {
+    writer.writeBool(
+      3,
+      f
+    );
+  }
+  f = message.getForceRebuild();
+  if (f) {
+    writer.writeBool(
+      4,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional string yaml_content = 1;
+ * @return {string}
+ */
+proto.joblet.BuildRuntimeRequest.prototype.getYamlContent = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.joblet.BuildRuntimeRequest} returns this
+ */
+proto.joblet.BuildRuntimeRequest.prototype.setYamlContent = function(value) {
+  return jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+/**
+ * optional bool dry_run = 2;
+ * @return {boolean}
+ */
+proto.joblet.BuildRuntimeRequest.prototype.getDryRun = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 2, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.joblet.BuildRuntimeRequest} returns this
+ */
+proto.joblet.BuildRuntimeRequest.prototype.setDryRun = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 2, value);
+};
+
+
+/**
+ * optional bool verbose = 3;
+ * @return {boolean}
+ */
+proto.joblet.BuildRuntimeRequest.prototype.getVerbose = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 3, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.joblet.BuildRuntimeRequest} returns this
+ */
+proto.joblet.BuildRuntimeRequest.prototype.setVerbose = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 3, value);
+};
+
+
+/**
+ * optional bool force_rebuild = 4;
+ * @return {boolean}
+ */
+proto.joblet.BuildRuntimeRequest.prototype.getForceRebuild = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 4, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.joblet.BuildRuntimeRequest} returns this
+ */
+proto.joblet.BuildRuntimeRequest.prototype.setForceRebuild = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 4, value);
+};
+
+
+
 /**
  * Oneof group definitions for this message. Each group defines the field
  * numbers belonging to that group. When of these fields' value is set, all
@@ -5480,23 +5766,23 @@ proto.joblet.DataChunk.prototype.setPayload = function(value) {
  * @private {!Array<!Array<number>>}
  * @const
  */
-proto.joblet.RuntimeInstallationChunk.oneofGroups_ = [[1,2,3]];
+proto.joblet.BuildRuntimeProgress.oneofGroups_ = [[1,2,3]];
 
 /**
  * @enum {number}
  */
-proto.joblet.RuntimeInstallationChunk.ChunkTypeCase = {
-  CHUNK_TYPE_NOT_SET: 0,
-  PROGRESS: 1,
+proto.joblet.BuildRuntimeProgress.ProgressTypeCase = {
+  PROGRESS_TYPE_NOT_SET: 0,
+  PHASE: 1,
   LOG: 2,
   RESULT: 3
 };
 
 /**
- * @return {proto.joblet.RuntimeInstallationChunk.ChunkTypeCase}
+ * @return {proto.joblet.BuildRuntimeProgress.ProgressTypeCase}
  */
-proto.joblet.RuntimeInstallationChunk.prototype.getChunkTypeCase = function() {
-  return /** @type {proto.joblet.RuntimeInstallationChunk.ChunkTypeCase} */(jspb.Message.computeOneofCase(this, proto.joblet.RuntimeInstallationChunk.oneofGroups_[0]));
+proto.joblet.BuildRuntimeProgress.prototype.getProgressTypeCase = function() {
+  return /** @type {proto.joblet.BuildRuntimeProgress.ProgressTypeCase} */(jspb.Message.computeOneofCase(this, proto.joblet.BuildRuntimeProgress.oneofGroups_[0]));
 };
 
 
@@ -5514,8 +5800,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.joblet.RuntimeInstallationChunk.prototype.toObject = function(opt_includeInstance) {
-  return proto.joblet.RuntimeInstallationChunk.toObject(opt_includeInstance, this);
+proto.joblet.BuildRuntimeProgress.prototype.toObject = function(opt_includeInstance) {
+  return proto.joblet.BuildRuntimeProgress.toObject(opt_includeInstance, this);
 };
 
 
@@ -5524,15 +5810,15 @@ proto.joblet.RuntimeInstallationChunk.prototype.toObject = function(opt_includeI
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.joblet.RuntimeInstallationChunk} msg The msg instance to transform.
+ * @param {!proto.joblet.BuildRuntimeProgress} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.joblet.RuntimeInstallationChunk.toObject = function(includeInstance, msg) {
+proto.joblet.BuildRuntimeProgress.toObject = function(includeInstance, msg) {
   var f, obj = {
-    progress: (f = msg.getProgress()) && proto.joblet.RuntimeInstallationProgress.toObject(includeInstance, f),
-    log: (f = msg.getLog()) && proto.joblet.RuntimeInstallationLog.toObject(includeInstance, f),
-    result: (f = msg.getResult()) && proto.joblet.RuntimeInstallationResult.toObject(includeInstance, f)
+    phase: (f = msg.getPhase()) && proto.joblet.BuildPhaseProgress.toObject(includeInstance, f),
+    log: (f = msg.getLog()) && proto.joblet.BuildLogLine.toObject(includeInstance, f),
+    result: (f = msg.getResult()) && proto.joblet.BuildResult.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -5546,23 +5832,23 @@ proto.joblet.RuntimeInstallationChunk.toObject = function(includeInstance, msg) 
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.joblet.RuntimeInstallationChunk}
+ * @return {!proto.joblet.BuildRuntimeProgress}
  */
-proto.joblet.RuntimeInstallationChunk.deserializeBinary = function(bytes) {
+proto.joblet.BuildRuntimeProgress.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.joblet.RuntimeInstallationChunk;
-  return proto.joblet.RuntimeInstallationChunk.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.joblet.BuildRuntimeProgress;
+  return proto.joblet.BuildRuntimeProgress.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.joblet.RuntimeInstallationChunk} msg The message object to deserialize into.
+ * @param {!proto.joblet.BuildRuntimeProgress} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.joblet.RuntimeInstallationChunk}
+ * @return {!proto.joblet.BuildRuntimeProgress}
  */
-proto.joblet.RuntimeInstallationChunk.deserializeBinaryFromReader = function(msg, reader) {
+proto.joblet.BuildRuntimeProgress.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -5570,18 +5856,18 @@ proto.joblet.RuntimeInstallationChunk.deserializeBinaryFromReader = function(msg
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = new proto.joblet.RuntimeInstallationProgress;
-      reader.readMessage(value,proto.joblet.RuntimeInstallationProgress.deserializeBinaryFromReader);
-      msg.setProgress(value);
+      var value = new proto.joblet.BuildPhaseProgress;
+      reader.readMessage(value,proto.joblet.BuildPhaseProgress.deserializeBinaryFromReader);
+      msg.setPhase(value);
       break;
     case 2:
-      var value = new proto.joblet.RuntimeInstallationLog;
-      reader.readMessage(value,proto.joblet.RuntimeInstallationLog.deserializeBinaryFromReader);
+      var value = new proto.joblet.BuildLogLine;
+      reader.readMessage(value,proto.joblet.BuildLogLine.deserializeBinaryFromReader);
       msg.setLog(value);
       break;
     case 3:
-      var value = new proto.joblet.RuntimeInstallationResult;
-      reader.readMessage(value,proto.joblet.RuntimeInstallationResult.deserializeBinaryFromReader);
+      var value = new proto.joblet.BuildResult;
+      reader.readMessage(value,proto.joblet.BuildResult.deserializeBinaryFromReader);
       msg.setResult(value);
       break;
     default:
@@ -5597,9 +5883,9 @@ proto.joblet.RuntimeInstallationChunk.deserializeBinaryFromReader = function(msg
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.joblet.RuntimeInstallationChunk.prototype.serializeBinary = function() {
+proto.joblet.BuildRuntimeProgress.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.joblet.RuntimeInstallationChunk.serializeBinaryToWriter(this, writer);
+  proto.joblet.BuildRuntimeProgress.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -5607,18 +5893,18 @@ proto.joblet.RuntimeInstallationChunk.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.joblet.RuntimeInstallationChunk} message
+ * @param {!proto.joblet.BuildRuntimeProgress} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.joblet.RuntimeInstallationChunk.serializeBinaryToWriter = function(message, writer) {
+proto.joblet.BuildRuntimeProgress.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getProgress();
+  f = message.getPhase();
   if (f != null) {
     writer.writeMessage(
       1,
       f,
-      proto.joblet.RuntimeInstallationProgress.serializeBinaryToWriter
+      proto.joblet.BuildPhaseProgress.serializeBinaryToWriter
     );
   }
   f = message.getLog();
@@ -5626,7 +5912,7 @@ proto.joblet.RuntimeInstallationChunk.serializeBinaryToWriter = function(message
     writer.writeMessage(
       2,
       f,
-      proto.joblet.RuntimeInstallationLog.serializeBinaryToWriter
+      proto.joblet.BuildLogLine.serializeBinaryToWriter
     );
   }
   f = message.getResult();
@@ -5634,37 +5920,37 @@ proto.joblet.RuntimeInstallationChunk.serializeBinaryToWriter = function(message
     writer.writeMessage(
       3,
       f,
-      proto.joblet.RuntimeInstallationResult.serializeBinaryToWriter
+      proto.joblet.BuildResult.serializeBinaryToWriter
     );
   }
 };
 
 
 /**
- * optional RuntimeInstallationProgress progress = 1;
- * @return {?proto.joblet.RuntimeInstallationProgress}
+ * optional BuildPhaseProgress phase = 1;
+ * @return {?proto.joblet.BuildPhaseProgress}
  */
-proto.joblet.RuntimeInstallationChunk.prototype.getProgress = function() {
-  return /** @type{?proto.joblet.RuntimeInstallationProgress} */ (
-    jspb.Message.getWrapperField(this, proto.joblet.RuntimeInstallationProgress, 1));
+proto.joblet.BuildRuntimeProgress.prototype.getPhase = function() {
+  return /** @type{?proto.joblet.BuildPhaseProgress} */ (
+    jspb.Message.getWrapperField(this, proto.joblet.BuildPhaseProgress, 1));
 };
 
 
 /**
- * @param {?proto.joblet.RuntimeInstallationProgress|undefined} value
- * @return {!proto.joblet.RuntimeInstallationChunk} returns this
+ * @param {?proto.joblet.BuildPhaseProgress|undefined} value
+ * @return {!proto.joblet.BuildRuntimeProgress} returns this
 */
-proto.joblet.RuntimeInstallationChunk.prototype.setProgress = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 1, proto.joblet.RuntimeInstallationChunk.oneofGroups_[0], value);
+proto.joblet.BuildRuntimeProgress.prototype.setPhase = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 1, proto.joblet.BuildRuntimeProgress.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the message field making it undefined.
- * @return {!proto.joblet.RuntimeInstallationChunk} returns this
+ * @return {!proto.joblet.BuildRuntimeProgress} returns this
  */
-proto.joblet.RuntimeInstallationChunk.prototype.clearProgress = function() {
-  return this.setProgress(undefined);
+proto.joblet.BuildRuntimeProgress.prototype.clearPhase = function() {
+  return this.setPhase(undefined);
 };
 
 
@@ -5672,35 +5958,35 @@ proto.joblet.RuntimeInstallationChunk.prototype.clearProgress = function() {
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.joblet.RuntimeInstallationChunk.prototype.hasProgress = function() {
+proto.joblet.BuildRuntimeProgress.prototype.hasPhase = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
 
 /**
- * optional RuntimeInstallationLog log = 2;
- * @return {?proto.joblet.RuntimeInstallationLog}
+ * optional BuildLogLine log = 2;
+ * @return {?proto.joblet.BuildLogLine}
  */
-proto.joblet.RuntimeInstallationChunk.prototype.getLog = function() {
-  return /** @type{?proto.joblet.RuntimeInstallationLog} */ (
-    jspb.Message.getWrapperField(this, proto.joblet.RuntimeInstallationLog, 2));
+proto.joblet.BuildRuntimeProgress.prototype.getLog = function() {
+  return /** @type{?proto.joblet.BuildLogLine} */ (
+    jspb.Message.getWrapperField(this, proto.joblet.BuildLogLine, 2));
 };
 
 
 /**
- * @param {?proto.joblet.RuntimeInstallationLog|undefined} value
- * @return {!proto.joblet.RuntimeInstallationChunk} returns this
+ * @param {?proto.joblet.BuildLogLine|undefined} value
+ * @return {!proto.joblet.BuildRuntimeProgress} returns this
 */
-proto.joblet.RuntimeInstallationChunk.prototype.setLog = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 2, proto.joblet.RuntimeInstallationChunk.oneofGroups_[0], value);
+proto.joblet.BuildRuntimeProgress.prototype.setLog = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 2, proto.joblet.BuildRuntimeProgress.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the message field making it undefined.
- * @return {!proto.joblet.RuntimeInstallationChunk} returns this
+ * @return {!proto.joblet.BuildRuntimeProgress} returns this
  */
-proto.joblet.RuntimeInstallationChunk.prototype.clearLog = function() {
+proto.joblet.BuildRuntimeProgress.prototype.clearLog = function() {
   return this.setLog(undefined);
 };
 
@@ -5709,35 +5995,35 @@ proto.joblet.RuntimeInstallationChunk.prototype.clearLog = function() {
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.joblet.RuntimeInstallationChunk.prototype.hasLog = function() {
+proto.joblet.BuildRuntimeProgress.prototype.hasLog = function() {
   return jspb.Message.getField(this, 2) != null;
 };
 
 
 /**
- * optional RuntimeInstallationResult result = 3;
- * @return {?proto.joblet.RuntimeInstallationResult}
+ * optional BuildResult result = 3;
+ * @return {?proto.joblet.BuildResult}
  */
-proto.joblet.RuntimeInstallationChunk.prototype.getResult = function() {
-  return /** @type{?proto.joblet.RuntimeInstallationResult} */ (
-    jspb.Message.getWrapperField(this, proto.joblet.RuntimeInstallationResult, 3));
+proto.joblet.BuildRuntimeProgress.prototype.getResult = function() {
+  return /** @type{?proto.joblet.BuildResult} */ (
+    jspb.Message.getWrapperField(this, proto.joblet.BuildResult, 3));
 };
 
 
 /**
- * @param {?proto.joblet.RuntimeInstallationResult|undefined} value
- * @return {!proto.joblet.RuntimeInstallationChunk} returns this
+ * @param {?proto.joblet.BuildResult|undefined} value
+ * @return {!proto.joblet.BuildRuntimeProgress} returns this
 */
-proto.joblet.RuntimeInstallationChunk.prototype.setResult = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 3, proto.joblet.RuntimeInstallationChunk.oneofGroups_[0], value);
+proto.joblet.BuildRuntimeProgress.prototype.setResult = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 3, proto.joblet.BuildRuntimeProgress.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the message field making it undefined.
- * @return {!proto.joblet.RuntimeInstallationChunk} returns this
+ * @return {!proto.joblet.BuildRuntimeProgress} returns this
  */
-proto.joblet.RuntimeInstallationChunk.prototype.clearResult = function() {
+proto.joblet.BuildRuntimeProgress.prototype.clearResult = function() {
   return this.setResult(undefined);
 };
 
@@ -5746,7 +6032,7 @@ proto.joblet.RuntimeInstallationChunk.prototype.clearResult = function() {
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.joblet.RuntimeInstallationChunk.prototype.hasResult = function() {
+proto.joblet.BuildRuntimeProgress.prototype.hasResult = function() {
   return jspb.Message.getField(this, 3) != null;
 };
 
@@ -5767,8 +6053,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.joblet.RuntimeInstallationProgress.prototype.toObject = function(opt_includeInstance) {
-  return proto.joblet.RuntimeInstallationProgress.toObject(opt_includeInstance, this);
+proto.joblet.BuildPhaseProgress.prototype.toObject = function(opt_includeInstance) {
+  return proto.joblet.BuildPhaseProgress.toObject(opt_includeInstance, this);
 };
 
 
@@ -5777,15 +6063,16 @@ proto.joblet.RuntimeInstallationProgress.prototype.toObject = function(opt_inclu
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.joblet.RuntimeInstallationProgress} msg The msg instance to transform.
+ * @param {!proto.joblet.BuildPhaseProgress} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.joblet.RuntimeInstallationProgress.toObject = function(includeInstance, msg) {
+proto.joblet.BuildPhaseProgress.toObject = function(includeInstance, msg) {
   var f, obj = {
-    message: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    step: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    totalSteps: jspb.Message.getFieldWithDefault(msg, 3, 0)
+    phaseNumber: jspb.Message.getFieldWithDefault(msg, 1, 0),
+    totalPhases: jspb.Message.getFieldWithDefault(msg, 2, 0),
+    phaseName: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    message: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
   if (includeInstance) {
@@ -5799,23 +6086,23 @@ proto.joblet.RuntimeInstallationProgress.toObject = function(includeInstance, ms
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.joblet.RuntimeInstallationProgress}
+ * @return {!proto.joblet.BuildPhaseProgress}
  */
-proto.joblet.RuntimeInstallationProgress.deserializeBinary = function(bytes) {
+proto.joblet.BuildPhaseProgress.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.joblet.RuntimeInstallationProgress;
-  return proto.joblet.RuntimeInstallationProgress.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.joblet.BuildPhaseProgress;
+  return proto.joblet.BuildPhaseProgress.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.joblet.RuntimeInstallationProgress} msg The message object to deserialize into.
+ * @param {!proto.joblet.BuildPhaseProgress} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.joblet.RuntimeInstallationProgress}
+ * @return {!proto.joblet.BuildPhaseProgress}
  */
-proto.joblet.RuntimeInstallationProgress.deserializeBinaryFromReader = function(msg, reader) {
+proto.joblet.BuildPhaseProgress.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -5823,16 +6110,20 @@ proto.joblet.RuntimeInstallationProgress.deserializeBinaryFromReader = function(
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setMessage(value);
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setPhaseNumber(value);
       break;
     case 2:
       var value = /** @type {number} */ (reader.readInt32());
-      msg.setStep(value);
+      msg.setTotalPhases(value);
       break;
     case 3:
-      var value = /** @type {number} */ (reader.readInt32());
-      msg.setTotalSteps(value);
+      var value = /** @type {string} */ (reader.readString());
+      msg.setPhaseName(value);
+      break;
+    case 4:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setMessage(value);
       break;
     default:
       reader.skipField();
@@ -5847,9 +6138,9 @@ proto.joblet.RuntimeInstallationProgress.deserializeBinaryFromReader = function(
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.joblet.RuntimeInstallationProgress.prototype.serializeBinary = function() {
+proto.joblet.BuildPhaseProgress.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.joblet.RuntimeInstallationProgress.serializeBinaryToWriter(this, writer);
+  proto.joblet.BuildPhaseProgress.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -5857,29 +6148,244 @@ proto.joblet.RuntimeInstallationProgress.prototype.serializeBinary = function() 
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.joblet.RuntimeInstallationProgress} message
+ * @param {!proto.joblet.BuildPhaseProgress} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.joblet.RuntimeInstallationProgress.serializeBinaryToWriter = function(message, writer) {
+proto.joblet.BuildPhaseProgress.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getMessage();
-  if (f.length > 0) {
-    writer.writeString(
+  f = message.getPhaseNumber();
+  if (f !== 0) {
+    writer.writeInt32(
       1,
       f
     );
   }
-  f = message.getStep();
+  f = message.getTotalPhases();
   if (f !== 0) {
     writer.writeInt32(
       2,
       f
     );
   }
-  f = message.getTotalSteps();
+  f = message.getPhaseName();
+  if (f.length > 0) {
+    writer.writeString(
+      3,
+      f
+    );
+  }
+  f = message.getMessage();
+  if (f.length > 0) {
+    writer.writeString(
+      4,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional int32 phase_number = 1;
+ * @return {number}
+ */
+proto.joblet.BuildPhaseProgress.prototype.getPhaseNumber = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.BuildPhaseProgress} returns this
+ */
+proto.joblet.BuildPhaseProgress.prototype.setPhaseNumber = function(value) {
+  return jspb.Message.setProto3IntField(this, 1, value);
+};
+
+
+/**
+ * optional int32 total_phases = 2;
+ * @return {number}
+ */
+proto.joblet.BuildPhaseProgress.prototype.getTotalPhases = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.BuildPhaseProgress} returns this
+ */
+proto.joblet.BuildPhaseProgress.prototype.setTotalPhases = function(value) {
+  return jspb.Message.setProto3IntField(this, 2, value);
+};
+
+
+/**
+ * optional string phase_name = 3;
+ * @return {string}
+ */
+proto.joblet.BuildPhaseProgress.prototype.getPhaseName = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.joblet.BuildPhaseProgress} returns this
+ */
+proto.joblet.BuildPhaseProgress.prototype.setPhaseName = function(value) {
+  return jspb.Message.setProto3StringField(this, 3, value);
+};
+
+
+/**
+ * optional string message = 4;
+ * @return {string}
+ */
+proto.joblet.BuildPhaseProgress.prototype.getMessage = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.joblet.BuildPhaseProgress} returns this
+ */
+proto.joblet.BuildPhaseProgress.prototype.setMessage = function(value) {
+  return jspb.Message.setProto3StringField(this, 4, value);
+};
+
+
+
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.joblet.BuildLogLine.prototype.toObject = function(opt_includeInstance) {
+  return proto.joblet.BuildLogLine.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.joblet.BuildLogLine} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.joblet.BuildLogLine.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    level: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    message: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    timestamp: jspb.Message.getFieldWithDefault(msg, 3, 0)
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.joblet.BuildLogLine}
+ */
+proto.joblet.BuildLogLine.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.joblet.BuildLogLine;
+  return proto.joblet.BuildLogLine.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.joblet.BuildLogLine} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.joblet.BuildLogLine}
+ */
+proto.joblet.BuildLogLine.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setLevel(value);
+      break;
+    case 2:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setMessage(value);
+      break;
+    case 3:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setTimestamp(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.joblet.BuildLogLine.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.joblet.BuildLogLine.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.joblet.BuildLogLine} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.joblet.BuildLogLine.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getLevel();
+  if (f.length > 0) {
+    writer.writeString(
+      1,
+      f
+    );
+  }
+  f = message.getMessage();
+  if (f.length > 0) {
+    writer.writeString(
+      2,
+      f
+    );
+  }
+  f = message.getTimestamp();
   if (f !== 0) {
-    writer.writeInt32(
+    writer.writeInt64(
       3,
       f
     );
@@ -5888,55 +6394,55 @@ proto.joblet.RuntimeInstallationProgress.serializeBinaryToWriter = function(mess
 
 
 /**
- * optional string message = 1;
+ * optional string level = 1;
  * @return {string}
  */
-proto.joblet.RuntimeInstallationProgress.prototype.getMessage = function() {
+proto.joblet.BuildLogLine.prototype.getLevel = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
 /**
  * @param {string} value
- * @return {!proto.joblet.RuntimeInstallationProgress} returns this
+ * @return {!proto.joblet.BuildLogLine} returns this
  */
-proto.joblet.RuntimeInstallationProgress.prototype.setMessage = function(value) {
+proto.joblet.BuildLogLine.prototype.setLevel = function(value) {
   return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
 /**
- * optional int32 step = 2;
- * @return {number}
+ * optional string message = 2;
+ * @return {string}
  */
-proto.joblet.RuntimeInstallationProgress.prototype.getStep = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+proto.joblet.BuildLogLine.prototype.getMessage = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
 
 /**
- * @param {number} value
- * @return {!proto.joblet.RuntimeInstallationProgress} returns this
+ * @param {string} value
+ * @return {!proto.joblet.BuildLogLine} returns this
  */
-proto.joblet.RuntimeInstallationProgress.prototype.setStep = function(value) {
-  return jspb.Message.setProto3IntField(this, 2, value);
+proto.joblet.BuildLogLine.prototype.setMessage = function(value) {
+  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
 /**
- * optional int32 total_steps = 3;
+ * optional int64 timestamp = 3;
  * @return {number}
  */
-proto.joblet.RuntimeInstallationProgress.prototype.getTotalSteps = function() {
+proto.joblet.BuildLogLine.prototype.getTimestamp = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.joblet.RuntimeInstallationProgress} returns this
+ * @return {!proto.joblet.BuildLogLine} returns this
  */
-proto.joblet.RuntimeInstallationProgress.prototype.setTotalSteps = function(value) {
+proto.joblet.BuildLogLine.prototype.setTimestamp = function(value) {
   return jspb.Message.setProto3IntField(this, 3, value);
 };
 
@@ -5957,8 +6463,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.joblet.RuntimeInstallationLog.prototype.toObject = function(opt_includeInstance) {
-  return proto.joblet.RuntimeInstallationLog.toObject(opt_includeInstance, this);
+proto.joblet.BuildResult.prototype.toObject = function(opt_includeInstance) {
+  return proto.joblet.BuildResult.toObject(opt_includeInstance, this);
 };
 
 
@@ -5967,13 +6473,19 @@ proto.joblet.RuntimeInstallationLog.prototype.toObject = function(opt_includeIns
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.joblet.RuntimeInstallationLog} msg The msg instance to transform.
+ * @param {!proto.joblet.BuildResult} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.joblet.RuntimeInstallationLog.toObject = function(includeInstance, msg) {
+proto.joblet.BuildResult.toObject = function(includeInstance, msg) {
   var f, obj = {
-    data: msg.getData_asB64()
+    success: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
+    message: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    runtimeName: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    runtimeVersion: jspb.Message.getFieldWithDefault(msg, 4, ""),
+    installPath: jspb.Message.getFieldWithDefault(msg, 5, ""),
+    sizeBytes: jspb.Message.getFieldWithDefault(msg, 6, 0),
+    buildDurationMs: jspb.Message.getFieldWithDefault(msg, 7, 0)
   };
 
   if (includeInstance) {
@@ -5987,23 +6499,23 @@ proto.joblet.RuntimeInstallationLog.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.joblet.RuntimeInstallationLog}
+ * @return {!proto.joblet.BuildResult}
  */
-proto.joblet.RuntimeInstallationLog.deserializeBinary = function(bytes) {
+proto.joblet.BuildResult.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.joblet.RuntimeInstallationLog;
-  return proto.joblet.RuntimeInstallationLog.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.joblet.BuildResult;
+  return proto.joblet.BuildResult.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.joblet.RuntimeInstallationLog} msg The message object to deserialize into.
+ * @param {!proto.joblet.BuildResult} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.joblet.RuntimeInstallationLog}
+ * @return {!proto.joblet.BuildResult}
  */
-proto.joblet.RuntimeInstallationLog.deserializeBinaryFromReader = function(msg, reader) {
+proto.joblet.BuildResult.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -6011,8 +6523,32 @@ proto.joblet.RuntimeInstallationLog.deserializeBinaryFromReader = function(msg, 
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {!Uint8Array} */ (reader.readBytes());
-      msg.setData(value);
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setSuccess(value);
+      break;
+    case 2:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setMessage(value);
+      break;
+    case 3:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setRuntimeName(value);
+      break;
+    case 4:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setRuntimeVersion(value);
+      break;
+    case 5:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setInstallPath(value);
+      break;
+    case 6:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setSizeBytes(value);
+      break;
+    case 7:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setBuildDurationMs(value);
       break;
     default:
       reader.skipField();
@@ -6027,9 +6563,9 @@ proto.joblet.RuntimeInstallationLog.deserializeBinaryFromReader = function(msg, 
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.joblet.RuntimeInstallationLog.prototype.serializeBinary = function() {
+proto.joblet.BuildResult.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.joblet.RuntimeInstallationLog.serializeBinaryToWriter(this, writer);
+  proto.joblet.BuildResult.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -6037,16 +6573,58 @@ proto.joblet.RuntimeInstallationLog.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.joblet.RuntimeInstallationLog} message
+ * @param {!proto.joblet.BuildResult} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.joblet.RuntimeInstallationLog.serializeBinaryToWriter = function(message, writer) {
+proto.joblet.BuildResult.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getData_asU8();
-  if (f.length > 0) {
-    writer.writeBytes(
+  f = message.getSuccess();
+  if (f) {
+    writer.writeBool(
       1,
+      f
+    );
+  }
+  f = message.getMessage();
+  if (f.length > 0) {
+    writer.writeString(
+      2,
+      f
+    );
+  }
+  f = message.getRuntimeName();
+  if (f.length > 0) {
+    writer.writeString(
+      3,
+      f
+    );
+  }
+  f = message.getRuntimeVersion();
+  if (f.length > 0) {
+    writer.writeString(
+      4,
+      f
+    );
+  }
+  f = message.getInstallPath();
+  if (f.length > 0) {
+    writer.writeString(
+      5,
+      f
+    );
+  }
+  f = message.getSizeBytes();
+  if (f !== 0) {
+    writer.writeInt64(
+      6,
+      f
+    );
+  }
+  f = message.getBuildDurationMs();
+  if (f !== 0) {
+    writer.writeInt64(
+      7,
       f
     );
   }
@@ -6054,44 +6632,128 @@ proto.joblet.RuntimeInstallationLog.serializeBinaryToWriter = function(message, 
 
 
 /**
- * optional bytes data = 1;
- * @return {!(string|Uint8Array)}
+ * optional bool success = 1;
+ * @return {boolean}
  */
-proto.joblet.RuntimeInstallationLog.prototype.getData = function() {
-  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+proto.joblet.BuildResult.prototype.getSuccess = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 1, false));
 };
 
 
 /**
- * optional bytes data = 1;
- * This is a type-conversion wrapper around `getData()`
+ * @param {boolean} value
+ * @return {!proto.joblet.BuildResult} returns this
+ */
+proto.joblet.BuildResult.prototype.setSuccess = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 1, value);
+};
+
+
+/**
+ * optional string message = 2;
  * @return {string}
  */
-proto.joblet.RuntimeInstallationLog.prototype.getData_asB64 = function() {
-  return /** @type {string} */ (jspb.Message.bytesAsB64(
-      this.getData()));
+proto.joblet.BuildResult.prototype.getMessage = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
 
 /**
- * optional bytes data = 1;
- * Note that Uint8Array is not supported on all browsers.
- * @see http://caniuse.com/Uint8Array
- * This is a type-conversion wrapper around `getData()`
- * @return {!Uint8Array}
+ * @param {string} value
+ * @return {!proto.joblet.BuildResult} returns this
  */
-proto.joblet.RuntimeInstallationLog.prototype.getData_asU8 = function() {
-  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
-      this.getData()));
+proto.joblet.BuildResult.prototype.setMessage = function(value) {
+  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
 /**
- * @param {!(string|Uint8Array)} value
- * @return {!proto.joblet.RuntimeInstallationLog} returns this
+ * optional string runtime_name = 3;
+ * @return {string}
  */
-proto.joblet.RuntimeInstallationLog.prototype.setData = function(value) {
-  return jspb.Message.setProto3BytesField(this, 1, value);
+proto.joblet.BuildResult.prototype.getRuntimeName = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.joblet.BuildResult} returns this
+ */
+proto.joblet.BuildResult.prototype.setRuntimeName = function(value) {
+  return jspb.Message.setProto3StringField(this, 3, value);
+};
+
+
+/**
+ * optional string runtime_version = 4;
+ * @return {string}
+ */
+proto.joblet.BuildResult.prototype.getRuntimeVersion = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.joblet.BuildResult} returns this
+ */
+proto.joblet.BuildResult.prototype.setRuntimeVersion = function(value) {
+  return jspb.Message.setProto3StringField(this, 4, value);
+};
+
+
+/**
+ * optional string install_path = 5;
+ * @return {string}
+ */
+proto.joblet.BuildResult.prototype.getInstallPath = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.joblet.BuildResult} returns this
+ */
+proto.joblet.BuildResult.prototype.setInstallPath = function(value) {
+  return jspb.Message.setProto3StringField(this, 5, value);
+};
+
+
+/**
+ * optional int64 size_bytes = 6;
+ * @return {number}
+ */
+proto.joblet.BuildResult.prototype.getSizeBytes = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.BuildResult} returns this
+ */
+proto.joblet.BuildResult.prototype.setSizeBytes = function(value) {
+  return jspb.Message.setProto3IntField(this, 6, value);
+};
+
+
+/**
+ * optional int64 build_duration_ms = 7;
+ * @return {number}
+ */
+proto.joblet.BuildResult.prototype.getBuildDurationMs = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 7, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.BuildResult} returns this
+ */
+proto.joblet.BuildResult.prototype.setBuildDurationMs = function(value) {
+  return jspb.Message.setProto3IntField(this, 7, value);
 };
 
 
@@ -6111,8 +6773,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.joblet.RuntimeInstallationResult.prototype.toObject = function(opt_includeInstance) {
-  return proto.joblet.RuntimeInstallationResult.toObject(opt_includeInstance, this);
+proto.joblet.ValidateRuntimeYAMLRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.joblet.ValidateRuntimeYAMLRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -6121,16 +6783,13 @@ proto.joblet.RuntimeInstallationResult.prototype.toObject = function(opt_include
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.joblet.RuntimeInstallationResult} msg The msg instance to transform.
+ * @param {!proto.joblet.ValidateRuntimeYAMLRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.joblet.RuntimeInstallationResult.toObject = function(includeInstance, msg) {
+proto.joblet.ValidateRuntimeYAMLRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    success: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
-    message: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    runtimeSpec: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    installPath: jspb.Message.getFieldWithDefault(msg, 4, "")
+    yamlContent: jspb.Message.getFieldWithDefault(msg, 1, "")
   };
 
   if (includeInstance) {
@@ -6144,23 +6803,23 @@ proto.joblet.RuntimeInstallationResult.toObject = function(includeInstance, msg)
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.joblet.RuntimeInstallationResult}
+ * @return {!proto.joblet.ValidateRuntimeYAMLRequest}
  */
-proto.joblet.RuntimeInstallationResult.deserializeBinary = function(bytes) {
+proto.joblet.ValidateRuntimeYAMLRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.joblet.RuntimeInstallationResult;
-  return proto.joblet.RuntimeInstallationResult.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.joblet.ValidateRuntimeYAMLRequest;
+  return proto.joblet.ValidateRuntimeYAMLRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.joblet.RuntimeInstallationResult} msg The message object to deserialize into.
+ * @param {!proto.joblet.ValidateRuntimeYAMLRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.joblet.RuntimeInstallationResult}
+ * @return {!proto.joblet.ValidateRuntimeYAMLRequest}
  */
-proto.joblet.RuntimeInstallationResult.deserializeBinaryFromReader = function(msg, reader) {
+proto.joblet.ValidateRuntimeYAMLRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -6168,20 +6827,8 @@ proto.joblet.RuntimeInstallationResult.deserializeBinaryFromReader = function(ms
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {boolean} */ (reader.readBool());
-      msg.setSuccess(value);
-      break;
-    case 2:
       var value = /** @type {string} */ (reader.readString());
-      msg.setMessage(value);
-      break;
-    case 3:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setRuntimeSpec(value);
-      break;
-    case 4:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setInstallPath(value);
+      msg.setYamlContent(value);
       break;
     default:
       reader.skipField();
@@ -6196,9 +6843,9 @@ proto.joblet.RuntimeInstallationResult.deserializeBinaryFromReader = function(ms
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.joblet.RuntimeInstallationResult.prototype.serializeBinary = function() {
+proto.joblet.ValidateRuntimeYAMLRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.joblet.RuntimeInstallationResult.serializeBinaryToWriter(this, writer);
+  proto.joblet.ValidateRuntimeYAMLRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -6206,13 +6853,171 @@ proto.joblet.RuntimeInstallationResult.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.joblet.RuntimeInstallationResult} message
+ * @param {!proto.joblet.ValidateRuntimeYAMLRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.joblet.RuntimeInstallationResult.serializeBinaryToWriter = function(message, writer) {
+proto.joblet.ValidateRuntimeYAMLRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getSuccess();
+  f = message.getYamlContent();
+  if (f.length > 0) {
+    writer.writeString(
+      1,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional string yaml_content = 1;
+ * @return {string}
+ */
+proto.joblet.ValidateRuntimeYAMLRequest.prototype.getYamlContent = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.joblet.ValidateRuntimeYAMLRequest} returns this
+ */
+proto.joblet.ValidateRuntimeYAMLRequest.prototype.setYamlContent = function(value) {
+  return jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+
+/**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.joblet.ValidateRuntimeYAMLResponse.repeatedFields_ = [3,4];
+
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.joblet.ValidateRuntimeYAMLResponse.prototype.toObject = function(opt_includeInstance) {
+  return proto.joblet.ValidateRuntimeYAMLResponse.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.joblet.ValidateRuntimeYAMLResponse} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.joblet.ValidateRuntimeYAMLResponse.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    valid: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
+    message: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    errorsList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f,
+    warningsList: (f = jspb.Message.getRepeatedField(msg, 4)) == null ? undefined : f,
+    specInfo: (f = msg.getSpecInfo()) && proto.joblet.RuntimeYAMLInfo.toObject(includeInstance, f)
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.joblet.ValidateRuntimeYAMLResponse}
+ */
+proto.joblet.ValidateRuntimeYAMLResponse.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.joblet.ValidateRuntimeYAMLResponse;
+  return proto.joblet.ValidateRuntimeYAMLResponse.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.joblet.ValidateRuntimeYAMLResponse} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.joblet.ValidateRuntimeYAMLResponse}
+ */
+proto.joblet.ValidateRuntimeYAMLResponse.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setValid(value);
+      break;
+    case 2:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setMessage(value);
+      break;
+    case 3:
+      var value = /** @type {string} */ (reader.readString());
+      msg.addErrors(value);
+      break;
+    case 4:
+      var value = /** @type {string} */ (reader.readString());
+      msg.addWarnings(value);
+      break;
+    case 5:
+      var value = new proto.joblet.RuntimeYAMLInfo;
+      reader.readMessage(value,proto.joblet.RuntimeYAMLInfo.deserializeBinaryFromReader);
+      msg.setSpecInfo(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.joblet.ValidateRuntimeYAMLResponse.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.joblet.ValidateRuntimeYAMLResponse.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.joblet.ValidateRuntimeYAMLResponse} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.joblet.ValidateRuntimeYAMLResponse.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getValid();
   if (f) {
     writer.writeBool(
       1,
@@ -6226,37 +7031,45 @@ proto.joblet.RuntimeInstallationResult.serializeBinaryToWriter = function(messag
       f
     );
   }
-  f = message.getRuntimeSpec();
+  f = message.getErrorsList();
   if (f.length > 0) {
-    writer.writeString(
+    writer.writeRepeatedString(
       3,
       f
     );
   }
-  f = message.getInstallPath();
+  f = message.getWarningsList();
   if (f.length > 0) {
-    writer.writeString(
+    writer.writeRepeatedString(
       4,
       f
+    );
+  }
+  f = message.getSpecInfo();
+  if (f != null) {
+    writer.writeMessage(
+      5,
+      f,
+      proto.joblet.RuntimeYAMLInfo.serializeBinaryToWriter
     );
   }
 };
 
 
 /**
- * optional bool success = 1;
+ * optional bool valid = 1;
  * @return {boolean}
  */
-proto.joblet.RuntimeInstallationResult.prototype.getSuccess = function() {
+proto.joblet.ValidateRuntimeYAMLResponse.prototype.getValid = function() {
   return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 1, false));
 };
 
 
 /**
  * @param {boolean} value
- * @return {!proto.joblet.RuntimeInstallationResult} returns this
+ * @return {!proto.joblet.ValidateRuntimeYAMLResponse} returns this
  */
-proto.joblet.RuntimeInstallationResult.prototype.setSuccess = function(value) {
+proto.joblet.ValidateRuntimeYAMLResponse.prototype.setValid = function(value) {
   return jspb.Message.setProto3BooleanField(this, 1, value);
 };
 
@@ -6265,53 +7078,543 @@ proto.joblet.RuntimeInstallationResult.prototype.setSuccess = function(value) {
  * optional string message = 2;
  * @return {string}
  */
-proto.joblet.RuntimeInstallationResult.prototype.getMessage = function() {
+proto.joblet.ValidateRuntimeYAMLResponse.prototype.getMessage = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
 
 /**
  * @param {string} value
- * @return {!proto.joblet.RuntimeInstallationResult} returns this
+ * @return {!proto.joblet.ValidateRuntimeYAMLResponse} returns this
  */
-proto.joblet.RuntimeInstallationResult.prototype.setMessage = function(value) {
+proto.joblet.ValidateRuntimeYAMLResponse.prototype.setMessage = function(value) {
   return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
 /**
- * optional string runtime_spec = 3;
+ * repeated string errors = 3;
+ * @return {!Array<string>}
+ */
+proto.joblet.ValidateRuntimeYAMLResponse.prototype.getErrorsList = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 3));
+};
+
+
+/**
+ * @param {!Array<string>} value
+ * @return {!proto.joblet.ValidateRuntimeYAMLResponse} returns this
+ */
+proto.joblet.ValidateRuntimeYAMLResponse.prototype.setErrorsList = function(value) {
+  return jspb.Message.setField(this, 3, value || []);
+};
+
+
+/**
+ * @param {string} value
+ * @param {number=} opt_index
+ * @return {!proto.joblet.ValidateRuntimeYAMLResponse} returns this
+ */
+proto.joblet.ValidateRuntimeYAMLResponse.prototype.addErrors = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 3, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.joblet.ValidateRuntimeYAMLResponse} returns this
+ */
+proto.joblet.ValidateRuntimeYAMLResponse.prototype.clearErrorsList = function() {
+  return this.setErrorsList([]);
+};
+
+
+/**
+ * repeated string warnings = 4;
+ * @return {!Array<string>}
+ */
+proto.joblet.ValidateRuntimeYAMLResponse.prototype.getWarningsList = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 4));
+};
+
+
+/**
+ * @param {!Array<string>} value
+ * @return {!proto.joblet.ValidateRuntimeYAMLResponse} returns this
+ */
+proto.joblet.ValidateRuntimeYAMLResponse.prototype.setWarningsList = function(value) {
+  return jspb.Message.setField(this, 4, value || []);
+};
+
+
+/**
+ * @param {string} value
+ * @param {number=} opt_index
+ * @return {!proto.joblet.ValidateRuntimeYAMLResponse} returns this
+ */
+proto.joblet.ValidateRuntimeYAMLResponse.prototype.addWarnings = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 4, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.joblet.ValidateRuntimeYAMLResponse} returns this
+ */
+proto.joblet.ValidateRuntimeYAMLResponse.prototype.clearWarningsList = function() {
+  return this.setWarningsList([]);
+};
+
+
+/**
+ * optional RuntimeYAMLInfo spec_info = 5;
+ * @return {?proto.joblet.RuntimeYAMLInfo}
+ */
+proto.joblet.ValidateRuntimeYAMLResponse.prototype.getSpecInfo = function() {
+  return /** @type{?proto.joblet.RuntimeYAMLInfo} */ (
+    jspb.Message.getWrapperField(this, proto.joblet.RuntimeYAMLInfo, 5));
+};
+
+
+/**
+ * @param {?proto.joblet.RuntimeYAMLInfo|undefined} value
+ * @return {!proto.joblet.ValidateRuntimeYAMLResponse} returns this
+*/
+proto.joblet.ValidateRuntimeYAMLResponse.prototype.setSpecInfo = function(value) {
+  return jspb.Message.setWrapperField(this, 5, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.joblet.ValidateRuntimeYAMLResponse} returns this
+ */
+proto.joblet.ValidateRuntimeYAMLResponse.prototype.clearSpecInfo = function() {
+  return this.setSpecInfo(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.joblet.ValidateRuntimeYAMLResponse.prototype.hasSpecInfo = function() {
+  return jspb.Message.getField(this, 5) != null;
+};
+
+
+
+/**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.joblet.RuntimeYAMLInfo.repeatedFields_ = [6,7];
+
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.joblet.RuntimeYAMLInfo.prototype.toObject = function(opt_includeInstance) {
+  return proto.joblet.RuntimeYAMLInfo.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.joblet.RuntimeYAMLInfo} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.joblet.RuntimeYAMLInfo.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    name: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    version: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    language: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    languageVersion: jspb.Message.getFieldWithDefault(msg, 4, ""),
+    description: jspb.Message.getFieldWithDefault(msg, 5, ""),
+    pipPackagesList: (f = jspb.Message.getRepeatedField(msg, 6)) == null ? undefined : f,
+    npmPackagesList: (f = jspb.Message.getRepeatedField(msg, 7)) == null ? undefined : f,
+    hasHooks: jspb.Message.getBooleanFieldWithDefault(msg, 8, false),
+    requiresGpu: jspb.Message.getBooleanFieldWithDefault(msg, 9, false)
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.joblet.RuntimeYAMLInfo}
+ */
+proto.joblet.RuntimeYAMLInfo.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.joblet.RuntimeYAMLInfo;
+  return proto.joblet.RuntimeYAMLInfo.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.joblet.RuntimeYAMLInfo} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.joblet.RuntimeYAMLInfo}
+ */
+proto.joblet.RuntimeYAMLInfo.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setName(value);
+      break;
+    case 2:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setVersion(value);
+      break;
+    case 3:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setLanguage(value);
+      break;
+    case 4:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setLanguageVersion(value);
+      break;
+    case 5:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setDescription(value);
+      break;
+    case 6:
+      var value = /** @type {string} */ (reader.readString());
+      msg.addPipPackages(value);
+      break;
+    case 7:
+      var value = /** @type {string} */ (reader.readString());
+      msg.addNpmPackages(value);
+      break;
+    case 8:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setHasHooks(value);
+      break;
+    case 9:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setRequiresGpu(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.joblet.RuntimeYAMLInfo.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.joblet.RuntimeYAMLInfo.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.joblet.RuntimeYAMLInfo} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.joblet.RuntimeYAMLInfo.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getName();
+  if (f.length > 0) {
+    writer.writeString(
+      1,
+      f
+    );
+  }
+  f = message.getVersion();
+  if (f.length > 0) {
+    writer.writeString(
+      2,
+      f
+    );
+  }
+  f = message.getLanguage();
+  if (f.length > 0) {
+    writer.writeString(
+      3,
+      f
+    );
+  }
+  f = message.getLanguageVersion();
+  if (f.length > 0) {
+    writer.writeString(
+      4,
+      f
+    );
+  }
+  f = message.getDescription();
+  if (f.length > 0) {
+    writer.writeString(
+      5,
+      f
+    );
+  }
+  f = message.getPipPackagesList();
+  if (f.length > 0) {
+    writer.writeRepeatedString(
+      6,
+      f
+    );
+  }
+  f = message.getNpmPackagesList();
+  if (f.length > 0) {
+    writer.writeRepeatedString(
+      7,
+      f
+    );
+  }
+  f = message.getHasHooks();
+  if (f) {
+    writer.writeBool(
+      8,
+      f
+    );
+  }
+  f = message.getRequiresGpu();
+  if (f) {
+    writer.writeBool(
+      9,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional string name = 1;
  * @return {string}
  */
-proto.joblet.RuntimeInstallationResult.prototype.getRuntimeSpec = function() {
+proto.joblet.RuntimeYAMLInfo.prototype.getName = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.joblet.RuntimeYAMLInfo} returns this
+ */
+proto.joblet.RuntimeYAMLInfo.prototype.setName = function(value) {
+  return jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+/**
+ * optional string version = 2;
+ * @return {string}
+ */
+proto.joblet.RuntimeYAMLInfo.prototype.getVersion = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.joblet.RuntimeYAMLInfo} returns this
+ */
+proto.joblet.RuntimeYAMLInfo.prototype.setVersion = function(value) {
+  return jspb.Message.setProto3StringField(this, 2, value);
+};
+
+
+/**
+ * optional string language = 3;
+ * @return {string}
+ */
+proto.joblet.RuntimeYAMLInfo.prototype.getLanguage = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
 };
 
 
 /**
  * @param {string} value
- * @return {!proto.joblet.RuntimeInstallationResult} returns this
+ * @return {!proto.joblet.RuntimeYAMLInfo} returns this
  */
-proto.joblet.RuntimeInstallationResult.prototype.setRuntimeSpec = function(value) {
+proto.joblet.RuntimeYAMLInfo.prototype.setLanguage = function(value) {
   return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 
 /**
- * optional string install_path = 4;
+ * optional string language_version = 4;
  * @return {string}
  */
-proto.joblet.RuntimeInstallationResult.prototype.getInstallPath = function() {
+proto.joblet.RuntimeYAMLInfo.prototype.getLanguageVersion = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
 };
 
 
 /**
  * @param {string} value
- * @return {!proto.joblet.RuntimeInstallationResult} returns this
+ * @return {!proto.joblet.RuntimeYAMLInfo} returns this
  */
-proto.joblet.RuntimeInstallationResult.prototype.setInstallPath = function(value) {
+proto.joblet.RuntimeYAMLInfo.prototype.setLanguageVersion = function(value) {
   return jspb.Message.setProto3StringField(this, 4, value);
+};
+
+
+/**
+ * optional string description = 5;
+ * @return {string}
+ */
+proto.joblet.RuntimeYAMLInfo.prototype.getDescription = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.joblet.RuntimeYAMLInfo} returns this
+ */
+proto.joblet.RuntimeYAMLInfo.prototype.setDescription = function(value) {
+  return jspb.Message.setProto3StringField(this, 5, value);
+};
+
+
+/**
+ * repeated string pip_packages = 6;
+ * @return {!Array<string>}
+ */
+proto.joblet.RuntimeYAMLInfo.prototype.getPipPackagesList = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 6));
+};
+
+
+/**
+ * @param {!Array<string>} value
+ * @return {!proto.joblet.RuntimeYAMLInfo} returns this
+ */
+proto.joblet.RuntimeYAMLInfo.prototype.setPipPackagesList = function(value) {
+  return jspb.Message.setField(this, 6, value || []);
+};
+
+
+/**
+ * @param {string} value
+ * @param {number=} opt_index
+ * @return {!proto.joblet.RuntimeYAMLInfo} returns this
+ */
+proto.joblet.RuntimeYAMLInfo.prototype.addPipPackages = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 6, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.joblet.RuntimeYAMLInfo} returns this
+ */
+proto.joblet.RuntimeYAMLInfo.prototype.clearPipPackagesList = function() {
+  return this.setPipPackagesList([]);
+};
+
+
+/**
+ * repeated string npm_packages = 7;
+ * @return {!Array<string>}
+ */
+proto.joblet.RuntimeYAMLInfo.prototype.getNpmPackagesList = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 7));
+};
+
+
+/**
+ * @param {!Array<string>} value
+ * @return {!proto.joblet.RuntimeYAMLInfo} returns this
+ */
+proto.joblet.RuntimeYAMLInfo.prototype.setNpmPackagesList = function(value) {
+  return jspb.Message.setField(this, 7, value || []);
+};
+
+
+/**
+ * @param {string} value
+ * @param {number=} opt_index
+ * @return {!proto.joblet.RuntimeYAMLInfo} returns this
+ */
+proto.joblet.RuntimeYAMLInfo.prototype.addNpmPackages = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 7, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.joblet.RuntimeYAMLInfo} returns this
+ */
+proto.joblet.RuntimeYAMLInfo.prototype.clearNpmPackagesList = function() {
+  return this.setNpmPackagesList([]);
+};
+
+
+/**
+ * optional bool has_hooks = 8;
+ * @return {boolean}
+ */
+proto.joblet.RuntimeYAMLInfo.prototype.getHasHooks = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 8, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.joblet.RuntimeYAMLInfo} returns this
+ */
+proto.joblet.RuntimeYAMLInfo.prototype.setHasHooks = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 8, value);
+};
+
+
+/**
+ * optional bool requires_gpu = 9;
+ * @return {boolean}
+ */
+proto.joblet.RuntimeYAMLInfo.prototype.getRequiresGpu = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 9, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.joblet.RuntimeYAMLInfo} returns this
+ */
+proto.joblet.RuntimeYAMLInfo.prototype.setRequiresGpu = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 9, value);
 };
 
 
@@ -17126,1371 +18429,6 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.joblet.InstallRuntimeRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.joblet.InstallRuntimeRequest.toObject(opt_includeInstance, this);
-};
-
-
-/**
- * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Deprecated. Whether to include
- *     the JSPB instance for transitional soy proto support:
- *     http://goto/soy-param-migration
- * @param {!proto.joblet.InstallRuntimeRequest} msg The msg instance to transform.
- * @return {!Object}
- * @suppress {unusedLocalVariables} f is only used for nested messages
- */
-proto.joblet.InstallRuntimeRequest.toObject = function(includeInstance, msg) {
-  var f, obj = {
-    runtimespec: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    repository: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    branch: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    path: jspb.Message.getFieldWithDefault(msg, 4, ""),
-    forcereinstall: jspb.Message.getBooleanFieldWithDefault(msg, 5, false),
-    registryUrl: jspb.Message.getFieldWithDefault(msg, 6, "")
-  };
-
-  if (includeInstance) {
-    obj.$jspbMessageInstance = msg;
-  }
-  return obj;
-};
-}
-
-
-/**
- * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.joblet.InstallRuntimeRequest}
- */
-proto.joblet.InstallRuntimeRequest.deserializeBinary = function(bytes) {
-  var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.joblet.InstallRuntimeRequest;
-  return proto.joblet.InstallRuntimeRequest.deserializeBinaryFromReader(msg, reader);
-};
-
-
-/**
- * Deserializes binary data (in protobuf wire format) from the
- * given reader into the given message object.
- * @param {!proto.joblet.InstallRuntimeRequest} msg The message object to deserialize into.
- * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.joblet.InstallRuntimeRequest}
- */
-proto.joblet.InstallRuntimeRequest.deserializeBinaryFromReader = function(msg, reader) {
-  while (reader.nextField()) {
-    if (reader.isEndGroup()) {
-      break;
-    }
-    var field = reader.getFieldNumber();
-    switch (field) {
-    case 1:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setRuntimespec(value);
-      break;
-    case 2:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setRepository(value);
-      break;
-    case 3:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setBranch(value);
-      break;
-    case 4:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setPath(value);
-      break;
-    case 5:
-      var value = /** @type {boolean} */ (reader.readBool());
-      msg.setForcereinstall(value);
-      break;
-    case 6:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setRegistryUrl(value);
-      break;
-    default:
-      reader.skipField();
-      break;
-    }
-  }
-  return msg;
-};
-
-
-/**
- * Serializes the message to binary data (in protobuf wire format).
- * @return {!Uint8Array}
- */
-proto.joblet.InstallRuntimeRequest.prototype.serializeBinary = function() {
-  var writer = new jspb.BinaryWriter();
-  proto.joblet.InstallRuntimeRequest.serializeBinaryToWriter(this, writer);
-  return writer.getResultBuffer();
-};
-
-
-/**
- * Serializes the given message to binary data (in protobuf wire
- * format), writing to the given BinaryWriter.
- * @param {!proto.joblet.InstallRuntimeRequest} message
- * @param {!jspb.BinaryWriter} writer
- * @suppress {unusedLocalVariables} f is only used for nested messages
- */
-proto.joblet.InstallRuntimeRequest.serializeBinaryToWriter = function(message, writer) {
-  var f = undefined;
-  f = message.getRuntimespec();
-  if (f.length > 0) {
-    writer.writeString(
-      1,
-      f
-    );
-  }
-  f = message.getRepository();
-  if (f.length > 0) {
-    writer.writeString(
-      2,
-      f
-    );
-  }
-  f = message.getBranch();
-  if (f.length > 0) {
-    writer.writeString(
-      3,
-      f
-    );
-  }
-  f = message.getPath();
-  if (f.length > 0) {
-    writer.writeString(
-      4,
-      f
-    );
-  }
-  f = message.getForcereinstall();
-  if (f) {
-    writer.writeBool(
-      5,
-      f
-    );
-  }
-  f = message.getRegistryUrl();
-  if (f.length > 0) {
-    writer.writeString(
-      6,
-      f
-    );
-  }
-};
-
-
-/**
- * optional string runtimeSpec = 1;
- * @return {string}
- */
-proto.joblet.InstallRuntimeRequest.prototype.getRuntimespec = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.joblet.InstallRuntimeRequest} returns this
- */
-proto.joblet.InstallRuntimeRequest.prototype.setRuntimespec = function(value) {
-  return jspb.Message.setProto3StringField(this, 1, value);
-};
-
-
-/**
- * optional string repository = 2;
- * @return {string}
- */
-proto.joblet.InstallRuntimeRequest.prototype.getRepository = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.joblet.InstallRuntimeRequest} returns this
- */
-proto.joblet.InstallRuntimeRequest.prototype.setRepository = function(value) {
-  return jspb.Message.setProto3StringField(this, 2, value);
-};
-
-
-/**
- * optional string branch = 3;
- * @return {string}
- */
-proto.joblet.InstallRuntimeRequest.prototype.getBranch = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.joblet.InstallRuntimeRequest} returns this
- */
-proto.joblet.InstallRuntimeRequest.prototype.setBranch = function(value) {
-  return jspb.Message.setProto3StringField(this, 3, value);
-};
-
-
-/**
- * optional string path = 4;
- * @return {string}
- */
-proto.joblet.InstallRuntimeRequest.prototype.getPath = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.joblet.InstallRuntimeRequest} returns this
- */
-proto.joblet.InstallRuntimeRequest.prototype.setPath = function(value) {
-  return jspb.Message.setProto3StringField(this, 4, value);
-};
-
-
-/**
- * optional bool forceReinstall = 5;
- * @return {boolean}
- */
-proto.joblet.InstallRuntimeRequest.prototype.getForcereinstall = function() {
-  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 5, false));
-};
-
-
-/**
- * @param {boolean} value
- * @return {!proto.joblet.InstallRuntimeRequest} returns this
- */
-proto.joblet.InstallRuntimeRequest.prototype.setForcereinstall = function(value) {
-  return jspb.Message.setProto3BooleanField(this, 5, value);
-};
-
-
-/**
- * optional string registry_url = 6;
- * @return {string}
- */
-proto.joblet.InstallRuntimeRequest.prototype.getRegistryUrl = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 6, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.joblet.InstallRuntimeRequest} returns this
- */
-proto.joblet.InstallRuntimeRequest.prototype.setRegistryUrl = function(value) {
-  return jspb.Message.setProto3StringField(this, 6, value);
-};
-
-
-
-
-
-if (jspb.Message.GENERATE_TO_OBJECT) {
-/**
- * Creates an object representation of this proto.
- * Field names that are reserved in JavaScript and will be renamed to pb_name.
- * Optional fields that are not set will be set to undefined.
- * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
- * For the list of reserved names please see:
- *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
- * @param {boolean=} opt_includeInstance Deprecated. whether to include the
- *     JSPB instance for transitional soy proto support:
- *     http://goto/soy-param-migration
- * @return {!Object}
- */
-proto.joblet.InstallRuntimeResponse.prototype.toObject = function(opt_includeInstance) {
-  return proto.joblet.InstallRuntimeResponse.toObject(opt_includeInstance, this);
-};
-
-
-/**
- * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Deprecated. Whether to include
- *     the JSPB instance for transitional soy proto support:
- *     http://goto/soy-param-migration
- * @param {!proto.joblet.InstallRuntimeResponse} msg The msg instance to transform.
- * @return {!Object}
- * @suppress {unusedLocalVariables} f is only used for nested messages
- */
-proto.joblet.InstallRuntimeResponse.toObject = function(includeInstance, msg) {
-  var f, obj = {
-    buildjobuuid: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    runtimespec: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    status: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    message: jspb.Message.getFieldWithDefault(msg, 4, ""),
-    repository: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    resolvedpath: jspb.Message.getFieldWithDefault(msg, 6, "")
-  };
-
-  if (includeInstance) {
-    obj.$jspbMessageInstance = msg;
-  }
-  return obj;
-};
-}
-
-
-/**
- * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.joblet.InstallRuntimeResponse}
- */
-proto.joblet.InstallRuntimeResponse.deserializeBinary = function(bytes) {
-  var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.joblet.InstallRuntimeResponse;
-  return proto.joblet.InstallRuntimeResponse.deserializeBinaryFromReader(msg, reader);
-};
-
-
-/**
- * Deserializes binary data (in protobuf wire format) from the
- * given reader into the given message object.
- * @param {!proto.joblet.InstallRuntimeResponse} msg The message object to deserialize into.
- * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.joblet.InstallRuntimeResponse}
- */
-proto.joblet.InstallRuntimeResponse.deserializeBinaryFromReader = function(msg, reader) {
-  while (reader.nextField()) {
-    if (reader.isEndGroup()) {
-      break;
-    }
-    var field = reader.getFieldNumber();
-    switch (field) {
-    case 1:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setBuildjobuuid(value);
-      break;
-    case 2:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setRuntimespec(value);
-      break;
-    case 3:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setStatus(value);
-      break;
-    case 4:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setMessage(value);
-      break;
-    case 5:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setRepository(value);
-      break;
-    case 6:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setResolvedpath(value);
-      break;
-    default:
-      reader.skipField();
-      break;
-    }
-  }
-  return msg;
-};
-
-
-/**
- * Serializes the message to binary data (in protobuf wire format).
- * @return {!Uint8Array}
- */
-proto.joblet.InstallRuntimeResponse.prototype.serializeBinary = function() {
-  var writer = new jspb.BinaryWriter();
-  proto.joblet.InstallRuntimeResponse.serializeBinaryToWriter(this, writer);
-  return writer.getResultBuffer();
-};
-
-
-/**
- * Serializes the given message to binary data (in protobuf wire
- * format), writing to the given BinaryWriter.
- * @param {!proto.joblet.InstallRuntimeResponse} message
- * @param {!jspb.BinaryWriter} writer
- * @suppress {unusedLocalVariables} f is only used for nested messages
- */
-proto.joblet.InstallRuntimeResponse.serializeBinaryToWriter = function(message, writer) {
-  var f = undefined;
-  f = message.getBuildjobuuid();
-  if (f.length > 0) {
-    writer.writeString(
-      1,
-      f
-    );
-  }
-  f = message.getRuntimespec();
-  if (f.length > 0) {
-    writer.writeString(
-      2,
-      f
-    );
-  }
-  f = message.getStatus();
-  if (f.length > 0) {
-    writer.writeString(
-      3,
-      f
-    );
-  }
-  f = message.getMessage();
-  if (f.length > 0) {
-    writer.writeString(
-      4,
-      f
-    );
-  }
-  f = message.getRepository();
-  if (f.length > 0) {
-    writer.writeString(
-      5,
-      f
-    );
-  }
-  f = message.getResolvedpath();
-  if (f.length > 0) {
-    writer.writeString(
-      6,
-      f
-    );
-  }
-};
-
-
-/**
- * optional string buildJobUuid = 1;
- * @return {string}
- */
-proto.joblet.InstallRuntimeResponse.prototype.getBuildjobuuid = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.joblet.InstallRuntimeResponse} returns this
- */
-proto.joblet.InstallRuntimeResponse.prototype.setBuildjobuuid = function(value) {
-  return jspb.Message.setProto3StringField(this, 1, value);
-};
-
-
-/**
- * optional string runtimeSpec = 2;
- * @return {string}
- */
-proto.joblet.InstallRuntimeResponse.prototype.getRuntimespec = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.joblet.InstallRuntimeResponse} returns this
- */
-proto.joblet.InstallRuntimeResponse.prototype.setRuntimespec = function(value) {
-  return jspb.Message.setProto3StringField(this, 2, value);
-};
-
-
-/**
- * optional string status = 3;
- * @return {string}
- */
-proto.joblet.InstallRuntimeResponse.prototype.getStatus = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.joblet.InstallRuntimeResponse} returns this
- */
-proto.joblet.InstallRuntimeResponse.prototype.setStatus = function(value) {
-  return jspb.Message.setProto3StringField(this, 3, value);
-};
-
-
-/**
- * optional string message = 4;
- * @return {string}
- */
-proto.joblet.InstallRuntimeResponse.prototype.getMessage = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.joblet.InstallRuntimeResponse} returns this
- */
-proto.joblet.InstallRuntimeResponse.prototype.setMessage = function(value) {
-  return jspb.Message.setProto3StringField(this, 4, value);
-};
-
-
-/**
- * optional string repository = 5;
- * @return {string}
- */
-proto.joblet.InstallRuntimeResponse.prototype.getRepository = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.joblet.InstallRuntimeResponse} returns this
- */
-proto.joblet.InstallRuntimeResponse.prototype.setRepository = function(value) {
-  return jspb.Message.setProto3StringField(this, 5, value);
-};
-
-
-/**
- * optional string resolvedPath = 6;
- * @return {string}
- */
-proto.joblet.InstallRuntimeResponse.prototype.getResolvedpath = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 6, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.joblet.InstallRuntimeResponse} returns this
- */
-proto.joblet.InstallRuntimeResponse.prototype.setResolvedpath = function(value) {
-  return jspb.Message.setProto3StringField(this, 6, value);
-};
-
-
-
-/**
- * List of repeated fields within this message type.
- * @private {!Array<number>}
- * @const
- */
-proto.joblet.InstallRuntimeFromLocalRequest.repeatedFields_ = [2];
-
-
-
-if (jspb.Message.GENERATE_TO_OBJECT) {
-/**
- * Creates an object representation of this proto.
- * Field names that are reserved in JavaScript and will be renamed to pb_name.
- * Optional fields that are not set will be set to undefined.
- * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
- * For the list of reserved names please see:
- *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
- * @param {boolean=} opt_includeInstance Deprecated. whether to include the
- *     JSPB instance for transitional soy proto support:
- *     http://goto/soy-param-migration
- * @return {!Object}
- */
-proto.joblet.InstallRuntimeFromLocalRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.joblet.InstallRuntimeFromLocalRequest.toObject(opt_includeInstance, this);
-};
-
-
-/**
- * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Deprecated. Whether to include
- *     the JSPB instance for transitional soy proto support:
- *     http://goto/soy-param-migration
- * @param {!proto.joblet.InstallRuntimeFromLocalRequest} msg The msg instance to transform.
- * @return {!Object}
- * @suppress {unusedLocalVariables} f is only used for nested messages
- */
-proto.joblet.InstallRuntimeFromLocalRequest.toObject = function(includeInstance, msg) {
-  var f, obj = {
-    runtimespec: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    filesList: jspb.Message.toObjectList(msg.getFilesList(),
-    proto.joblet.RuntimeFile.toObject, includeInstance),
-    forcereinstall: jspb.Message.getBooleanFieldWithDefault(msg, 3, false)
-  };
-
-  if (includeInstance) {
-    obj.$jspbMessageInstance = msg;
-  }
-  return obj;
-};
-}
-
-
-/**
- * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.joblet.InstallRuntimeFromLocalRequest}
- */
-proto.joblet.InstallRuntimeFromLocalRequest.deserializeBinary = function(bytes) {
-  var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.joblet.InstallRuntimeFromLocalRequest;
-  return proto.joblet.InstallRuntimeFromLocalRequest.deserializeBinaryFromReader(msg, reader);
-};
-
-
-/**
- * Deserializes binary data (in protobuf wire format) from the
- * given reader into the given message object.
- * @param {!proto.joblet.InstallRuntimeFromLocalRequest} msg The message object to deserialize into.
- * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.joblet.InstallRuntimeFromLocalRequest}
- */
-proto.joblet.InstallRuntimeFromLocalRequest.deserializeBinaryFromReader = function(msg, reader) {
-  while (reader.nextField()) {
-    if (reader.isEndGroup()) {
-      break;
-    }
-    var field = reader.getFieldNumber();
-    switch (field) {
-    case 1:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setRuntimespec(value);
-      break;
-    case 2:
-      var value = new proto.joblet.RuntimeFile;
-      reader.readMessage(value,proto.joblet.RuntimeFile.deserializeBinaryFromReader);
-      msg.addFiles(value);
-      break;
-    case 3:
-      var value = /** @type {boolean} */ (reader.readBool());
-      msg.setForcereinstall(value);
-      break;
-    default:
-      reader.skipField();
-      break;
-    }
-  }
-  return msg;
-};
-
-
-/**
- * Serializes the message to binary data (in protobuf wire format).
- * @return {!Uint8Array}
- */
-proto.joblet.InstallRuntimeFromLocalRequest.prototype.serializeBinary = function() {
-  var writer = new jspb.BinaryWriter();
-  proto.joblet.InstallRuntimeFromLocalRequest.serializeBinaryToWriter(this, writer);
-  return writer.getResultBuffer();
-};
-
-
-/**
- * Serializes the given message to binary data (in protobuf wire
- * format), writing to the given BinaryWriter.
- * @param {!proto.joblet.InstallRuntimeFromLocalRequest} message
- * @param {!jspb.BinaryWriter} writer
- * @suppress {unusedLocalVariables} f is only used for nested messages
- */
-proto.joblet.InstallRuntimeFromLocalRequest.serializeBinaryToWriter = function(message, writer) {
-  var f = undefined;
-  f = message.getRuntimespec();
-  if (f.length > 0) {
-    writer.writeString(
-      1,
-      f
-    );
-  }
-  f = message.getFilesList();
-  if (f.length > 0) {
-    writer.writeRepeatedMessage(
-      2,
-      f,
-      proto.joblet.RuntimeFile.serializeBinaryToWriter
-    );
-  }
-  f = message.getForcereinstall();
-  if (f) {
-    writer.writeBool(
-      3,
-      f
-    );
-  }
-};
-
-
-/**
- * optional string runtimeSpec = 1;
- * @return {string}
- */
-proto.joblet.InstallRuntimeFromLocalRequest.prototype.getRuntimespec = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.joblet.InstallRuntimeFromLocalRequest} returns this
- */
-proto.joblet.InstallRuntimeFromLocalRequest.prototype.setRuntimespec = function(value) {
-  return jspb.Message.setProto3StringField(this, 1, value);
-};
-
-
-/**
- * repeated RuntimeFile files = 2;
- * @return {!Array<!proto.joblet.RuntimeFile>}
- */
-proto.joblet.InstallRuntimeFromLocalRequest.prototype.getFilesList = function() {
-  return /** @type{!Array<!proto.joblet.RuntimeFile>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.joblet.RuntimeFile, 2));
-};
-
-
-/**
- * @param {!Array<!proto.joblet.RuntimeFile>} value
- * @return {!proto.joblet.InstallRuntimeFromLocalRequest} returns this
-*/
-proto.joblet.InstallRuntimeFromLocalRequest.prototype.setFilesList = function(value) {
-  return jspb.Message.setRepeatedWrapperField(this, 2, value);
-};
-
-
-/**
- * @param {!proto.joblet.RuntimeFile=} opt_value
- * @param {number=} opt_index
- * @return {!proto.joblet.RuntimeFile}
- */
-proto.joblet.InstallRuntimeFromLocalRequest.prototype.addFiles = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 2, opt_value, proto.joblet.RuntimeFile, opt_index);
-};
-
-
-/**
- * Clears the list making it empty but non-null.
- * @return {!proto.joblet.InstallRuntimeFromLocalRequest} returns this
- */
-proto.joblet.InstallRuntimeFromLocalRequest.prototype.clearFilesList = function() {
-  return this.setFilesList([]);
-};
-
-
-/**
- * optional bool forceReinstall = 3;
- * @return {boolean}
- */
-proto.joblet.InstallRuntimeFromLocalRequest.prototype.getForcereinstall = function() {
-  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 3, false));
-};
-
-
-/**
- * @param {boolean} value
- * @return {!proto.joblet.InstallRuntimeFromLocalRequest} returns this
- */
-proto.joblet.InstallRuntimeFromLocalRequest.prototype.setForcereinstall = function(value) {
-  return jspb.Message.setProto3BooleanField(this, 3, value);
-};
-
-
-
-
-
-if (jspb.Message.GENERATE_TO_OBJECT) {
-/**
- * Creates an object representation of this proto.
- * Field names that are reserved in JavaScript and will be renamed to pb_name.
- * Optional fields that are not set will be set to undefined.
- * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
- * For the list of reserved names please see:
- *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
- * @param {boolean=} opt_includeInstance Deprecated. whether to include the
- *     JSPB instance for transitional soy proto support:
- *     http://goto/soy-param-migration
- * @return {!Object}
- */
-proto.joblet.RuntimeFile.prototype.toObject = function(opt_includeInstance) {
-  return proto.joblet.RuntimeFile.toObject(opt_includeInstance, this);
-};
-
-
-/**
- * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Deprecated. Whether to include
- *     the JSPB instance for transitional soy proto support:
- *     http://goto/soy-param-migration
- * @param {!proto.joblet.RuntimeFile} msg The msg instance to transform.
- * @return {!Object}
- * @suppress {unusedLocalVariables} f is only used for nested messages
- */
-proto.joblet.RuntimeFile.toObject = function(includeInstance, msg) {
-  var f, obj = {
-    path: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    content: msg.getContent_asB64(),
-    executable: jspb.Message.getBooleanFieldWithDefault(msg, 3, false)
-  };
-
-  if (includeInstance) {
-    obj.$jspbMessageInstance = msg;
-  }
-  return obj;
-};
-}
-
-
-/**
- * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.joblet.RuntimeFile}
- */
-proto.joblet.RuntimeFile.deserializeBinary = function(bytes) {
-  var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.joblet.RuntimeFile;
-  return proto.joblet.RuntimeFile.deserializeBinaryFromReader(msg, reader);
-};
-
-
-/**
- * Deserializes binary data (in protobuf wire format) from the
- * given reader into the given message object.
- * @param {!proto.joblet.RuntimeFile} msg The message object to deserialize into.
- * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.joblet.RuntimeFile}
- */
-proto.joblet.RuntimeFile.deserializeBinaryFromReader = function(msg, reader) {
-  while (reader.nextField()) {
-    if (reader.isEndGroup()) {
-      break;
-    }
-    var field = reader.getFieldNumber();
-    switch (field) {
-    case 1:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setPath(value);
-      break;
-    case 2:
-      var value = /** @type {!Uint8Array} */ (reader.readBytes());
-      msg.setContent(value);
-      break;
-    case 3:
-      var value = /** @type {boolean} */ (reader.readBool());
-      msg.setExecutable(value);
-      break;
-    default:
-      reader.skipField();
-      break;
-    }
-  }
-  return msg;
-};
-
-
-/**
- * Serializes the message to binary data (in protobuf wire format).
- * @return {!Uint8Array}
- */
-proto.joblet.RuntimeFile.prototype.serializeBinary = function() {
-  var writer = new jspb.BinaryWriter();
-  proto.joblet.RuntimeFile.serializeBinaryToWriter(this, writer);
-  return writer.getResultBuffer();
-};
-
-
-/**
- * Serializes the given message to binary data (in protobuf wire
- * format), writing to the given BinaryWriter.
- * @param {!proto.joblet.RuntimeFile} message
- * @param {!jspb.BinaryWriter} writer
- * @suppress {unusedLocalVariables} f is only used for nested messages
- */
-proto.joblet.RuntimeFile.serializeBinaryToWriter = function(message, writer) {
-  var f = undefined;
-  f = message.getPath();
-  if (f.length > 0) {
-    writer.writeString(
-      1,
-      f
-    );
-  }
-  f = message.getContent_asU8();
-  if (f.length > 0) {
-    writer.writeBytes(
-      2,
-      f
-    );
-  }
-  f = message.getExecutable();
-  if (f) {
-    writer.writeBool(
-      3,
-      f
-    );
-  }
-};
-
-
-/**
- * optional string path = 1;
- * @return {string}
- */
-proto.joblet.RuntimeFile.prototype.getPath = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.joblet.RuntimeFile} returns this
- */
-proto.joblet.RuntimeFile.prototype.setPath = function(value) {
-  return jspb.Message.setProto3StringField(this, 1, value);
-};
-
-
-/**
- * optional bytes content = 2;
- * @return {!(string|Uint8Array)}
- */
-proto.joblet.RuntimeFile.prototype.getContent = function() {
-  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
-};
-
-
-/**
- * optional bytes content = 2;
- * This is a type-conversion wrapper around `getContent()`
- * @return {string}
- */
-proto.joblet.RuntimeFile.prototype.getContent_asB64 = function() {
-  return /** @type {string} */ (jspb.Message.bytesAsB64(
-      this.getContent()));
-};
-
-
-/**
- * optional bytes content = 2;
- * Note that Uint8Array is not supported on all browsers.
- * @see http://caniuse.com/Uint8Array
- * This is a type-conversion wrapper around `getContent()`
- * @return {!Uint8Array}
- */
-proto.joblet.RuntimeFile.prototype.getContent_asU8 = function() {
-  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
-      this.getContent()));
-};
-
-
-/**
- * @param {!(string|Uint8Array)} value
- * @return {!proto.joblet.RuntimeFile} returns this
- */
-proto.joblet.RuntimeFile.prototype.setContent = function(value) {
-  return jspb.Message.setProto3BytesField(this, 2, value);
-};
-
-
-/**
- * optional bool executable = 3;
- * @return {boolean}
- */
-proto.joblet.RuntimeFile.prototype.getExecutable = function() {
-  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 3, false));
-};
-
-
-/**
- * @param {boolean} value
- * @return {!proto.joblet.RuntimeFile} returns this
- */
-proto.joblet.RuntimeFile.prototype.setExecutable = function(value) {
-  return jspb.Message.setProto3BooleanField(this, 3, value);
-};
-
-
-
-
-
-if (jspb.Message.GENERATE_TO_OBJECT) {
-/**
- * Creates an object representation of this proto.
- * Field names that are reserved in JavaScript and will be renamed to pb_name.
- * Optional fields that are not set will be set to undefined.
- * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
- * For the list of reserved names please see:
- *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
- * @param {boolean=} opt_includeInstance Deprecated. whether to include the
- *     JSPB instance for transitional soy proto support:
- *     http://goto/soy-param-migration
- * @return {!Object}
- */
-proto.joblet.ValidateRuntimeSpecRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.joblet.ValidateRuntimeSpecRequest.toObject(opt_includeInstance, this);
-};
-
-
-/**
- * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Deprecated. Whether to include
- *     the JSPB instance for transitional soy proto support:
- *     http://goto/soy-param-migration
- * @param {!proto.joblet.ValidateRuntimeSpecRequest} msg The msg instance to transform.
- * @return {!Object}
- * @suppress {unusedLocalVariables} f is only used for nested messages
- */
-proto.joblet.ValidateRuntimeSpecRequest.toObject = function(includeInstance, msg) {
-  var f, obj = {
-    runtimespec: jspb.Message.getFieldWithDefault(msg, 1, "")
-  };
-
-  if (includeInstance) {
-    obj.$jspbMessageInstance = msg;
-  }
-  return obj;
-};
-}
-
-
-/**
- * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.joblet.ValidateRuntimeSpecRequest}
- */
-proto.joblet.ValidateRuntimeSpecRequest.deserializeBinary = function(bytes) {
-  var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.joblet.ValidateRuntimeSpecRequest;
-  return proto.joblet.ValidateRuntimeSpecRequest.deserializeBinaryFromReader(msg, reader);
-};
-
-
-/**
- * Deserializes binary data (in protobuf wire format) from the
- * given reader into the given message object.
- * @param {!proto.joblet.ValidateRuntimeSpecRequest} msg The message object to deserialize into.
- * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.joblet.ValidateRuntimeSpecRequest}
- */
-proto.joblet.ValidateRuntimeSpecRequest.deserializeBinaryFromReader = function(msg, reader) {
-  while (reader.nextField()) {
-    if (reader.isEndGroup()) {
-      break;
-    }
-    var field = reader.getFieldNumber();
-    switch (field) {
-    case 1:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setRuntimespec(value);
-      break;
-    default:
-      reader.skipField();
-      break;
-    }
-  }
-  return msg;
-};
-
-
-/**
- * Serializes the message to binary data (in protobuf wire format).
- * @return {!Uint8Array}
- */
-proto.joblet.ValidateRuntimeSpecRequest.prototype.serializeBinary = function() {
-  var writer = new jspb.BinaryWriter();
-  proto.joblet.ValidateRuntimeSpecRequest.serializeBinaryToWriter(this, writer);
-  return writer.getResultBuffer();
-};
-
-
-/**
- * Serializes the given message to binary data (in protobuf wire
- * format), writing to the given BinaryWriter.
- * @param {!proto.joblet.ValidateRuntimeSpecRequest} message
- * @param {!jspb.BinaryWriter} writer
- * @suppress {unusedLocalVariables} f is only used for nested messages
- */
-proto.joblet.ValidateRuntimeSpecRequest.serializeBinaryToWriter = function(message, writer) {
-  var f = undefined;
-  f = message.getRuntimespec();
-  if (f.length > 0) {
-    writer.writeString(
-      1,
-      f
-    );
-  }
-};
-
-
-/**
- * optional string runtimeSpec = 1;
- * @return {string}
- */
-proto.joblet.ValidateRuntimeSpecRequest.prototype.getRuntimespec = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.joblet.ValidateRuntimeSpecRequest} returns this
- */
-proto.joblet.ValidateRuntimeSpecRequest.prototype.setRuntimespec = function(value) {
-  return jspb.Message.setProto3StringField(this, 1, value);
-};
-
-
-
-
-
-if (jspb.Message.GENERATE_TO_OBJECT) {
-/**
- * Creates an object representation of this proto.
- * Field names that are reserved in JavaScript and will be renamed to pb_name.
- * Optional fields that are not set will be set to undefined.
- * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
- * For the list of reserved names please see:
- *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
- * @param {boolean=} opt_includeInstance Deprecated. whether to include the
- *     JSPB instance for transitional soy proto support:
- *     http://goto/soy-param-migration
- * @return {!Object}
- */
-proto.joblet.ValidateRuntimeSpecResponse.prototype.toObject = function(opt_includeInstance) {
-  return proto.joblet.ValidateRuntimeSpecResponse.toObject(opt_includeInstance, this);
-};
-
-
-/**
- * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Deprecated. Whether to include
- *     the JSPB instance for transitional soy proto support:
- *     http://goto/soy-param-migration
- * @param {!proto.joblet.ValidateRuntimeSpecResponse} msg The msg instance to transform.
- * @return {!Object}
- * @suppress {unusedLocalVariables} f is only used for nested messages
- */
-proto.joblet.ValidateRuntimeSpecResponse.toObject = function(includeInstance, msg) {
-  var f, obj = {
-    valid: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
-    message: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    normalizedspec: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    specinfo: (f = msg.getSpecinfo()) && proto.joblet.RuntimeSpecInfo.toObject(includeInstance, f)
-  };
-
-  if (includeInstance) {
-    obj.$jspbMessageInstance = msg;
-  }
-  return obj;
-};
-}
-
-
-/**
- * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.joblet.ValidateRuntimeSpecResponse}
- */
-proto.joblet.ValidateRuntimeSpecResponse.deserializeBinary = function(bytes) {
-  var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.joblet.ValidateRuntimeSpecResponse;
-  return proto.joblet.ValidateRuntimeSpecResponse.deserializeBinaryFromReader(msg, reader);
-};
-
-
-/**
- * Deserializes binary data (in protobuf wire format) from the
- * given reader into the given message object.
- * @param {!proto.joblet.ValidateRuntimeSpecResponse} msg The message object to deserialize into.
- * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.joblet.ValidateRuntimeSpecResponse}
- */
-proto.joblet.ValidateRuntimeSpecResponse.deserializeBinaryFromReader = function(msg, reader) {
-  while (reader.nextField()) {
-    if (reader.isEndGroup()) {
-      break;
-    }
-    var field = reader.getFieldNumber();
-    switch (field) {
-    case 1:
-      var value = /** @type {boolean} */ (reader.readBool());
-      msg.setValid(value);
-      break;
-    case 2:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setMessage(value);
-      break;
-    case 3:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setNormalizedspec(value);
-      break;
-    case 4:
-      var value = new proto.joblet.RuntimeSpecInfo;
-      reader.readMessage(value,proto.joblet.RuntimeSpecInfo.deserializeBinaryFromReader);
-      msg.setSpecinfo(value);
-      break;
-    default:
-      reader.skipField();
-      break;
-    }
-  }
-  return msg;
-};
-
-
-/**
- * Serializes the message to binary data (in protobuf wire format).
- * @return {!Uint8Array}
- */
-proto.joblet.ValidateRuntimeSpecResponse.prototype.serializeBinary = function() {
-  var writer = new jspb.BinaryWriter();
-  proto.joblet.ValidateRuntimeSpecResponse.serializeBinaryToWriter(this, writer);
-  return writer.getResultBuffer();
-};
-
-
-/**
- * Serializes the given message to binary data (in protobuf wire
- * format), writing to the given BinaryWriter.
- * @param {!proto.joblet.ValidateRuntimeSpecResponse} message
- * @param {!jspb.BinaryWriter} writer
- * @suppress {unusedLocalVariables} f is only used for nested messages
- */
-proto.joblet.ValidateRuntimeSpecResponse.serializeBinaryToWriter = function(message, writer) {
-  var f = undefined;
-  f = message.getValid();
-  if (f) {
-    writer.writeBool(
-      1,
-      f
-    );
-  }
-  f = message.getMessage();
-  if (f.length > 0) {
-    writer.writeString(
-      2,
-      f
-    );
-  }
-  f = message.getNormalizedspec();
-  if (f.length > 0) {
-    writer.writeString(
-      3,
-      f
-    );
-  }
-  f = message.getSpecinfo();
-  if (f != null) {
-    writer.writeMessage(
-      4,
-      f,
-      proto.joblet.RuntimeSpecInfo.serializeBinaryToWriter
-    );
-  }
-};
-
-
-/**
- * optional bool valid = 1;
- * @return {boolean}
- */
-proto.joblet.ValidateRuntimeSpecResponse.prototype.getValid = function() {
-  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 1, false));
-};
-
-
-/**
- * @param {boolean} value
- * @return {!proto.joblet.ValidateRuntimeSpecResponse} returns this
- */
-proto.joblet.ValidateRuntimeSpecResponse.prototype.setValid = function(value) {
-  return jspb.Message.setProto3BooleanField(this, 1, value);
-};
-
-
-/**
- * optional string message = 2;
- * @return {string}
- */
-proto.joblet.ValidateRuntimeSpecResponse.prototype.getMessage = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.joblet.ValidateRuntimeSpecResponse} returns this
- */
-proto.joblet.ValidateRuntimeSpecResponse.prototype.setMessage = function(value) {
-  return jspb.Message.setProto3StringField(this, 2, value);
-};
-
-
-/**
- * optional string normalizedSpec = 3;
- * @return {string}
- */
-proto.joblet.ValidateRuntimeSpecResponse.prototype.getNormalizedspec = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.joblet.ValidateRuntimeSpecResponse} returns this
- */
-proto.joblet.ValidateRuntimeSpecResponse.prototype.setNormalizedspec = function(value) {
-  return jspb.Message.setProto3StringField(this, 3, value);
-};
-
-
-/**
- * optional RuntimeSpecInfo specInfo = 4;
- * @return {?proto.joblet.RuntimeSpecInfo}
- */
-proto.joblet.ValidateRuntimeSpecResponse.prototype.getSpecinfo = function() {
-  return /** @type{?proto.joblet.RuntimeSpecInfo} */ (
-    jspb.Message.getWrapperField(this, proto.joblet.RuntimeSpecInfo, 4));
-};
-
-
-/**
- * @param {?proto.joblet.RuntimeSpecInfo|undefined} value
- * @return {!proto.joblet.ValidateRuntimeSpecResponse} returns this
-*/
-proto.joblet.ValidateRuntimeSpecResponse.prototype.setSpecinfo = function(value) {
-  return jspb.Message.setWrapperField(this, 4, value);
-};
-
-
-/**
- * Clears the message field making it undefined.
- * @return {!proto.joblet.ValidateRuntimeSpecResponse} returns this
- */
-proto.joblet.ValidateRuntimeSpecResponse.prototype.clearSpecinfo = function() {
-  return this.setSpecinfo(undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.joblet.ValidateRuntimeSpecResponse.prototype.hasSpecinfo = function() {
-  return jspb.Message.getField(this, 4) != null;
-};
-
-
-
-
-
-if (jspb.Message.GENERATE_TO_OBJECT) {
-/**
- * Creates an object representation of this proto.
- * Field names that are reserved in JavaScript and will be renamed to pb_name.
- * Optional fields that are not set will be set to undefined.
- * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
- * For the list of reserved names please see:
- *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
- * @param {boolean=} opt_includeInstance Deprecated. whether to include the
- *     JSPB instance for transitional soy proto support:
- *     http://goto/soy-param-migration
- * @return {!Object}
- */
 proto.joblet.RuntimeRemoveReq.prototype.toObject = function(opt_includeInstance) {
   return proto.joblet.RuntimeRemoveReq.toObject(opt_includeInstance, this);
 };
@@ -18796,13 +18734,6 @@ proto.joblet.RuntimeRemoveRes.prototype.setFreedspacebytes = function(value) {
 
 
 
-/**
- * List of repeated fields within this message type.
- * @private {!Array<number>}
- * @const
- */
-proto.joblet.RuntimeSpecInfo.repeatedFields_ = [3];
-
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
@@ -18818,8 +18749,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.joblet.RuntimeSpecInfo.prototype.toObject = function(opt_includeInstance) {
-  return proto.joblet.RuntimeSpecInfo.toObject(opt_includeInstance, this);
+proto.joblet.StreamJobMetricsRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.joblet.StreamJobMetricsRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -18828,16 +18759,13 @@ proto.joblet.RuntimeSpecInfo.prototype.toObject = function(opt_includeInstance) 
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.joblet.RuntimeSpecInfo} msg The msg instance to transform.
+ * @param {!proto.joblet.StreamJobMetricsRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.joblet.RuntimeSpecInfo.toObject = function(includeInstance, msg) {
+proto.joblet.StreamJobMetricsRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    language: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    version: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    variantsList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f,
-    architecture: jspb.Message.getFieldWithDefault(msg, 4, "")
+    jobUuid: jspb.Message.getFieldWithDefault(msg, 1, "")
   };
 
   if (includeInstance) {
@@ -18851,23 +18779,23 @@ proto.joblet.RuntimeSpecInfo.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.joblet.RuntimeSpecInfo}
+ * @return {!proto.joblet.StreamJobMetricsRequest}
  */
-proto.joblet.RuntimeSpecInfo.deserializeBinary = function(bytes) {
+proto.joblet.StreamJobMetricsRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.joblet.RuntimeSpecInfo;
-  return proto.joblet.RuntimeSpecInfo.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.joblet.StreamJobMetricsRequest;
+  return proto.joblet.StreamJobMetricsRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.joblet.RuntimeSpecInfo} msg The message object to deserialize into.
+ * @param {!proto.joblet.StreamJobMetricsRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.joblet.RuntimeSpecInfo}
+ * @return {!proto.joblet.StreamJobMetricsRequest}
  */
-proto.joblet.RuntimeSpecInfo.deserializeBinaryFromReader = function(msg, reader) {
+proto.joblet.StreamJobMetricsRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -18876,19 +18804,7 @@ proto.joblet.RuntimeSpecInfo.deserializeBinaryFromReader = function(msg, reader)
     switch (field) {
     case 1:
       var value = /** @type {string} */ (reader.readString());
-      msg.setLanguage(value);
-      break;
-    case 2:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setVersion(value);
-      break;
-    case 3:
-      var value = /** @type {string} */ (reader.readString());
-      msg.addVariants(value);
-      break;
-    case 4:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setArchitecture(value);
+      msg.setJobUuid(value);
       break;
     default:
       reader.skipField();
@@ -18903,9 +18819,9 @@ proto.joblet.RuntimeSpecInfo.deserializeBinaryFromReader = function(msg, reader)
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.joblet.RuntimeSpecInfo.prototype.serializeBinary = function() {
+proto.joblet.StreamJobMetricsRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.joblet.RuntimeSpecInfo.serializeBinaryToWriter(this, writer);
+  proto.joblet.StreamJobMetricsRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -18913,141 +18829,40 @@ proto.joblet.RuntimeSpecInfo.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.joblet.RuntimeSpecInfo} message
+ * @param {!proto.joblet.StreamJobMetricsRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.joblet.RuntimeSpecInfo.serializeBinaryToWriter = function(message, writer) {
+proto.joblet.StreamJobMetricsRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getLanguage();
+  f = message.getJobUuid();
   if (f.length > 0) {
     writer.writeString(
       1,
       f
     );
   }
-  f = message.getVersion();
-  if (f.length > 0) {
-    writer.writeString(
-      2,
-      f
-    );
-  }
-  f = message.getVariantsList();
-  if (f.length > 0) {
-    writer.writeRepeatedString(
-      3,
-      f
-    );
-  }
-  f = message.getArchitecture();
-  if (f.length > 0) {
-    writer.writeString(
-      4,
-      f
-    );
-  }
 };
 
 
 /**
- * optional string language = 1;
+ * optional string job_uuid = 1;
  * @return {string}
  */
-proto.joblet.RuntimeSpecInfo.prototype.getLanguage = function() {
+proto.joblet.StreamJobMetricsRequest.prototype.getJobUuid = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
 /**
  * @param {string} value
- * @return {!proto.joblet.RuntimeSpecInfo} returns this
+ * @return {!proto.joblet.StreamJobMetricsRequest} returns this
  */
-proto.joblet.RuntimeSpecInfo.prototype.setLanguage = function(value) {
+proto.joblet.StreamJobMetricsRequest.prototype.setJobUuid = function(value) {
   return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
-/**
- * optional string version = 2;
- * @return {string}
- */
-proto.joblet.RuntimeSpecInfo.prototype.getVersion = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.joblet.RuntimeSpecInfo} returns this
- */
-proto.joblet.RuntimeSpecInfo.prototype.setVersion = function(value) {
-  return jspb.Message.setProto3StringField(this, 2, value);
-};
-
-
-/**
- * repeated string variants = 3;
- * @return {!Array<string>}
- */
-proto.joblet.RuntimeSpecInfo.prototype.getVariantsList = function() {
-  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 3));
-};
-
-
-/**
- * @param {!Array<string>} value
- * @return {!proto.joblet.RuntimeSpecInfo} returns this
- */
-proto.joblet.RuntimeSpecInfo.prototype.setVariantsList = function(value) {
-  return jspb.Message.setField(this, 3, value || []);
-};
-
-
-/**
- * @param {string} value
- * @param {number=} opt_index
- * @return {!proto.joblet.RuntimeSpecInfo} returns this
- */
-proto.joblet.RuntimeSpecInfo.prototype.addVariants = function(value, opt_index) {
-  return jspb.Message.addToRepeatedField(this, 3, value, opt_index);
-};
-
-
-/**
- * Clears the list making it empty but non-null.
- * @return {!proto.joblet.RuntimeSpecInfo} returns this
- */
-proto.joblet.RuntimeSpecInfo.prototype.clearVariantsList = function() {
-  return this.setVariantsList([]);
-};
-
-
-/**
- * optional string architecture = 4;
- * @return {string}
- */
-proto.joblet.RuntimeSpecInfo.prototype.getArchitecture = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.joblet.RuntimeSpecInfo} returns this
- */
-proto.joblet.RuntimeSpecInfo.prototype.setArchitecture = function(value) {
-  return jspb.Message.setProto3StringField(this, 4, value);
-};
-
-
-
-/**
- * List of repeated fields within this message type.
- * @private {!Array<number>}
- * @const
- */
-proto.joblet.StreamTelemetryRequest.repeatedFields_ = [2];
 
 
 
@@ -19064,8 +18879,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.joblet.StreamTelemetryRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.joblet.StreamTelemetryRequest.toObject(opt_includeInstance, this);
+proto.joblet.GetJobMetricsRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.joblet.GetJobMetricsRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -19074,11 +18889,668 @@ proto.joblet.StreamTelemetryRequest.prototype.toObject = function(opt_includeIns
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.joblet.StreamTelemetryRequest} msg The msg instance to transform.
+ * @param {!proto.joblet.GetJobMetricsRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.joblet.StreamTelemetryRequest.toObject = function(includeInstance, msg) {
+proto.joblet.GetJobMetricsRequest.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    jobUuid: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    startTime: jspb.Message.getFieldWithDefault(msg, 2, 0),
+    endTime: jspb.Message.getFieldWithDefault(msg, 3, 0),
+    limit: jspb.Message.getFieldWithDefault(msg, 4, 0)
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.joblet.GetJobMetricsRequest}
+ */
+proto.joblet.GetJobMetricsRequest.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.joblet.GetJobMetricsRequest;
+  return proto.joblet.GetJobMetricsRequest.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.joblet.GetJobMetricsRequest} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.joblet.GetJobMetricsRequest}
+ */
+proto.joblet.GetJobMetricsRequest.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setJobUuid(value);
+      break;
+    case 2:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setStartTime(value);
+      break;
+    case 3:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setEndTime(value);
+      break;
+    case 4:
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setLimit(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.joblet.GetJobMetricsRequest.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.joblet.GetJobMetricsRequest.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.joblet.GetJobMetricsRequest} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.joblet.GetJobMetricsRequest.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getJobUuid();
+  if (f.length > 0) {
+    writer.writeString(
+      1,
+      f
+    );
+  }
+  f = message.getStartTime();
+  if (f !== 0) {
+    writer.writeInt64(
+      2,
+      f
+    );
+  }
+  f = message.getEndTime();
+  if (f !== 0) {
+    writer.writeInt64(
+      3,
+      f
+    );
+  }
+  f = message.getLimit();
+  if (f !== 0) {
+    writer.writeInt32(
+      4,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional string job_uuid = 1;
+ * @return {string}
+ */
+proto.joblet.GetJobMetricsRequest.prototype.getJobUuid = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.joblet.GetJobMetricsRequest} returns this
+ */
+proto.joblet.GetJobMetricsRequest.prototype.setJobUuid = function(value) {
+  return jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+/**
+ * optional int64 start_time = 2;
+ * @return {number}
+ */
+proto.joblet.GetJobMetricsRequest.prototype.getStartTime = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.GetJobMetricsRequest} returns this
+ */
+proto.joblet.GetJobMetricsRequest.prototype.setStartTime = function(value) {
+  return jspb.Message.setProto3IntField(this, 2, value);
+};
+
+
+/**
+ * optional int64 end_time = 3;
+ * @return {number}
+ */
+proto.joblet.GetJobMetricsRequest.prototype.getEndTime = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.GetJobMetricsRequest} returns this
+ */
+proto.joblet.GetJobMetricsRequest.prototype.setEndTime = function(value) {
+  return jspb.Message.setProto3IntField(this, 3, value);
+};
+
+
+/**
+ * optional int32 limit = 4;
+ * @return {number}
+ */
+proto.joblet.GetJobMetricsRequest.prototype.getLimit = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.GetJobMetricsRequest} returns this
+ */
+proto.joblet.GetJobMetricsRequest.prototype.setLimit = function(value) {
+  return jspb.Message.setProto3IntField(this, 4, value);
+};
+
+
+
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.joblet.JobMetricsEvent.prototype.toObject = function(opt_includeInstance) {
+  return proto.joblet.JobMetricsEvent.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.joblet.JobMetricsEvent} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.joblet.JobMetricsEvent.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    timestamp: jspb.Message.getFieldWithDefault(msg, 1, 0),
+    jobId: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    cpuPercent: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
+    memoryBytes: jspb.Message.getFieldWithDefault(msg, 4, 0),
+    memoryLimit: jspb.Message.getFieldWithDefault(msg, 5, 0),
+    diskReadBytes: jspb.Message.getFieldWithDefault(msg, 6, 0),
+    diskWriteBytes: jspb.Message.getFieldWithDefault(msg, 7, 0),
+    netRecvBytes: jspb.Message.getFieldWithDefault(msg, 8, 0),
+    netSentBytes: jspb.Message.getFieldWithDefault(msg, 9, 0),
+    gpuPercent: jspb.Message.getFloatingPointFieldWithDefault(msg, 10, 0.0),
+    gpuMemoryBytes: jspb.Message.getFieldWithDefault(msg, 11, 0)
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.joblet.JobMetricsEvent}
+ */
+proto.joblet.JobMetricsEvent.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.joblet.JobMetricsEvent;
+  return proto.joblet.JobMetricsEvent.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.joblet.JobMetricsEvent} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.joblet.JobMetricsEvent}
+ */
+proto.joblet.JobMetricsEvent.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setTimestamp(value);
+      break;
+    case 2:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setJobId(value);
+      break;
+    case 3:
+      var value = /** @type {number} */ (reader.readDouble());
+      msg.setCpuPercent(value);
+      break;
+    case 4:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setMemoryBytes(value);
+      break;
+    case 5:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setMemoryLimit(value);
+      break;
+    case 6:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setDiskReadBytes(value);
+      break;
+    case 7:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setDiskWriteBytes(value);
+      break;
+    case 8:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setNetRecvBytes(value);
+      break;
+    case 9:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setNetSentBytes(value);
+      break;
+    case 10:
+      var value = /** @type {number} */ (reader.readDouble());
+      msg.setGpuPercent(value);
+      break;
+    case 11:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setGpuMemoryBytes(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.joblet.JobMetricsEvent.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.joblet.JobMetricsEvent.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.joblet.JobMetricsEvent} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.joblet.JobMetricsEvent.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getTimestamp();
+  if (f !== 0) {
+    writer.writeInt64(
+      1,
+      f
+    );
+  }
+  f = message.getJobId();
+  if (f.length > 0) {
+    writer.writeString(
+      2,
+      f
+    );
+  }
+  f = message.getCpuPercent();
+  if (f !== 0.0) {
+    writer.writeDouble(
+      3,
+      f
+    );
+  }
+  f = message.getMemoryBytes();
+  if (f !== 0) {
+    writer.writeInt64(
+      4,
+      f
+    );
+  }
+  f = message.getMemoryLimit();
+  if (f !== 0) {
+    writer.writeInt64(
+      5,
+      f
+    );
+  }
+  f = message.getDiskReadBytes();
+  if (f !== 0) {
+    writer.writeInt64(
+      6,
+      f
+    );
+  }
+  f = message.getDiskWriteBytes();
+  if (f !== 0) {
+    writer.writeInt64(
+      7,
+      f
+    );
+  }
+  f = message.getNetRecvBytes();
+  if (f !== 0) {
+    writer.writeInt64(
+      8,
+      f
+    );
+  }
+  f = message.getNetSentBytes();
+  if (f !== 0) {
+    writer.writeInt64(
+      9,
+      f
+    );
+  }
+  f = message.getGpuPercent();
+  if (f !== 0.0) {
+    writer.writeDouble(
+      10,
+      f
+    );
+  }
+  f = message.getGpuMemoryBytes();
+  if (f !== 0) {
+    writer.writeInt64(
+      11,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional int64 timestamp = 1;
+ * @return {number}
+ */
+proto.joblet.JobMetricsEvent.prototype.getTimestamp = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.JobMetricsEvent} returns this
+ */
+proto.joblet.JobMetricsEvent.prototype.setTimestamp = function(value) {
+  return jspb.Message.setProto3IntField(this, 1, value);
+};
+
+
+/**
+ * optional string job_id = 2;
+ * @return {string}
+ */
+proto.joblet.JobMetricsEvent.prototype.getJobId = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.joblet.JobMetricsEvent} returns this
+ */
+proto.joblet.JobMetricsEvent.prototype.setJobId = function(value) {
+  return jspb.Message.setProto3StringField(this, 2, value);
+};
+
+
+/**
+ * optional double cpu_percent = 3;
+ * @return {number}
+ */
+proto.joblet.JobMetricsEvent.prototype.getCpuPercent = function() {
+  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 3, 0.0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.JobMetricsEvent} returns this
+ */
+proto.joblet.JobMetricsEvent.prototype.setCpuPercent = function(value) {
+  return jspb.Message.setProto3FloatField(this, 3, value);
+};
+
+
+/**
+ * optional int64 memory_bytes = 4;
+ * @return {number}
+ */
+proto.joblet.JobMetricsEvent.prototype.getMemoryBytes = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.JobMetricsEvent} returns this
+ */
+proto.joblet.JobMetricsEvent.prototype.setMemoryBytes = function(value) {
+  return jspb.Message.setProto3IntField(this, 4, value);
+};
+
+
+/**
+ * optional int64 memory_limit = 5;
+ * @return {number}
+ */
+proto.joblet.JobMetricsEvent.prototype.getMemoryLimit = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.JobMetricsEvent} returns this
+ */
+proto.joblet.JobMetricsEvent.prototype.setMemoryLimit = function(value) {
+  return jspb.Message.setProto3IntField(this, 5, value);
+};
+
+
+/**
+ * optional int64 disk_read_bytes = 6;
+ * @return {number}
+ */
+proto.joblet.JobMetricsEvent.prototype.getDiskReadBytes = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.JobMetricsEvent} returns this
+ */
+proto.joblet.JobMetricsEvent.prototype.setDiskReadBytes = function(value) {
+  return jspb.Message.setProto3IntField(this, 6, value);
+};
+
+
+/**
+ * optional int64 disk_write_bytes = 7;
+ * @return {number}
+ */
+proto.joblet.JobMetricsEvent.prototype.getDiskWriteBytes = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 7, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.JobMetricsEvent} returns this
+ */
+proto.joblet.JobMetricsEvent.prototype.setDiskWriteBytes = function(value) {
+  return jspb.Message.setProto3IntField(this, 7, value);
+};
+
+
+/**
+ * optional int64 net_recv_bytes = 8;
+ * @return {number}
+ */
+proto.joblet.JobMetricsEvent.prototype.getNetRecvBytes = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 8, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.JobMetricsEvent} returns this
+ */
+proto.joblet.JobMetricsEvent.prototype.setNetRecvBytes = function(value) {
+  return jspb.Message.setProto3IntField(this, 8, value);
+};
+
+
+/**
+ * optional int64 net_sent_bytes = 9;
+ * @return {number}
+ */
+proto.joblet.JobMetricsEvent.prototype.getNetSentBytes = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 9, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.JobMetricsEvent} returns this
+ */
+proto.joblet.JobMetricsEvent.prototype.setNetSentBytes = function(value) {
+  return jspb.Message.setProto3IntField(this, 9, value);
+};
+
+
+/**
+ * optional double gpu_percent = 10;
+ * @return {number}
+ */
+proto.joblet.JobMetricsEvent.prototype.getGpuPercent = function() {
+  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 10, 0.0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.JobMetricsEvent} returns this
+ */
+proto.joblet.JobMetricsEvent.prototype.setGpuPercent = function(value) {
+  return jspb.Message.setProto3FloatField(this, 10, value);
+};
+
+
+/**
+ * optional int64 gpu_memory_bytes = 11;
+ * @return {number}
+ */
+proto.joblet.JobMetricsEvent.prototype.getGpuMemoryBytes = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 11, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.JobMetricsEvent} returns this
+ */
+proto.joblet.JobMetricsEvent.prototype.setGpuMemoryBytes = function(value) {
+  return jspb.Message.setProto3IntField(this, 11, value);
+};
+
+
+
+/**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.joblet.StreamJobTelematicsRequest.repeatedFields_ = [2];
+
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.joblet.StreamJobTelematicsRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.joblet.StreamJobTelematicsRequest.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.joblet.StreamJobTelematicsRequest} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.joblet.StreamJobTelematicsRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     jobUuid: jspb.Message.getFieldWithDefault(msg, 1, ""),
     typesList: (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f
@@ -19095,23 +19567,23 @@ proto.joblet.StreamTelemetryRequest.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.joblet.StreamTelemetryRequest}
+ * @return {!proto.joblet.StreamJobTelematicsRequest}
  */
-proto.joblet.StreamTelemetryRequest.deserializeBinary = function(bytes) {
+proto.joblet.StreamJobTelematicsRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.joblet.StreamTelemetryRequest;
-  return proto.joblet.StreamTelemetryRequest.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.joblet.StreamJobTelematicsRequest;
+  return proto.joblet.StreamJobTelematicsRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.joblet.StreamTelemetryRequest} msg The message object to deserialize into.
+ * @param {!proto.joblet.StreamJobTelematicsRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.joblet.StreamTelemetryRequest}
+ * @return {!proto.joblet.StreamJobTelematicsRequest}
  */
-proto.joblet.StreamTelemetryRequest.deserializeBinaryFromReader = function(msg, reader) {
+proto.joblet.StreamJobTelematicsRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -19139,9 +19611,9 @@ proto.joblet.StreamTelemetryRequest.deserializeBinaryFromReader = function(msg, 
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.joblet.StreamTelemetryRequest.prototype.serializeBinary = function() {
+proto.joblet.StreamJobTelematicsRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.joblet.StreamTelemetryRequest.serializeBinaryToWriter(this, writer);
+  proto.joblet.StreamJobTelematicsRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -19149,11 +19621,11 @@ proto.joblet.StreamTelemetryRequest.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.joblet.StreamTelemetryRequest} message
+ * @param {!proto.joblet.StreamJobTelematicsRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.joblet.StreamTelemetryRequest.serializeBinaryToWriter = function(message, writer) {
+proto.joblet.StreamJobTelematicsRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getJobUuid();
   if (f.length > 0) {
@@ -19176,16 +19648,16 @@ proto.joblet.StreamTelemetryRequest.serializeBinaryToWriter = function(message, 
  * optional string job_uuid = 1;
  * @return {string}
  */
-proto.joblet.StreamTelemetryRequest.prototype.getJobUuid = function() {
+proto.joblet.StreamJobTelematicsRequest.prototype.getJobUuid = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
 /**
  * @param {string} value
- * @return {!proto.joblet.StreamTelemetryRequest} returns this
+ * @return {!proto.joblet.StreamJobTelematicsRequest} returns this
  */
-proto.joblet.StreamTelemetryRequest.prototype.setJobUuid = function(value) {
+proto.joblet.StreamJobTelematicsRequest.prototype.setJobUuid = function(value) {
   return jspb.Message.setProto3StringField(this, 1, value);
 };
 
@@ -19194,16 +19666,16 @@ proto.joblet.StreamTelemetryRequest.prototype.setJobUuid = function(value) {
  * repeated string types = 2;
  * @return {!Array<string>}
  */
-proto.joblet.StreamTelemetryRequest.prototype.getTypesList = function() {
+proto.joblet.StreamJobTelematicsRequest.prototype.getTypesList = function() {
   return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 2));
 };
 
 
 /**
  * @param {!Array<string>} value
- * @return {!proto.joblet.StreamTelemetryRequest} returns this
+ * @return {!proto.joblet.StreamJobTelematicsRequest} returns this
  */
-proto.joblet.StreamTelemetryRequest.prototype.setTypesList = function(value) {
+proto.joblet.StreamJobTelematicsRequest.prototype.setTypesList = function(value) {
   return jspb.Message.setField(this, 2, value || []);
 };
 
@@ -19211,18 +19683,18 @@ proto.joblet.StreamTelemetryRequest.prototype.setTypesList = function(value) {
 /**
  * @param {string} value
  * @param {number=} opt_index
- * @return {!proto.joblet.StreamTelemetryRequest} returns this
+ * @return {!proto.joblet.StreamJobTelematicsRequest} returns this
  */
-proto.joblet.StreamTelemetryRequest.prototype.addTypes = function(value, opt_index) {
+proto.joblet.StreamJobTelematicsRequest.prototype.addTypes = function(value, opt_index) {
   return jspb.Message.addToRepeatedField(this, 2, value, opt_index);
 };
 
 
 /**
  * Clears the list making it empty but non-null.
- * @return {!proto.joblet.StreamTelemetryRequest} returns this
+ * @return {!proto.joblet.StreamJobTelematicsRequest} returns this
  */
-proto.joblet.StreamTelemetryRequest.prototype.clearTypesList = function() {
+proto.joblet.StreamJobTelematicsRequest.prototype.clearTypesList = function() {
   return this.setTypesList([]);
 };
 
@@ -19233,7 +19705,7 @@ proto.joblet.StreamTelemetryRequest.prototype.clearTypesList = function() {
  * @private {!Array<number>}
  * @const
  */
-proto.joblet.GetTelemetryRequest.repeatedFields_ = [2];
+proto.joblet.GetJobTelematicsRequest.repeatedFields_ = [2];
 
 
 
@@ -19250,8 +19722,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.joblet.GetTelemetryRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.joblet.GetTelemetryRequest.toObject(opt_includeInstance, this);
+proto.joblet.GetJobTelematicsRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.joblet.GetJobTelematicsRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -19260,11 +19732,11 @@ proto.joblet.GetTelemetryRequest.prototype.toObject = function(opt_includeInstan
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.joblet.GetTelemetryRequest} msg The msg instance to transform.
+ * @param {!proto.joblet.GetJobTelematicsRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.joblet.GetTelemetryRequest.toObject = function(includeInstance, msg) {
+proto.joblet.GetJobTelematicsRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     jobUuid: jspb.Message.getFieldWithDefault(msg, 1, ""),
     typesList: (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f,
@@ -19284,23 +19756,23 @@ proto.joblet.GetTelemetryRequest.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.joblet.GetTelemetryRequest}
+ * @return {!proto.joblet.GetJobTelematicsRequest}
  */
-proto.joblet.GetTelemetryRequest.deserializeBinary = function(bytes) {
+proto.joblet.GetJobTelematicsRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.joblet.GetTelemetryRequest;
-  return proto.joblet.GetTelemetryRequest.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.joblet.GetJobTelematicsRequest;
+  return proto.joblet.GetJobTelematicsRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.joblet.GetTelemetryRequest} msg The message object to deserialize into.
+ * @param {!proto.joblet.GetJobTelematicsRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.joblet.GetTelemetryRequest}
+ * @return {!proto.joblet.GetJobTelematicsRequest}
  */
-proto.joblet.GetTelemetryRequest.deserializeBinaryFromReader = function(msg, reader) {
+proto.joblet.GetJobTelematicsRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -19340,9 +19812,9 @@ proto.joblet.GetTelemetryRequest.deserializeBinaryFromReader = function(msg, rea
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.joblet.GetTelemetryRequest.prototype.serializeBinary = function() {
+proto.joblet.GetJobTelematicsRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.joblet.GetTelemetryRequest.serializeBinaryToWriter(this, writer);
+  proto.joblet.GetJobTelematicsRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -19350,11 +19822,11 @@ proto.joblet.GetTelemetryRequest.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.joblet.GetTelemetryRequest} message
+ * @param {!proto.joblet.GetJobTelematicsRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.joblet.GetTelemetryRequest.serializeBinaryToWriter = function(message, writer) {
+proto.joblet.GetJobTelematicsRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getJobUuid();
   if (f.length > 0) {
@@ -19398,16 +19870,16 @@ proto.joblet.GetTelemetryRequest.serializeBinaryToWriter = function(message, wri
  * optional string job_uuid = 1;
  * @return {string}
  */
-proto.joblet.GetTelemetryRequest.prototype.getJobUuid = function() {
+proto.joblet.GetJobTelematicsRequest.prototype.getJobUuid = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
 /**
  * @param {string} value
- * @return {!proto.joblet.GetTelemetryRequest} returns this
+ * @return {!proto.joblet.GetJobTelematicsRequest} returns this
  */
-proto.joblet.GetTelemetryRequest.prototype.setJobUuid = function(value) {
+proto.joblet.GetJobTelematicsRequest.prototype.setJobUuid = function(value) {
   return jspb.Message.setProto3StringField(this, 1, value);
 };
 
@@ -19416,16 +19888,16 @@ proto.joblet.GetTelemetryRequest.prototype.setJobUuid = function(value) {
  * repeated string types = 2;
  * @return {!Array<string>}
  */
-proto.joblet.GetTelemetryRequest.prototype.getTypesList = function() {
+proto.joblet.GetJobTelematicsRequest.prototype.getTypesList = function() {
   return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 2));
 };
 
 
 /**
  * @param {!Array<string>} value
- * @return {!proto.joblet.GetTelemetryRequest} returns this
+ * @return {!proto.joblet.GetJobTelematicsRequest} returns this
  */
-proto.joblet.GetTelemetryRequest.prototype.setTypesList = function(value) {
+proto.joblet.GetJobTelematicsRequest.prototype.setTypesList = function(value) {
   return jspb.Message.setField(this, 2, value || []);
 };
 
@@ -19433,18 +19905,18 @@ proto.joblet.GetTelemetryRequest.prototype.setTypesList = function(value) {
 /**
  * @param {string} value
  * @param {number=} opt_index
- * @return {!proto.joblet.GetTelemetryRequest} returns this
+ * @return {!proto.joblet.GetJobTelematicsRequest} returns this
  */
-proto.joblet.GetTelemetryRequest.prototype.addTypes = function(value, opt_index) {
+proto.joblet.GetJobTelematicsRequest.prototype.addTypes = function(value, opt_index) {
   return jspb.Message.addToRepeatedField(this, 2, value, opt_index);
 };
 
 
 /**
  * Clears the list making it empty but non-null.
- * @return {!proto.joblet.GetTelemetryRequest} returns this
+ * @return {!proto.joblet.GetJobTelematicsRequest} returns this
  */
-proto.joblet.GetTelemetryRequest.prototype.clearTypesList = function() {
+proto.joblet.GetJobTelematicsRequest.prototype.clearTypesList = function() {
   return this.setTypesList([]);
 };
 
@@ -19453,16 +19925,16 @@ proto.joblet.GetTelemetryRequest.prototype.clearTypesList = function() {
  * optional int64 start_time = 3;
  * @return {number}
  */
-proto.joblet.GetTelemetryRequest.prototype.getStartTime = function() {
+proto.joblet.GetJobTelematicsRequest.prototype.getStartTime = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.joblet.GetTelemetryRequest} returns this
+ * @return {!proto.joblet.GetJobTelematicsRequest} returns this
  */
-proto.joblet.GetTelemetryRequest.prototype.setStartTime = function(value) {
+proto.joblet.GetJobTelematicsRequest.prototype.setStartTime = function(value) {
   return jspb.Message.setProto3IntField(this, 3, value);
 };
 
@@ -19471,16 +19943,16 @@ proto.joblet.GetTelemetryRequest.prototype.setStartTime = function(value) {
  * optional int64 end_time = 4;
  * @return {number}
  */
-proto.joblet.GetTelemetryRequest.prototype.getEndTime = function() {
+proto.joblet.GetJobTelematicsRequest.prototype.getEndTime = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.joblet.GetTelemetryRequest} returns this
+ * @return {!proto.joblet.GetJobTelematicsRequest} returns this
  */
-proto.joblet.GetTelemetryRequest.prototype.setEndTime = function(value) {
+proto.joblet.GetJobTelematicsRequest.prototype.setEndTime = function(value) {
   return jspb.Message.setProto3IntField(this, 4, value);
 };
 
@@ -19489,16 +19961,16 @@ proto.joblet.GetTelemetryRequest.prototype.setEndTime = function(value) {
  * optional int32 limit = 5;
  * @return {number}
  */
-proto.joblet.GetTelemetryRequest.prototype.getLimit = function() {
+proto.joblet.GetJobTelematicsRequest.prototype.getLimit = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.joblet.GetTelemetryRequest} returns this
+ * @return {!proto.joblet.GetJobTelematicsRequest} returns this
  */
-proto.joblet.GetTelemetryRequest.prototype.setLimit = function(value) {
+proto.joblet.GetJobTelematicsRequest.prototype.setLimit = function(value) {
   return jspb.Message.setProto3IntField(this, 5, value);
 };
 
@@ -19512,24 +19984,27 @@ proto.joblet.GetTelemetryRequest.prototype.setLimit = function(value) {
  * @private {!Array<!Array<number>>}
  * @const
  */
-proto.joblet.TelemetryEvent.oneofGroups_ = [[10,11,12,13]];
+proto.joblet.TelematicsEvent.oneofGroups_ = [[10,11,12,13,14,15,16]];
 
 /**
  * @enum {number}
  */
-proto.joblet.TelemetryEvent.DataCase = {
+proto.joblet.TelematicsEvent.DataCase = {
   DATA_NOT_SET: 0,
-  METRICS: 10,
-  EXEC: 11,
-  CONNECT: 12,
-  FILE: 13
+  EXEC: 10,
+  CONNECT: 11,
+  ACCEPT: 12,
+  FILE: 13,
+  MMAP: 14,
+  MPROTECT: 15,
+  SOCKET_DATA: 16
 };
 
 /**
- * @return {proto.joblet.TelemetryEvent.DataCase}
+ * @return {proto.joblet.TelematicsEvent.DataCase}
  */
-proto.joblet.TelemetryEvent.prototype.getDataCase = function() {
-  return /** @type {proto.joblet.TelemetryEvent.DataCase} */(jspb.Message.computeOneofCase(this, proto.joblet.TelemetryEvent.oneofGroups_[0]));
+proto.joblet.TelematicsEvent.prototype.getDataCase = function() {
+  return /** @type {proto.joblet.TelematicsEvent.DataCase} */(jspb.Message.computeOneofCase(this, proto.joblet.TelematicsEvent.oneofGroups_[0]));
 };
 
 
@@ -19547,8 +20022,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.joblet.TelemetryEvent.prototype.toObject = function(opt_includeInstance) {
-  return proto.joblet.TelemetryEvent.toObject(opt_includeInstance, this);
+proto.joblet.TelematicsEvent.prototype.toObject = function(opt_includeInstance) {
+  return proto.joblet.TelematicsEvent.toObject(opt_includeInstance, this);
 };
 
 
@@ -19557,19 +20032,22 @@ proto.joblet.TelemetryEvent.prototype.toObject = function(opt_includeInstance) {
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.joblet.TelemetryEvent} msg The msg instance to transform.
+ * @param {!proto.joblet.TelematicsEvent} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.joblet.TelemetryEvent.toObject = function(includeInstance, msg) {
+proto.joblet.TelematicsEvent.toObject = function(includeInstance, msg) {
   var f, obj = {
     timestamp: jspb.Message.getFieldWithDefault(msg, 1, 0),
     jobId: jspb.Message.getFieldWithDefault(msg, 2, ""),
     type: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    metrics: (f = msg.getMetrics()) && proto.joblet.TelemetryMetricsData.toObject(includeInstance, f),
-    exec: (f = msg.getExec()) && proto.joblet.TelemetryExecData.toObject(includeInstance, f),
-    connect: (f = msg.getConnect()) && proto.joblet.TelemetryConnectData.toObject(includeInstance, f),
-    file: (f = msg.getFile()) && proto.joblet.TelemetryFileData.toObject(includeInstance, f)
+    exec: (f = msg.getExec()) && proto.joblet.TelematicsExecData.toObject(includeInstance, f),
+    connect: (f = msg.getConnect()) && proto.joblet.TelematicsConnectData.toObject(includeInstance, f),
+    accept: (f = msg.getAccept()) && proto.joblet.TelematicsAcceptData.toObject(includeInstance, f),
+    file: (f = msg.getFile()) && proto.joblet.TelematicsFileData.toObject(includeInstance, f),
+    mmap: (f = msg.getMmap()) && proto.joblet.TelematicsMmapData.toObject(includeInstance, f),
+    mprotect: (f = msg.getMprotect()) && proto.joblet.TelematicsMprotectData.toObject(includeInstance, f),
+    socketData: (f = msg.getSocketData()) && proto.joblet.TelematicsSocketDataData.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -19583,23 +20061,23 @@ proto.joblet.TelemetryEvent.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.joblet.TelemetryEvent}
+ * @return {!proto.joblet.TelematicsEvent}
  */
-proto.joblet.TelemetryEvent.deserializeBinary = function(bytes) {
+proto.joblet.TelematicsEvent.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.joblet.TelemetryEvent;
-  return proto.joblet.TelemetryEvent.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.joblet.TelematicsEvent;
+  return proto.joblet.TelematicsEvent.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.joblet.TelemetryEvent} msg The message object to deserialize into.
+ * @param {!proto.joblet.TelematicsEvent} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.joblet.TelemetryEvent}
+ * @return {!proto.joblet.TelematicsEvent}
  */
-proto.joblet.TelemetryEvent.deserializeBinaryFromReader = function(msg, reader) {
+proto.joblet.TelematicsEvent.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -19619,24 +20097,39 @@ proto.joblet.TelemetryEvent.deserializeBinaryFromReader = function(msg, reader) 
       msg.setType(value);
       break;
     case 10:
-      var value = new proto.joblet.TelemetryMetricsData;
-      reader.readMessage(value,proto.joblet.TelemetryMetricsData.deserializeBinaryFromReader);
-      msg.setMetrics(value);
-      break;
-    case 11:
-      var value = new proto.joblet.TelemetryExecData;
-      reader.readMessage(value,proto.joblet.TelemetryExecData.deserializeBinaryFromReader);
+      var value = new proto.joblet.TelematicsExecData;
+      reader.readMessage(value,proto.joblet.TelematicsExecData.deserializeBinaryFromReader);
       msg.setExec(value);
       break;
-    case 12:
-      var value = new proto.joblet.TelemetryConnectData;
-      reader.readMessage(value,proto.joblet.TelemetryConnectData.deserializeBinaryFromReader);
+    case 11:
+      var value = new proto.joblet.TelematicsConnectData;
+      reader.readMessage(value,proto.joblet.TelematicsConnectData.deserializeBinaryFromReader);
       msg.setConnect(value);
       break;
+    case 12:
+      var value = new proto.joblet.TelematicsAcceptData;
+      reader.readMessage(value,proto.joblet.TelematicsAcceptData.deserializeBinaryFromReader);
+      msg.setAccept(value);
+      break;
     case 13:
-      var value = new proto.joblet.TelemetryFileData;
-      reader.readMessage(value,proto.joblet.TelemetryFileData.deserializeBinaryFromReader);
+      var value = new proto.joblet.TelematicsFileData;
+      reader.readMessage(value,proto.joblet.TelematicsFileData.deserializeBinaryFromReader);
       msg.setFile(value);
+      break;
+    case 14:
+      var value = new proto.joblet.TelematicsMmapData;
+      reader.readMessage(value,proto.joblet.TelematicsMmapData.deserializeBinaryFromReader);
+      msg.setMmap(value);
+      break;
+    case 15:
+      var value = new proto.joblet.TelematicsMprotectData;
+      reader.readMessage(value,proto.joblet.TelematicsMprotectData.deserializeBinaryFromReader);
+      msg.setMprotect(value);
+      break;
+    case 16:
+      var value = new proto.joblet.TelematicsSocketDataData;
+      reader.readMessage(value,proto.joblet.TelematicsSocketDataData.deserializeBinaryFromReader);
+      msg.setSocketData(value);
       break;
     default:
       reader.skipField();
@@ -19651,9 +20144,9 @@ proto.joblet.TelemetryEvent.deserializeBinaryFromReader = function(msg, reader) 
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.joblet.TelemetryEvent.prototype.serializeBinary = function() {
+proto.joblet.TelematicsEvent.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.joblet.TelemetryEvent.serializeBinaryToWriter(this, writer);
+  proto.joblet.TelematicsEvent.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -19661,11 +20154,11 @@ proto.joblet.TelemetryEvent.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.joblet.TelemetryEvent} message
+ * @param {!proto.joblet.TelematicsEvent} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.joblet.TelemetryEvent.serializeBinaryToWriter = function(message, writer) {
+proto.joblet.TelematicsEvent.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getTimestamp();
   if (f !== 0) {
@@ -19688,28 +20181,28 @@ proto.joblet.TelemetryEvent.serializeBinaryToWriter = function(message, writer) 
       f
     );
   }
-  f = message.getMetrics();
+  f = message.getExec();
   if (f != null) {
     writer.writeMessage(
       10,
       f,
-      proto.joblet.TelemetryMetricsData.serializeBinaryToWriter
-    );
-  }
-  f = message.getExec();
-  if (f != null) {
-    writer.writeMessage(
-      11,
-      f,
-      proto.joblet.TelemetryExecData.serializeBinaryToWriter
+      proto.joblet.TelematicsExecData.serializeBinaryToWriter
     );
   }
   f = message.getConnect();
   if (f != null) {
     writer.writeMessage(
+      11,
+      f,
+      proto.joblet.TelematicsConnectData.serializeBinaryToWriter
+    );
+  }
+  f = message.getAccept();
+  if (f != null) {
+    writer.writeMessage(
       12,
       f,
-      proto.joblet.TelemetryConnectData.serializeBinaryToWriter
+      proto.joblet.TelematicsAcceptData.serializeBinaryToWriter
     );
   }
   f = message.getFile();
@@ -19717,7 +20210,31 @@ proto.joblet.TelemetryEvent.serializeBinaryToWriter = function(message, writer) 
     writer.writeMessage(
       13,
       f,
-      proto.joblet.TelemetryFileData.serializeBinaryToWriter
+      proto.joblet.TelematicsFileData.serializeBinaryToWriter
+    );
+  }
+  f = message.getMmap();
+  if (f != null) {
+    writer.writeMessage(
+      14,
+      f,
+      proto.joblet.TelematicsMmapData.serializeBinaryToWriter
+    );
+  }
+  f = message.getMprotect();
+  if (f != null) {
+    writer.writeMessage(
+      15,
+      f,
+      proto.joblet.TelematicsMprotectData.serializeBinaryToWriter
+    );
+  }
+  f = message.getSocketData();
+  if (f != null) {
+    writer.writeMessage(
+      16,
+      f,
+      proto.joblet.TelematicsSocketDataData.serializeBinaryToWriter
     );
   }
 };
@@ -19727,16 +20244,16 @@ proto.joblet.TelemetryEvent.serializeBinaryToWriter = function(message, writer) 
  * optional int64 timestamp = 1;
  * @return {number}
  */
-proto.joblet.TelemetryEvent.prototype.getTimestamp = function() {
+proto.joblet.TelematicsEvent.prototype.getTimestamp = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.joblet.TelemetryEvent} returns this
+ * @return {!proto.joblet.TelematicsEvent} returns this
  */
-proto.joblet.TelemetryEvent.prototype.setTimestamp = function(value) {
+proto.joblet.TelematicsEvent.prototype.setTimestamp = function(value) {
   return jspb.Message.setProto3IntField(this, 1, value);
 };
 
@@ -19745,16 +20262,16 @@ proto.joblet.TelemetryEvent.prototype.setTimestamp = function(value) {
  * optional string job_id = 2;
  * @return {string}
  */
-proto.joblet.TelemetryEvent.prototype.getJobId = function() {
+proto.joblet.TelematicsEvent.prototype.getJobId = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
 
 /**
  * @param {string} value
- * @return {!proto.joblet.TelemetryEvent} returns this
+ * @return {!proto.joblet.TelematicsEvent} returns this
  */
-proto.joblet.TelemetryEvent.prototype.setJobId = function(value) {
+proto.joblet.TelematicsEvent.prototype.setJobId = function(value) {
   return jspb.Message.setProto3StringField(this, 2, value);
 };
 
@@ -19763,81 +20280,44 @@ proto.joblet.TelemetryEvent.prototype.setJobId = function(value) {
  * optional string type = 3;
  * @return {string}
  */
-proto.joblet.TelemetryEvent.prototype.getType = function() {
+proto.joblet.TelematicsEvent.prototype.getType = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
 };
 
 
 /**
  * @param {string} value
- * @return {!proto.joblet.TelemetryEvent} returns this
+ * @return {!proto.joblet.TelematicsEvent} returns this
  */
-proto.joblet.TelemetryEvent.prototype.setType = function(value) {
+proto.joblet.TelematicsEvent.prototype.setType = function(value) {
   return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 
 /**
- * optional TelemetryMetricsData metrics = 10;
- * @return {?proto.joblet.TelemetryMetricsData}
+ * optional TelematicsExecData exec = 10;
+ * @return {?proto.joblet.TelematicsExecData}
  */
-proto.joblet.TelemetryEvent.prototype.getMetrics = function() {
-  return /** @type{?proto.joblet.TelemetryMetricsData} */ (
-    jspb.Message.getWrapperField(this, proto.joblet.TelemetryMetricsData, 10));
+proto.joblet.TelematicsEvent.prototype.getExec = function() {
+  return /** @type{?proto.joblet.TelematicsExecData} */ (
+    jspb.Message.getWrapperField(this, proto.joblet.TelematicsExecData, 10));
 };
 
 
 /**
- * @param {?proto.joblet.TelemetryMetricsData|undefined} value
- * @return {!proto.joblet.TelemetryEvent} returns this
+ * @param {?proto.joblet.TelematicsExecData|undefined} value
+ * @return {!proto.joblet.TelematicsEvent} returns this
 */
-proto.joblet.TelemetryEvent.prototype.setMetrics = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 10, proto.joblet.TelemetryEvent.oneofGroups_[0], value);
+proto.joblet.TelematicsEvent.prototype.setExec = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 10, proto.joblet.TelematicsEvent.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the message field making it undefined.
- * @return {!proto.joblet.TelemetryEvent} returns this
+ * @return {!proto.joblet.TelematicsEvent} returns this
  */
-proto.joblet.TelemetryEvent.prototype.clearMetrics = function() {
-  return this.setMetrics(undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.joblet.TelemetryEvent.prototype.hasMetrics = function() {
-  return jspb.Message.getField(this, 10) != null;
-};
-
-
-/**
- * optional TelemetryExecData exec = 11;
- * @return {?proto.joblet.TelemetryExecData}
- */
-proto.joblet.TelemetryEvent.prototype.getExec = function() {
-  return /** @type{?proto.joblet.TelemetryExecData} */ (
-    jspb.Message.getWrapperField(this, proto.joblet.TelemetryExecData, 11));
-};
-
-
-/**
- * @param {?proto.joblet.TelemetryExecData|undefined} value
- * @return {!proto.joblet.TelemetryEvent} returns this
-*/
-proto.joblet.TelemetryEvent.prototype.setExec = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 11, proto.joblet.TelemetryEvent.oneofGroups_[0], value);
-};
-
-
-/**
- * Clears the message field making it undefined.
- * @return {!proto.joblet.TelemetryEvent} returns this
- */
-proto.joblet.TelemetryEvent.prototype.clearExec = function() {
+proto.joblet.TelematicsEvent.prototype.clearExec = function() {
   return this.setExec(undefined);
 };
 
@@ -19846,35 +20326,35 @@ proto.joblet.TelemetryEvent.prototype.clearExec = function() {
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.joblet.TelemetryEvent.prototype.hasExec = function() {
-  return jspb.Message.getField(this, 11) != null;
+proto.joblet.TelematicsEvent.prototype.hasExec = function() {
+  return jspb.Message.getField(this, 10) != null;
 };
 
 
 /**
- * optional TelemetryConnectData connect = 12;
- * @return {?proto.joblet.TelemetryConnectData}
+ * optional TelematicsConnectData connect = 11;
+ * @return {?proto.joblet.TelematicsConnectData}
  */
-proto.joblet.TelemetryEvent.prototype.getConnect = function() {
-  return /** @type{?proto.joblet.TelemetryConnectData} */ (
-    jspb.Message.getWrapperField(this, proto.joblet.TelemetryConnectData, 12));
+proto.joblet.TelematicsEvent.prototype.getConnect = function() {
+  return /** @type{?proto.joblet.TelematicsConnectData} */ (
+    jspb.Message.getWrapperField(this, proto.joblet.TelematicsConnectData, 11));
 };
 
 
 /**
- * @param {?proto.joblet.TelemetryConnectData|undefined} value
- * @return {!proto.joblet.TelemetryEvent} returns this
+ * @param {?proto.joblet.TelematicsConnectData|undefined} value
+ * @return {!proto.joblet.TelematicsEvent} returns this
 */
-proto.joblet.TelemetryEvent.prototype.setConnect = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 12, proto.joblet.TelemetryEvent.oneofGroups_[0], value);
+proto.joblet.TelematicsEvent.prototype.setConnect = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 11, proto.joblet.TelematicsEvent.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the message field making it undefined.
- * @return {!proto.joblet.TelemetryEvent} returns this
+ * @return {!proto.joblet.TelematicsEvent} returns this
  */
-proto.joblet.TelemetryEvent.prototype.clearConnect = function() {
+proto.joblet.TelematicsEvent.prototype.clearConnect = function() {
   return this.setConnect(undefined);
 };
 
@@ -19883,35 +20363,72 @@ proto.joblet.TelemetryEvent.prototype.clearConnect = function() {
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.joblet.TelemetryEvent.prototype.hasConnect = function() {
-  return jspb.Message.getField(this, 12) != null;
+proto.joblet.TelematicsEvent.prototype.hasConnect = function() {
+  return jspb.Message.getField(this, 11) != null;
 };
 
 
 /**
- * optional TelemetryFileData file = 13;
- * @return {?proto.joblet.TelemetryFileData}
+ * optional TelematicsAcceptData accept = 12;
+ * @return {?proto.joblet.TelematicsAcceptData}
  */
-proto.joblet.TelemetryEvent.prototype.getFile = function() {
-  return /** @type{?proto.joblet.TelemetryFileData} */ (
-    jspb.Message.getWrapperField(this, proto.joblet.TelemetryFileData, 13));
+proto.joblet.TelematicsEvent.prototype.getAccept = function() {
+  return /** @type{?proto.joblet.TelematicsAcceptData} */ (
+    jspb.Message.getWrapperField(this, proto.joblet.TelematicsAcceptData, 12));
 };
 
 
 /**
- * @param {?proto.joblet.TelemetryFileData|undefined} value
- * @return {!proto.joblet.TelemetryEvent} returns this
+ * @param {?proto.joblet.TelematicsAcceptData|undefined} value
+ * @return {!proto.joblet.TelematicsEvent} returns this
 */
-proto.joblet.TelemetryEvent.prototype.setFile = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 13, proto.joblet.TelemetryEvent.oneofGroups_[0], value);
+proto.joblet.TelematicsEvent.prototype.setAccept = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 12, proto.joblet.TelematicsEvent.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the message field making it undefined.
- * @return {!proto.joblet.TelemetryEvent} returns this
+ * @return {!proto.joblet.TelematicsEvent} returns this
  */
-proto.joblet.TelemetryEvent.prototype.clearFile = function() {
+proto.joblet.TelematicsEvent.prototype.clearAccept = function() {
+  return this.setAccept(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.joblet.TelematicsEvent.prototype.hasAccept = function() {
+  return jspb.Message.getField(this, 12) != null;
+};
+
+
+/**
+ * optional TelematicsFileData file = 13;
+ * @return {?proto.joblet.TelematicsFileData}
+ */
+proto.joblet.TelematicsEvent.prototype.getFile = function() {
+  return /** @type{?proto.joblet.TelematicsFileData} */ (
+    jspb.Message.getWrapperField(this, proto.joblet.TelematicsFileData, 13));
+};
+
+
+/**
+ * @param {?proto.joblet.TelematicsFileData|undefined} value
+ * @return {!proto.joblet.TelematicsEvent} returns this
+*/
+proto.joblet.TelematicsEvent.prototype.setFile = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 13, proto.joblet.TelematicsEvent.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.joblet.TelematicsEvent} returns this
+ */
+proto.joblet.TelematicsEvent.prototype.clearFile = function() {
   return this.setFile(undefined);
 };
 
@@ -19920,378 +20437,119 @@ proto.joblet.TelemetryEvent.prototype.clearFile = function() {
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.joblet.TelemetryEvent.prototype.hasFile = function() {
+proto.joblet.TelematicsEvent.prototype.hasFile = function() {
   return jspb.Message.getField(this, 13) != null;
 };
 
 
-
-
-
-if (jspb.Message.GENERATE_TO_OBJECT) {
 /**
- * Creates an object representation of this proto.
- * Field names that are reserved in JavaScript and will be renamed to pb_name.
- * Optional fields that are not set will be set to undefined.
- * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
- * For the list of reserved names please see:
- *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
- * @param {boolean=} opt_includeInstance Deprecated. whether to include the
- *     JSPB instance for transitional soy proto support:
- *     http://goto/soy-param-migration
- * @return {!Object}
+ * optional TelematicsMmapData mmap = 14;
+ * @return {?proto.joblet.TelematicsMmapData}
  */
-proto.joblet.TelemetryMetricsData.prototype.toObject = function(opt_includeInstance) {
-  return proto.joblet.TelemetryMetricsData.toObject(opt_includeInstance, this);
+proto.joblet.TelematicsEvent.prototype.getMmap = function() {
+  return /** @type{?proto.joblet.TelematicsMmapData} */ (
+    jspb.Message.getWrapperField(this, proto.joblet.TelematicsMmapData, 14));
 };
 
 
 /**
- * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Deprecated. Whether to include
- *     the JSPB instance for transitional soy proto support:
- *     http://goto/soy-param-migration
- * @param {!proto.joblet.TelemetryMetricsData} msg The msg instance to transform.
- * @return {!Object}
- * @suppress {unusedLocalVariables} f is only used for nested messages
- */
-proto.joblet.TelemetryMetricsData.toObject = function(includeInstance, msg) {
-  var f, obj = {
-    cpuPercent: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
-    memoryBytes: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    memoryLimit: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    diskReadBytes: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    diskWriteBytes: jspb.Message.getFieldWithDefault(msg, 5, 0),
-    netRecvBytes: jspb.Message.getFieldWithDefault(msg, 6, 0),
-    netSentBytes: jspb.Message.getFieldWithDefault(msg, 7, 0),
-    gpuPercent: jspb.Message.getFloatingPointFieldWithDefault(msg, 8, 0.0),
-    gpuMemoryBytes: jspb.Message.getFieldWithDefault(msg, 9, 0)
-  };
-
-  if (includeInstance) {
-    obj.$jspbMessageInstance = msg;
-  }
-  return obj;
-};
-}
-
-
-/**
- * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.joblet.TelemetryMetricsData}
- */
-proto.joblet.TelemetryMetricsData.deserializeBinary = function(bytes) {
-  var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.joblet.TelemetryMetricsData;
-  return proto.joblet.TelemetryMetricsData.deserializeBinaryFromReader(msg, reader);
+ * @param {?proto.joblet.TelematicsMmapData|undefined} value
+ * @return {!proto.joblet.TelematicsEvent} returns this
+*/
+proto.joblet.TelematicsEvent.prototype.setMmap = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 14, proto.joblet.TelematicsEvent.oneofGroups_[0], value);
 };
 
 
 /**
- * Deserializes binary data (in protobuf wire format) from the
- * given reader into the given message object.
- * @param {!proto.joblet.TelemetryMetricsData} msg The message object to deserialize into.
- * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.joblet.TelemetryMetricsData}
+ * Clears the message field making it undefined.
+ * @return {!proto.joblet.TelematicsEvent} returns this
  */
-proto.joblet.TelemetryMetricsData.deserializeBinaryFromReader = function(msg, reader) {
-  while (reader.nextField()) {
-    if (reader.isEndGroup()) {
-      break;
-    }
-    var field = reader.getFieldNumber();
-    switch (field) {
-    case 1:
-      var value = /** @type {number} */ (reader.readDouble());
-      msg.setCpuPercent(value);
-      break;
-    case 2:
-      var value = /** @type {number} */ (reader.readInt64());
-      msg.setMemoryBytes(value);
-      break;
-    case 3:
-      var value = /** @type {number} */ (reader.readInt64());
-      msg.setMemoryLimit(value);
-      break;
-    case 4:
-      var value = /** @type {number} */ (reader.readInt64());
-      msg.setDiskReadBytes(value);
-      break;
-    case 5:
-      var value = /** @type {number} */ (reader.readInt64());
-      msg.setDiskWriteBytes(value);
-      break;
-    case 6:
-      var value = /** @type {number} */ (reader.readInt64());
-      msg.setNetRecvBytes(value);
-      break;
-    case 7:
-      var value = /** @type {number} */ (reader.readInt64());
-      msg.setNetSentBytes(value);
-      break;
-    case 8:
-      var value = /** @type {number} */ (reader.readDouble());
-      msg.setGpuPercent(value);
-      break;
-    case 9:
-      var value = /** @type {number} */ (reader.readInt64());
-      msg.setGpuMemoryBytes(value);
-      break;
-    default:
-      reader.skipField();
-      break;
-    }
-  }
-  return msg;
+proto.joblet.TelematicsEvent.prototype.clearMmap = function() {
+  return this.setMmap(undefined);
 };
 
 
 /**
- * Serializes the message to binary data (in protobuf wire format).
- * @return {!Uint8Array}
+ * Returns whether this field is set.
+ * @return {boolean}
  */
-proto.joblet.TelemetryMetricsData.prototype.serializeBinary = function() {
-  var writer = new jspb.BinaryWriter();
-  proto.joblet.TelemetryMetricsData.serializeBinaryToWriter(this, writer);
-  return writer.getResultBuffer();
+proto.joblet.TelematicsEvent.prototype.hasMmap = function() {
+  return jspb.Message.getField(this, 14) != null;
 };
 
 
 /**
- * Serializes the given message to binary data (in protobuf wire
- * format), writing to the given BinaryWriter.
- * @param {!proto.joblet.TelemetryMetricsData} message
- * @param {!jspb.BinaryWriter} writer
- * @suppress {unusedLocalVariables} f is only used for nested messages
+ * optional TelematicsMprotectData mprotect = 15;
+ * @return {?proto.joblet.TelematicsMprotectData}
  */
-proto.joblet.TelemetryMetricsData.serializeBinaryToWriter = function(message, writer) {
-  var f = undefined;
-  f = message.getCpuPercent();
-  if (f !== 0.0) {
-    writer.writeDouble(
-      1,
-      f
-    );
-  }
-  f = message.getMemoryBytes();
-  if (f !== 0) {
-    writer.writeInt64(
-      2,
-      f
-    );
-  }
-  f = message.getMemoryLimit();
-  if (f !== 0) {
-    writer.writeInt64(
-      3,
-      f
-    );
-  }
-  f = message.getDiskReadBytes();
-  if (f !== 0) {
-    writer.writeInt64(
-      4,
-      f
-    );
-  }
-  f = message.getDiskWriteBytes();
-  if (f !== 0) {
-    writer.writeInt64(
-      5,
-      f
-    );
-  }
-  f = message.getNetRecvBytes();
-  if (f !== 0) {
-    writer.writeInt64(
-      6,
-      f
-    );
-  }
-  f = message.getNetSentBytes();
-  if (f !== 0) {
-    writer.writeInt64(
-      7,
-      f
-    );
-  }
-  f = message.getGpuPercent();
-  if (f !== 0.0) {
-    writer.writeDouble(
-      8,
-      f
-    );
-  }
-  f = message.getGpuMemoryBytes();
-  if (f !== 0) {
-    writer.writeInt64(
-      9,
-      f
-    );
-  }
+proto.joblet.TelematicsEvent.prototype.getMprotect = function() {
+  return /** @type{?proto.joblet.TelematicsMprotectData} */ (
+    jspb.Message.getWrapperField(this, proto.joblet.TelematicsMprotectData, 15));
 };
 
 
 /**
- * optional double cpu_percent = 1;
- * @return {number}
- */
-proto.joblet.TelemetryMetricsData.prototype.getCpuPercent = function() {
-  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 1, 0.0));
+ * @param {?proto.joblet.TelematicsMprotectData|undefined} value
+ * @return {!proto.joblet.TelematicsEvent} returns this
+*/
+proto.joblet.TelematicsEvent.prototype.setMprotect = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 15, proto.joblet.TelematicsEvent.oneofGroups_[0], value);
 };
 
 
 /**
- * @param {number} value
- * @return {!proto.joblet.TelemetryMetricsData} returns this
+ * Clears the message field making it undefined.
+ * @return {!proto.joblet.TelematicsEvent} returns this
  */
-proto.joblet.TelemetryMetricsData.prototype.setCpuPercent = function(value) {
-  return jspb.Message.setProto3FloatField(this, 1, value);
+proto.joblet.TelematicsEvent.prototype.clearMprotect = function() {
+  return this.setMprotect(undefined);
 };
 
 
 /**
- * optional int64 memory_bytes = 2;
- * @return {number}
+ * Returns whether this field is set.
+ * @return {boolean}
  */
-proto.joblet.TelemetryMetricsData.prototype.getMemoryBytes = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+proto.joblet.TelematicsEvent.prototype.hasMprotect = function() {
+  return jspb.Message.getField(this, 15) != null;
 };
 
 
 /**
- * @param {number} value
- * @return {!proto.joblet.TelemetryMetricsData} returns this
+ * optional TelematicsSocketDataData socket_data = 16;
+ * @return {?proto.joblet.TelematicsSocketDataData}
  */
-proto.joblet.TelemetryMetricsData.prototype.setMemoryBytes = function(value) {
-  return jspb.Message.setProto3IntField(this, 2, value);
+proto.joblet.TelematicsEvent.prototype.getSocketData = function() {
+  return /** @type{?proto.joblet.TelematicsSocketDataData} */ (
+    jspb.Message.getWrapperField(this, proto.joblet.TelematicsSocketDataData, 16));
 };
 
 
 /**
- * optional int64 memory_limit = 3;
- * @return {number}
- */
-proto.joblet.TelemetryMetricsData.prototype.getMemoryLimit = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+ * @param {?proto.joblet.TelematicsSocketDataData|undefined} value
+ * @return {!proto.joblet.TelematicsEvent} returns this
+*/
+proto.joblet.TelematicsEvent.prototype.setSocketData = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 16, proto.joblet.TelematicsEvent.oneofGroups_[0], value);
 };
 
 
 /**
- * @param {number} value
- * @return {!proto.joblet.TelemetryMetricsData} returns this
+ * Clears the message field making it undefined.
+ * @return {!proto.joblet.TelematicsEvent} returns this
  */
-proto.joblet.TelemetryMetricsData.prototype.setMemoryLimit = function(value) {
-  return jspb.Message.setProto3IntField(this, 3, value);
+proto.joblet.TelematicsEvent.prototype.clearSocketData = function() {
+  return this.setSocketData(undefined);
 };
 
 
 /**
- * optional int64 disk_read_bytes = 4;
- * @return {number}
+ * Returns whether this field is set.
+ * @return {boolean}
  */
-proto.joblet.TelemetryMetricsData.prototype.getDiskReadBytes = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
-};
-
-
-/**
- * @param {number} value
- * @return {!proto.joblet.TelemetryMetricsData} returns this
- */
-proto.joblet.TelemetryMetricsData.prototype.setDiskReadBytes = function(value) {
-  return jspb.Message.setProto3IntField(this, 4, value);
-};
-
-
-/**
- * optional int64 disk_write_bytes = 5;
- * @return {number}
- */
-proto.joblet.TelemetryMetricsData.prototype.getDiskWriteBytes = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
-};
-
-
-/**
- * @param {number} value
- * @return {!proto.joblet.TelemetryMetricsData} returns this
- */
-proto.joblet.TelemetryMetricsData.prototype.setDiskWriteBytes = function(value) {
-  return jspb.Message.setProto3IntField(this, 5, value);
-};
-
-
-/**
- * optional int64 net_recv_bytes = 6;
- * @return {number}
- */
-proto.joblet.TelemetryMetricsData.prototype.getNetRecvBytes = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
-};
-
-
-/**
- * @param {number} value
- * @return {!proto.joblet.TelemetryMetricsData} returns this
- */
-proto.joblet.TelemetryMetricsData.prototype.setNetRecvBytes = function(value) {
-  return jspb.Message.setProto3IntField(this, 6, value);
-};
-
-
-/**
- * optional int64 net_sent_bytes = 7;
- * @return {number}
- */
-proto.joblet.TelemetryMetricsData.prototype.getNetSentBytes = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 7, 0));
-};
-
-
-/**
- * @param {number} value
- * @return {!proto.joblet.TelemetryMetricsData} returns this
- */
-proto.joblet.TelemetryMetricsData.prototype.setNetSentBytes = function(value) {
-  return jspb.Message.setProto3IntField(this, 7, value);
-};
-
-
-/**
- * optional double gpu_percent = 8;
- * @return {number}
- */
-proto.joblet.TelemetryMetricsData.prototype.getGpuPercent = function() {
-  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 8, 0.0));
-};
-
-
-/**
- * @param {number} value
- * @return {!proto.joblet.TelemetryMetricsData} returns this
- */
-proto.joblet.TelemetryMetricsData.prototype.setGpuPercent = function(value) {
-  return jspb.Message.setProto3FloatField(this, 8, value);
-};
-
-
-/**
- * optional int64 gpu_memory_bytes = 9;
- * @return {number}
- */
-proto.joblet.TelemetryMetricsData.prototype.getGpuMemoryBytes = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 9, 0));
-};
-
-
-/**
- * @param {number} value
- * @return {!proto.joblet.TelemetryMetricsData} returns this
- */
-proto.joblet.TelemetryMetricsData.prototype.setGpuMemoryBytes = function(value) {
-  return jspb.Message.setProto3IntField(this, 9, value);
+proto.joblet.TelematicsEvent.prototype.hasSocketData = function() {
+  return jspb.Message.getField(this, 16) != null;
 };
 
 
@@ -20301,7 +20559,7 @@ proto.joblet.TelemetryMetricsData.prototype.setGpuMemoryBytes = function(value) 
  * @private {!Array<number>}
  * @const
  */
-proto.joblet.TelemetryExecData.repeatedFields_ = [3];
+proto.joblet.TelematicsExecData.repeatedFields_ = [4];
 
 
 
@@ -20318,8 +20576,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.joblet.TelemetryExecData.prototype.toObject = function(opt_includeInstance) {
-  return proto.joblet.TelemetryExecData.toObject(opt_includeInstance, this);
+proto.joblet.TelematicsExecData.prototype.toObject = function(opt_includeInstance) {
+  return proto.joblet.TelematicsExecData.toObject(opt_includeInstance, this);
 };
 
 
@@ -20328,17 +20586,17 @@ proto.joblet.TelemetryExecData.prototype.toObject = function(opt_includeInstance
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.joblet.TelemetryExecData} msg The msg instance to transform.
+ * @param {!proto.joblet.TelematicsExecData} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.joblet.TelemetryExecData.toObject = function(includeInstance, msg) {
+proto.joblet.TelematicsExecData.toObject = function(includeInstance, msg) {
   var f, obj = {
     pid: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    binary: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    argsList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f,
-    exitCode: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    ppid: jspb.Message.getFieldWithDefault(msg, 5, 0)
+    ppid: jspb.Message.getFieldWithDefault(msg, 2, 0),
+    binary: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    argsList: (f = jspb.Message.getRepeatedField(msg, 4)) == null ? undefined : f,
+    exitCode: jspb.Message.getFieldWithDefault(msg, 5, 0)
   };
 
   if (includeInstance) {
@@ -20352,23 +20610,23 @@ proto.joblet.TelemetryExecData.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.joblet.TelemetryExecData}
+ * @return {!proto.joblet.TelematicsExecData}
  */
-proto.joblet.TelemetryExecData.deserializeBinary = function(bytes) {
+proto.joblet.TelematicsExecData.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.joblet.TelemetryExecData;
-  return proto.joblet.TelemetryExecData.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.joblet.TelematicsExecData;
+  return proto.joblet.TelematicsExecData.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.joblet.TelemetryExecData} msg The message object to deserialize into.
+ * @param {!proto.joblet.TelematicsExecData} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.joblet.TelemetryExecData}
+ * @return {!proto.joblet.TelematicsExecData}
  */
-proto.joblet.TelemetryExecData.deserializeBinaryFromReader = function(msg, reader) {
+proto.joblet.TelematicsExecData.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -20380,20 +20638,20 @@ proto.joblet.TelemetryExecData.deserializeBinaryFromReader = function(msg, reade
       msg.setPid(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setBinary(value);
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setPpid(value);
       break;
     case 3:
       var value = /** @type {string} */ (reader.readString());
-      msg.addArgs(value);
+      msg.setBinary(value);
       break;
     case 4:
-      var value = /** @type {number} */ (reader.readInt32());
-      msg.setExitCode(value);
+      var value = /** @type {string} */ (reader.readString());
+      msg.addArgs(value);
       break;
     case 5:
-      var value = /** @type {number} */ (reader.readUint32());
-      msg.setPpid(value);
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setExitCode(value);
       break;
     default:
       reader.skipField();
@@ -20408,9 +20666,9 @@ proto.joblet.TelemetryExecData.deserializeBinaryFromReader = function(msg, reade
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.joblet.TelemetryExecData.prototype.serializeBinary = function() {
+proto.joblet.TelematicsExecData.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.joblet.TelemetryExecData.serializeBinaryToWriter(this, writer);
+  proto.joblet.TelematicsExecData.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -20418,11 +20676,11 @@ proto.joblet.TelemetryExecData.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.joblet.TelemetryExecData} message
+ * @param {!proto.joblet.TelematicsExecData} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.joblet.TelemetryExecData.serializeBinaryToWriter = function(message, writer) {
+proto.joblet.TelematicsExecData.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getPid();
   if (f !== 0) {
@@ -20431,30 +20689,30 @@ proto.joblet.TelemetryExecData.serializeBinaryToWriter = function(message, write
       f
     );
   }
+  f = message.getPpid();
+  if (f !== 0) {
+    writer.writeUint32(
+      2,
+      f
+    );
+  }
   f = message.getBinary();
   if (f.length > 0) {
     writer.writeString(
-      2,
+      3,
       f
     );
   }
   f = message.getArgsList();
   if (f.length > 0) {
     writer.writeRepeatedString(
-      3,
+      4,
       f
     );
   }
   f = message.getExitCode();
   if (f !== 0) {
     writer.writeInt32(
-      4,
-      f
-    );
-  }
-  f = message.getPpid();
-  if (f !== 0) {
-    writer.writeUint32(
       5,
       f
     );
@@ -20466,107 +20724,107 @@ proto.joblet.TelemetryExecData.serializeBinaryToWriter = function(message, write
  * optional uint32 pid = 1;
  * @return {number}
  */
-proto.joblet.TelemetryExecData.prototype.getPid = function() {
+proto.joblet.TelematicsExecData.prototype.getPid = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.joblet.TelemetryExecData} returns this
+ * @return {!proto.joblet.TelematicsExecData} returns this
  */
-proto.joblet.TelemetryExecData.prototype.setPid = function(value) {
+proto.joblet.TelematicsExecData.prototype.setPid = function(value) {
   return jspb.Message.setProto3IntField(this, 1, value);
 };
 
 
 /**
- * optional string binary = 2;
+ * optional uint32 ppid = 2;
+ * @return {number}
+ */
+proto.joblet.TelematicsExecData.prototype.getPpid = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.TelematicsExecData} returns this
+ */
+proto.joblet.TelematicsExecData.prototype.setPpid = function(value) {
+  return jspb.Message.setProto3IntField(this, 2, value);
+};
+
+
+/**
+ * optional string binary = 3;
  * @return {string}
  */
-proto.joblet.TelemetryExecData.prototype.getBinary = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+proto.joblet.TelematicsExecData.prototype.getBinary = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
 };
 
 
 /**
  * @param {string} value
- * @return {!proto.joblet.TelemetryExecData} returns this
+ * @return {!proto.joblet.TelematicsExecData} returns this
  */
-proto.joblet.TelemetryExecData.prototype.setBinary = function(value) {
-  return jspb.Message.setProto3StringField(this, 2, value);
+proto.joblet.TelematicsExecData.prototype.setBinary = function(value) {
+  return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 
 /**
- * repeated string args = 3;
+ * repeated string args = 4;
  * @return {!Array<string>}
  */
-proto.joblet.TelemetryExecData.prototype.getArgsList = function() {
-  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 3));
+proto.joblet.TelematicsExecData.prototype.getArgsList = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 4));
 };
 
 
 /**
  * @param {!Array<string>} value
- * @return {!proto.joblet.TelemetryExecData} returns this
+ * @return {!proto.joblet.TelematicsExecData} returns this
  */
-proto.joblet.TelemetryExecData.prototype.setArgsList = function(value) {
-  return jspb.Message.setField(this, 3, value || []);
+proto.joblet.TelematicsExecData.prototype.setArgsList = function(value) {
+  return jspb.Message.setField(this, 4, value || []);
 };
 
 
 /**
  * @param {string} value
  * @param {number=} opt_index
- * @return {!proto.joblet.TelemetryExecData} returns this
+ * @return {!proto.joblet.TelematicsExecData} returns this
  */
-proto.joblet.TelemetryExecData.prototype.addArgs = function(value, opt_index) {
-  return jspb.Message.addToRepeatedField(this, 3, value, opt_index);
+proto.joblet.TelematicsExecData.prototype.addArgs = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 4, value, opt_index);
 };
 
 
 /**
  * Clears the list making it empty but non-null.
- * @return {!proto.joblet.TelemetryExecData} returns this
+ * @return {!proto.joblet.TelematicsExecData} returns this
  */
-proto.joblet.TelemetryExecData.prototype.clearArgsList = function() {
+proto.joblet.TelematicsExecData.prototype.clearArgsList = function() {
   return this.setArgsList([]);
 };
 
 
 /**
- * optional int32 exit_code = 4;
+ * optional int32 exit_code = 5;
  * @return {number}
  */
-proto.joblet.TelemetryExecData.prototype.getExitCode = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
-};
-
-
-/**
- * @param {number} value
- * @return {!proto.joblet.TelemetryExecData} returns this
- */
-proto.joblet.TelemetryExecData.prototype.setExitCode = function(value) {
-  return jspb.Message.setProto3IntField(this, 4, value);
-};
-
-
-/**
- * optional uint32 ppid = 5;
- * @return {number}
- */
-proto.joblet.TelemetryExecData.prototype.getPpid = function() {
+proto.joblet.TelematicsExecData.prototype.getExitCode = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.joblet.TelemetryExecData} returns this
+ * @return {!proto.joblet.TelematicsExecData} returns this
  */
-proto.joblet.TelemetryExecData.prototype.setPpid = function(value) {
+proto.joblet.TelematicsExecData.prototype.setExitCode = function(value) {
   return jspb.Message.setProto3IntField(this, 5, value);
 };
 
@@ -20587,8 +20845,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.joblet.TelemetryConnectData.prototype.toObject = function(opt_includeInstance) {
-  return proto.joblet.TelemetryConnectData.toObject(opt_includeInstance, this);
+proto.joblet.TelematicsConnectData.prototype.toObject = function(opt_includeInstance) {
+  return proto.joblet.TelematicsConnectData.toObject(opt_includeInstance, this);
 };
 
 
@@ -20597,18 +20855,18 @@ proto.joblet.TelemetryConnectData.prototype.toObject = function(opt_includeInsta
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.joblet.TelemetryConnectData} msg The msg instance to transform.
+ * @param {!proto.joblet.TelematicsConnectData} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.joblet.TelemetryConnectData.toObject = function(includeInstance, msg) {
+proto.joblet.TelematicsConnectData.toObject = function(includeInstance, msg) {
   var f, obj = {
     pid: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    address: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    port: jspb.Message.getFieldWithDefault(msg, 3, 0),
+    dstAddr: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    dstPort: jspb.Message.getFieldWithDefault(msg, 3, 0),
     protocol: jspb.Message.getFieldWithDefault(msg, 4, ""),
-    localAddress: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    localPort: jspb.Message.getFieldWithDefault(msg, 6, 0)
+    srcAddr: jspb.Message.getFieldWithDefault(msg, 5, ""),
+    srcPort: jspb.Message.getFieldWithDefault(msg, 6, 0)
   };
 
   if (includeInstance) {
@@ -20622,23 +20880,23 @@ proto.joblet.TelemetryConnectData.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.joblet.TelemetryConnectData}
+ * @return {!proto.joblet.TelematicsConnectData}
  */
-proto.joblet.TelemetryConnectData.deserializeBinary = function(bytes) {
+proto.joblet.TelematicsConnectData.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.joblet.TelemetryConnectData;
-  return proto.joblet.TelemetryConnectData.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.joblet.TelematicsConnectData;
+  return proto.joblet.TelematicsConnectData.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.joblet.TelemetryConnectData} msg The message object to deserialize into.
+ * @param {!proto.joblet.TelematicsConnectData} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.joblet.TelemetryConnectData}
+ * @return {!proto.joblet.TelematicsConnectData}
  */
-proto.joblet.TelemetryConnectData.deserializeBinaryFromReader = function(msg, reader) {
+proto.joblet.TelematicsConnectData.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -20651,11 +20909,11 @@ proto.joblet.TelemetryConnectData.deserializeBinaryFromReader = function(msg, re
       break;
     case 2:
       var value = /** @type {string} */ (reader.readString());
-      msg.setAddress(value);
+      msg.setDstAddr(value);
       break;
     case 3:
       var value = /** @type {number} */ (reader.readUint32());
-      msg.setPort(value);
+      msg.setDstPort(value);
       break;
     case 4:
       var value = /** @type {string} */ (reader.readString());
@@ -20663,11 +20921,11 @@ proto.joblet.TelemetryConnectData.deserializeBinaryFromReader = function(msg, re
       break;
     case 5:
       var value = /** @type {string} */ (reader.readString());
-      msg.setLocalAddress(value);
+      msg.setSrcAddr(value);
       break;
     case 6:
       var value = /** @type {number} */ (reader.readUint32());
-      msg.setLocalPort(value);
+      msg.setSrcPort(value);
       break;
     default:
       reader.skipField();
@@ -20682,9 +20940,9 @@ proto.joblet.TelemetryConnectData.deserializeBinaryFromReader = function(msg, re
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.joblet.TelemetryConnectData.prototype.serializeBinary = function() {
+proto.joblet.TelematicsConnectData.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.joblet.TelemetryConnectData.serializeBinaryToWriter(this, writer);
+  proto.joblet.TelematicsConnectData.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -20692,11 +20950,11 @@ proto.joblet.TelemetryConnectData.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.joblet.TelemetryConnectData} message
+ * @param {!proto.joblet.TelematicsConnectData} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.joblet.TelemetryConnectData.serializeBinaryToWriter = function(message, writer) {
+proto.joblet.TelematicsConnectData.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getPid();
   if (f !== 0) {
@@ -20705,14 +20963,14 @@ proto.joblet.TelemetryConnectData.serializeBinaryToWriter = function(message, wr
       f
     );
   }
-  f = message.getAddress();
+  f = message.getDstAddr();
   if (f.length > 0) {
     writer.writeString(
       2,
       f
     );
   }
-  f = message.getPort();
+  f = message.getDstPort();
   if (f !== 0) {
     writer.writeUint32(
       3,
@@ -20726,14 +20984,14 @@ proto.joblet.TelemetryConnectData.serializeBinaryToWriter = function(message, wr
       f
     );
   }
-  f = message.getLocalAddress();
+  f = message.getSrcAddr();
   if (f.length > 0) {
     writer.writeString(
       5,
       f
     );
   }
-  f = message.getLocalPort();
+  f = message.getSrcPort();
   if (f !== 0) {
     writer.writeUint32(
       6,
@@ -20747,52 +21005,52 @@ proto.joblet.TelemetryConnectData.serializeBinaryToWriter = function(message, wr
  * optional uint32 pid = 1;
  * @return {number}
  */
-proto.joblet.TelemetryConnectData.prototype.getPid = function() {
+proto.joblet.TelematicsConnectData.prototype.getPid = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.joblet.TelemetryConnectData} returns this
+ * @return {!proto.joblet.TelematicsConnectData} returns this
  */
-proto.joblet.TelemetryConnectData.prototype.setPid = function(value) {
+proto.joblet.TelematicsConnectData.prototype.setPid = function(value) {
   return jspb.Message.setProto3IntField(this, 1, value);
 };
 
 
 /**
- * optional string address = 2;
+ * optional string dst_addr = 2;
  * @return {string}
  */
-proto.joblet.TelemetryConnectData.prototype.getAddress = function() {
+proto.joblet.TelematicsConnectData.prototype.getDstAddr = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
 
 /**
  * @param {string} value
- * @return {!proto.joblet.TelemetryConnectData} returns this
+ * @return {!proto.joblet.TelematicsConnectData} returns this
  */
-proto.joblet.TelemetryConnectData.prototype.setAddress = function(value) {
+proto.joblet.TelematicsConnectData.prototype.setDstAddr = function(value) {
   return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
 /**
- * optional uint32 port = 3;
+ * optional uint32 dst_port = 3;
  * @return {number}
  */
-proto.joblet.TelemetryConnectData.prototype.getPort = function() {
+proto.joblet.TelematicsConnectData.prototype.getDstPort = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.joblet.TelemetryConnectData} returns this
+ * @return {!proto.joblet.TelematicsConnectData} returns this
  */
-proto.joblet.TelemetryConnectData.prototype.setPort = function(value) {
+proto.joblet.TelematicsConnectData.prototype.setDstPort = function(value) {
   return jspb.Message.setProto3IntField(this, 3, value);
 };
 
@@ -20801,52 +21059,52 @@ proto.joblet.TelemetryConnectData.prototype.setPort = function(value) {
  * optional string protocol = 4;
  * @return {string}
  */
-proto.joblet.TelemetryConnectData.prototype.getProtocol = function() {
+proto.joblet.TelematicsConnectData.prototype.getProtocol = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
 };
 
 
 /**
  * @param {string} value
- * @return {!proto.joblet.TelemetryConnectData} returns this
+ * @return {!proto.joblet.TelematicsConnectData} returns this
  */
-proto.joblet.TelemetryConnectData.prototype.setProtocol = function(value) {
+proto.joblet.TelematicsConnectData.prototype.setProtocol = function(value) {
   return jspb.Message.setProto3StringField(this, 4, value);
 };
 
 
 /**
- * optional string local_address = 5;
+ * optional string src_addr = 5;
  * @return {string}
  */
-proto.joblet.TelemetryConnectData.prototype.getLocalAddress = function() {
+proto.joblet.TelematicsConnectData.prototype.getSrcAddr = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
 };
 
 
 /**
  * @param {string} value
- * @return {!proto.joblet.TelemetryConnectData} returns this
+ * @return {!proto.joblet.TelematicsConnectData} returns this
  */
-proto.joblet.TelemetryConnectData.prototype.setLocalAddress = function(value) {
+proto.joblet.TelematicsConnectData.prototype.setSrcAddr = function(value) {
   return jspb.Message.setProto3StringField(this, 5, value);
 };
 
 
 /**
- * optional uint32 local_port = 6;
+ * optional uint32 src_port = 6;
  * @return {number}
  */
-proto.joblet.TelemetryConnectData.prototype.getLocalPort = function() {
+proto.joblet.TelematicsConnectData.prototype.getSrcPort = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.joblet.TelemetryConnectData} returns this
+ * @return {!proto.joblet.TelematicsConnectData} returns this
  */
-proto.joblet.TelemetryConnectData.prototype.setLocalPort = function(value) {
+proto.joblet.TelematicsConnectData.prototype.setSrcPort = function(value) {
   return jspb.Message.setProto3IntField(this, 6, value);
 };
 
@@ -20867,8 +21125,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.joblet.TelemetryFileData.prototype.toObject = function(opt_includeInstance) {
-  return proto.joblet.TelemetryFileData.toObject(opt_includeInstance, this);
+proto.joblet.TelematicsAcceptData.prototype.toObject = function(opt_includeInstance) {
+  return proto.joblet.TelematicsAcceptData.toObject(opt_includeInstance, this);
 };
 
 
@@ -20877,16 +21135,18 @@ proto.joblet.TelemetryFileData.prototype.toObject = function(opt_includeInstance
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.joblet.TelemetryFileData} msg The msg instance to transform.
+ * @param {!proto.joblet.TelematicsAcceptData} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.joblet.TelemetryFileData.toObject = function(includeInstance, msg) {
+proto.joblet.TelematicsAcceptData.toObject = function(includeInstance, msg) {
   var f, obj = {
     pid: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    path: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    operation: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    bytes: jspb.Message.getFieldWithDefault(msg, 4, 0)
+    srcAddr: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    srcPort: jspb.Message.getFieldWithDefault(msg, 3, 0),
+    dstAddr: jspb.Message.getFieldWithDefault(msg, 4, ""),
+    dstPort: jspb.Message.getFieldWithDefault(msg, 5, 0),
+    protocol: jspb.Message.getFieldWithDefault(msg, 6, "")
   };
 
   if (includeInstance) {
@@ -20900,23 +21160,302 @@ proto.joblet.TelemetryFileData.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.joblet.TelemetryFileData}
+ * @return {!proto.joblet.TelematicsAcceptData}
  */
-proto.joblet.TelemetryFileData.deserializeBinary = function(bytes) {
+proto.joblet.TelematicsAcceptData.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.joblet.TelemetryFileData;
-  return proto.joblet.TelemetryFileData.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.joblet.TelematicsAcceptData;
+  return proto.joblet.TelematicsAcceptData.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.joblet.TelemetryFileData} msg The message object to deserialize into.
+ * @param {!proto.joblet.TelematicsAcceptData} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.joblet.TelemetryFileData}
+ * @return {!proto.joblet.TelematicsAcceptData}
  */
-proto.joblet.TelemetryFileData.deserializeBinaryFromReader = function(msg, reader) {
+proto.joblet.TelematicsAcceptData.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setPid(value);
+      break;
+    case 2:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setSrcAddr(value);
+      break;
+    case 3:
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setSrcPort(value);
+      break;
+    case 4:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setDstAddr(value);
+      break;
+    case 5:
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setDstPort(value);
+      break;
+    case 6:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setProtocol(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.joblet.TelematicsAcceptData.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.joblet.TelematicsAcceptData.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.joblet.TelematicsAcceptData} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.joblet.TelematicsAcceptData.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getPid();
+  if (f !== 0) {
+    writer.writeUint32(
+      1,
+      f
+    );
+  }
+  f = message.getSrcAddr();
+  if (f.length > 0) {
+    writer.writeString(
+      2,
+      f
+    );
+  }
+  f = message.getSrcPort();
+  if (f !== 0) {
+    writer.writeUint32(
+      3,
+      f
+    );
+  }
+  f = message.getDstAddr();
+  if (f.length > 0) {
+    writer.writeString(
+      4,
+      f
+    );
+  }
+  f = message.getDstPort();
+  if (f !== 0) {
+    writer.writeUint32(
+      5,
+      f
+    );
+  }
+  f = message.getProtocol();
+  if (f.length > 0) {
+    writer.writeString(
+      6,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional uint32 pid = 1;
+ * @return {number}
+ */
+proto.joblet.TelematicsAcceptData.prototype.getPid = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.TelematicsAcceptData} returns this
+ */
+proto.joblet.TelematicsAcceptData.prototype.setPid = function(value) {
+  return jspb.Message.setProto3IntField(this, 1, value);
+};
+
+
+/**
+ * optional string src_addr = 2;
+ * @return {string}
+ */
+proto.joblet.TelematicsAcceptData.prototype.getSrcAddr = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.joblet.TelematicsAcceptData} returns this
+ */
+proto.joblet.TelematicsAcceptData.prototype.setSrcAddr = function(value) {
+  return jspb.Message.setProto3StringField(this, 2, value);
+};
+
+
+/**
+ * optional uint32 src_port = 3;
+ * @return {number}
+ */
+proto.joblet.TelematicsAcceptData.prototype.getSrcPort = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.TelematicsAcceptData} returns this
+ */
+proto.joblet.TelematicsAcceptData.prototype.setSrcPort = function(value) {
+  return jspb.Message.setProto3IntField(this, 3, value);
+};
+
+
+/**
+ * optional string dst_addr = 4;
+ * @return {string}
+ */
+proto.joblet.TelematicsAcceptData.prototype.getDstAddr = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.joblet.TelematicsAcceptData} returns this
+ */
+proto.joblet.TelematicsAcceptData.prototype.setDstAddr = function(value) {
+  return jspb.Message.setProto3StringField(this, 4, value);
+};
+
+
+/**
+ * optional uint32 dst_port = 5;
+ * @return {number}
+ */
+proto.joblet.TelematicsAcceptData.prototype.getDstPort = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.TelematicsAcceptData} returns this
+ */
+proto.joblet.TelematicsAcceptData.prototype.setDstPort = function(value) {
+  return jspb.Message.setProto3IntField(this, 5, value);
+};
+
+
+/**
+ * optional string protocol = 6;
+ * @return {string}
+ */
+proto.joblet.TelematicsAcceptData.prototype.getProtocol = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 6, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.joblet.TelematicsAcceptData} returns this
+ */
+proto.joblet.TelematicsAcceptData.prototype.setProtocol = function(value) {
+  return jspb.Message.setProto3StringField(this, 6, value);
+};
+
+
+
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.joblet.TelematicsFileData.prototype.toObject = function(opt_includeInstance) {
+  return proto.joblet.TelematicsFileData.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.joblet.TelematicsFileData} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.joblet.TelematicsFileData.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    pid: jspb.Message.getFieldWithDefault(msg, 1, 0),
+    path: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    operation: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    bytes: jspb.Message.getFieldWithDefault(msg, 4, 0),
+    flags: jspb.Message.getFieldWithDefault(msg, 5, 0)
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.joblet.TelematicsFileData}
+ */
+proto.joblet.TelematicsFileData.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.joblet.TelematicsFileData;
+  return proto.joblet.TelematicsFileData.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.joblet.TelematicsFileData} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.joblet.TelematicsFileData}
+ */
+proto.joblet.TelematicsFileData.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -20939,6 +21478,10 @@ proto.joblet.TelemetryFileData.deserializeBinaryFromReader = function(msg, reade
       var value = /** @type {number} */ (reader.readInt64());
       msg.setBytes(value);
       break;
+    case 5:
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setFlags(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -20952,9 +21495,9 @@ proto.joblet.TelemetryFileData.deserializeBinaryFromReader = function(msg, reade
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.joblet.TelemetryFileData.prototype.serializeBinary = function() {
+proto.joblet.TelematicsFileData.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.joblet.TelemetryFileData.serializeBinaryToWriter(this, writer);
+  proto.joblet.TelematicsFileData.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -20962,11 +21505,11 @@ proto.joblet.TelemetryFileData.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.joblet.TelemetryFileData} message
+ * @param {!proto.joblet.TelematicsFileData} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.joblet.TelemetryFileData.serializeBinaryToWriter = function(message, writer) {
+proto.joblet.TelematicsFileData.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getPid();
   if (f !== 0) {
@@ -20996,6 +21539,13 @@ proto.joblet.TelemetryFileData.serializeBinaryToWriter = function(message, write
       f
     );
   }
+  f = message.getFlags();
+  if (f !== 0) {
+    writer.writeUint32(
+      5,
+      f
+    );
+  }
 };
 
 
@@ -21003,16 +21553,16 @@ proto.joblet.TelemetryFileData.serializeBinaryToWriter = function(message, write
  * optional uint32 pid = 1;
  * @return {number}
  */
-proto.joblet.TelemetryFileData.prototype.getPid = function() {
+proto.joblet.TelematicsFileData.prototype.getPid = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.joblet.TelemetryFileData} returns this
+ * @return {!proto.joblet.TelematicsFileData} returns this
  */
-proto.joblet.TelemetryFileData.prototype.setPid = function(value) {
+proto.joblet.TelematicsFileData.prototype.setPid = function(value) {
   return jspb.Message.setProto3IntField(this, 1, value);
 };
 
@@ -21021,16 +21571,16 @@ proto.joblet.TelemetryFileData.prototype.setPid = function(value) {
  * optional string path = 2;
  * @return {string}
  */
-proto.joblet.TelemetryFileData.prototype.getPath = function() {
+proto.joblet.TelematicsFileData.prototype.getPath = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
 
 /**
  * @param {string} value
- * @return {!proto.joblet.TelemetryFileData} returns this
+ * @return {!proto.joblet.TelematicsFileData} returns this
  */
-proto.joblet.TelemetryFileData.prototype.setPath = function(value) {
+proto.joblet.TelematicsFileData.prototype.setPath = function(value) {
   return jspb.Message.setProto3StringField(this, 2, value);
 };
 
@@ -21039,16 +21589,16 @@ proto.joblet.TelemetryFileData.prototype.setPath = function(value) {
  * optional string operation = 3;
  * @return {string}
  */
-proto.joblet.TelemetryFileData.prototype.getOperation = function() {
+proto.joblet.TelematicsFileData.prototype.getOperation = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
 };
 
 
 /**
  * @param {string} value
- * @return {!proto.joblet.TelemetryFileData} returns this
+ * @return {!proto.joblet.TelematicsFileData} returns this
  */
-proto.joblet.TelemetryFileData.prototype.setOperation = function(value) {
+proto.joblet.TelematicsFileData.prototype.setOperation = function(value) {
   return jspb.Message.setProto3StringField(this, 3, value);
 };
 
@@ -21057,17 +21607,875 @@ proto.joblet.TelemetryFileData.prototype.setOperation = function(value) {
  * optional int64 bytes = 4;
  * @return {number}
  */
-proto.joblet.TelemetryFileData.prototype.getBytes = function() {
+proto.joblet.TelematicsFileData.prototype.getBytes = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.joblet.TelemetryFileData} returns this
+ * @return {!proto.joblet.TelematicsFileData} returns this
  */
-proto.joblet.TelemetryFileData.prototype.setBytes = function(value) {
+proto.joblet.TelematicsFileData.prototype.setBytes = function(value) {
   return jspb.Message.setProto3IntField(this, 4, value);
+};
+
+
+/**
+ * optional uint32 flags = 5;
+ * @return {number}
+ */
+proto.joblet.TelematicsFileData.prototype.getFlags = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.TelematicsFileData} returns this
+ */
+proto.joblet.TelematicsFileData.prototype.setFlags = function(value) {
+  return jspb.Message.setProto3IntField(this, 5, value);
+};
+
+
+
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.joblet.TelematicsMmapData.prototype.toObject = function(opt_includeInstance) {
+  return proto.joblet.TelematicsMmapData.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.joblet.TelematicsMmapData} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.joblet.TelematicsMmapData.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    pid: jspb.Message.getFieldWithDefault(msg, 1, 0),
+    addr: jspb.Message.getFieldWithDefault(msg, 2, 0),
+    length: jspb.Message.getFieldWithDefault(msg, 3, 0),
+    prot: jspb.Message.getFieldWithDefault(msg, 4, 0),
+    flags: jspb.Message.getFieldWithDefault(msg, 5, 0),
+    filePath: jspb.Message.getFieldWithDefault(msg, 6, "")
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.joblet.TelematicsMmapData}
+ */
+proto.joblet.TelematicsMmapData.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.joblet.TelematicsMmapData;
+  return proto.joblet.TelematicsMmapData.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.joblet.TelematicsMmapData} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.joblet.TelematicsMmapData}
+ */
+proto.joblet.TelematicsMmapData.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setPid(value);
+      break;
+    case 2:
+      var value = /** @type {number} */ (reader.readUint64());
+      msg.setAddr(value);
+      break;
+    case 3:
+      var value = /** @type {number} */ (reader.readUint64());
+      msg.setLength(value);
+      break;
+    case 4:
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setProt(value);
+      break;
+    case 5:
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setFlags(value);
+      break;
+    case 6:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setFilePath(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.joblet.TelematicsMmapData.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.joblet.TelematicsMmapData.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.joblet.TelematicsMmapData} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.joblet.TelematicsMmapData.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getPid();
+  if (f !== 0) {
+    writer.writeUint32(
+      1,
+      f
+    );
+  }
+  f = message.getAddr();
+  if (f !== 0) {
+    writer.writeUint64(
+      2,
+      f
+    );
+  }
+  f = message.getLength();
+  if (f !== 0) {
+    writer.writeUint64(
+      3,
+      f
+    );
+  }
+  f = message.getProt();
+  if (f !== 0) {
+    writer.writeUint32(
+      4,
+      f
+    );
+  }
+  f = message.getFlags();
+  if (f !== 0) {
+    writer.writeUint32(
+      5,
+      f
+    );
+  }
+  f = message.getFilePath();
+  if (f.length > 0) {
+    writer.writeString(
+      6,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional uint32 pid = 1;
+ * @return {number}
+ */
+proto.joblet.TelematicsMmapData.prototype.getPid = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.TelematicsMmapData} returns this
+ */
+proto.joblet.TelematicsMmapData.prototype.setPid = function(value) {
+  return jspb.Message.setProto3IntField(this, 1, value);
+};
+
+
+/**
+ * optional uint64 addr = 2;
+ * @return {number}
+ */
+proto.joblet.TelematicsMmapData.prototype.getAddr = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.TelematicsMmapData} returns this
+ */
+proto.joblet.TelematicsMmapData.prototype.setAddr = function(value) {
+  return jspb.Message.setProto3IntField(this, 2, value);
+};
+
+
+/**
+ * optional uint64 length = 3;
+ * @return {number}
+ */
+proto.joblet.TelematicsMmapData.prototype.getLength = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.TelematicsMmapData} returns this
+ */
+proto.joblet.TelematicsMmapData.prototype.setLength = function(value) {
+  return jspb.Message.setProto3IntField(this, 3, value);
+};
+
+
+/**
+ * optional uint32 prot = 4;
+ * @return {number}
+ */
+proto.joblet.TelematicsMmapData.prototype.getProt = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.TelematicsMmapData} returns this
+ */
+proto.joblet.TelematicsMmapData.prototype.setProt = function(value) {
+  return jspb.Message.setProto3IntField(this, 4, value);
+};
+
+
+/**
+ * optional uint32 flags = 5;
+ * @return {number}
+ */
+proto.joblet.TelematicsMmapData.prototype.getFlags = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.TelematicsMmapData} returns this
+ */
+proto.joblet.TelematicsMmapData.prototype.setFlags = function(value) {
+  return jspb.Message.setProto3IntField(this, 5, value);
+};
+
+
+/**
+ * optional string file_path = 6;
+ * @return {string}
+ */
+proto.joblet.TelematicsMmapData.prototype.getFilePath = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 6, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.joblet.TelematicsMmapData} returns this
+ */
+proto.joblet.TelematicsMmapData.prototype.setFilePath = function(value) {
+  return jspb.Message.setProto3StringField(this, 6, value);
+};
+
+
+
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.joblet.TelematicsMprotectData.prototype.toObject = function(opt_includeInstance) {
+  return proto.joblet.TelematicsMprotectData.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.joblet.TelematicsMprotectData} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.joblet.TelematicsMprotectData.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    pid: jspb.Message.getFieldWithDefault(msg, 1, 0),
+    addr: jspb.Message.getFieldWithDefault(msg, 2, 0),
+    length: jspb.Message.getFieldWithDefault(msg, 3, 0),
+    prot: jspb.Message.getFieldWithDefault(msg, 4, 0)
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.joblet.TelematicsMprotectData}
+ */
+proto.joblet.TelematicsMprotectData.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.joblet.TelematicsMprotectData;
+  return proto.joblet.TelematicsMprotectData.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.joblet.TelematicsMprotectData} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.joblet.TelematicsMprotectData}
+ */
+proto.joblet.TelematicsMprotectData.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setPid(value);
+      break;
+    case 2:
+      var value = /** @type {number} */ (reader.readUint64());
+      msg.setAddr(value);
+      break;
+    case 3:
+      var value = /** @type {number} */ (reader.readUint64());
+      msg.setLength(value);
+      break;
+    case 4:
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setProt(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.joblet.TelematicsMprotectData.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.joblet.TelematicsMprotectData.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.joblet.TelematicsMprotectData} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.joblet.TelematicsMprotectData.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getPid();
+  if (f !== 0) {
+    writer.writeUint32(
+      1,
+      f
+    );
+  }
+  f = message.getAddr();
+  if (f !== 0) {
+    writer.writeUint64(
+      2,
+      f
+    );
+  }
+  f = message.getLength();
+  if (f !== 0) {
+    writer.writeUint64(
+      3,
+      f
+    );
+  }
+  f = message.getProt();
+  if (f !== 0) {
+    writer.writeUint32(
+      4,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional uint32 pid = 1;
+ * @return {number}
+ */
+proto.joblet.TelematicsMprotectData.prototype.getPid = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.TelematicsMprotectData} returns this
+ */
+proto.joblet.TelematicsMprotectData.prototype.setPid = function(value) {
+  return jspb.Message.setProto3IntField(this, 1, value);
+};
+
+
+/**
+ * optional uint64 addr = 2;
+ * @return {number}
+ */
+proto.joblet.TelematicsMprotectData.prototype.getAddr = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.TelematicsMprotectData} returns this
+ */
+proto.joblet.TelematicsMprotectData.prototype.setAddr = function(value) {
+  return jspb.Message.setProto3IntField(this, 2, value);
+};
+
+
+/**
+ * optional uint64 length = 3;
+ * @return {number}
+ */
+proto.joblet.TelematicsMprotectData.prototype.getLength = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.TelematicsMprotectData} returns this
+ */
+proto.joblet.TelematicsMprotectData.prototype.setLength = function(value) {
+  return jspb.Message.setProto3IntField(this, 3, value);
+};
+
+
+/**
+ * optional uint32 prot = 4;
+ * @return {number}
+ */
+proto.joblet.TelematicsMprotectData.prototype.getProt = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.TelematicsMprotectData} returns this
+ */
+proto.joblet.TelematicsMprotectData.prototype.setProt = function(value) {
+  return jspb.Message.setProto3IntField(this, 4, value);
+};
+
+
+
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.joblet.TelematicsSocketDataData.prototype.toObject = function(opt_includeInstance) {
+  return proto.joblet.TelematicsSocketDataData.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.joblet.TelematicsSocketDataData} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.joblet.TelematicsSocketDataData.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    pid: jspb.Message.getFieldWithDefault(msg, 1, 0),
+    direction: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    dstAddr: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    dstPort: jspb.Message.getFieldWithDefault(msg, 4, 0),
+    srcAddr: jspb.Message.getFieldWithDefault(msg, 5, ""),
+    srcPort: jspb.Message.getFieldWithDefault(msg, 6, 0),
+    protocol: jspb.Message.getFieldWithDefault(msg, 7, ""),
+    bytes: jspb.Message.getFieldWithDefault(msg, 8, 0)
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.joblet.TelematicsSocketDataData}
+ */
+proto.joblet.TelematicsSocketDataData.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.joblet.TelematicsSocketDataData;
+  return proto.joblet.TelematicsSocketDataData.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.joblet.TelematicsSocketDataData} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.joblet.TelematicsSocketDataData}
+ */
+proto.joblet.TelematicsSocketDataData.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setPid(value);
+      break;
+    case 2:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setDirection(value);
+      break;
+    case 3:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setDstAddr(value);
+      break;
+    case 4:
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setDstPort(value);
+      break;
+    case 5:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setSrcAddr(value);
+      break;
+    case 6:
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setSrcPort(value);
+      break;
+    case 7:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setProtocol(value);
+      break;
+    case 8:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setBytes(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.joblet.TelematicsSocketDataData.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.joblet.TelematicsSocketDataData.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.joblet.TelematicsSocketDataData} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.joblet.TelematicsSocketDataData.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getPid();
+  if (f !== 0) {
+    writer.writeUint32(
+      1,
+      f
+    );
+  }
+  f = message.getDirection();
+  if (f.length > 0) {
+    writer.writeString(
+      2,
+      f
+    );
+  }
+  f = message.getDstAddr();
+  if (f.length > 0) {
+    writer.writeString(
+      3,
+      f
+    );
+  }
+  f = message.getDstPort();
+  if (f !== 0) {
+    writer.writeUint32(
+      4,
+      f
+    );
+  }
+  f = message.getSrcAddr();
+  if (f.length > 0) {
+    writer.writeString(
+      5,
+      f
+    );
+  }
+  f = message.getSrcPort();
+  if (f !== 0) {
+    writer.writeUint32(
+      6,
+      f
+    );
+  }
+  f = message.getProtocol();
+  if (f.length > 0) {
+    writer.writeString(
+      7,
+      f
+    );
+  }
+  f = message.getBytes();
+  if (f !== 0) {
+    writer.writeInt64(
+      8,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional uint32 pid = 1;
+ * @return {number}
+ */
+proto.joblet.TelematicsSocketDataData.prototype.getPid = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.TelematicsSocketDataData} returns this
+ */
+proto.joblet.TelematicsSocketDataData.prototype.setPid = function(value) {
+  return jspb.Message.setProto3IntField(this, 1, value);
+};
+
+
+/**
+ * optional string direction = 2;
+ * @return {string}
+ */
+proto.joblet.TelematicsSocketDataData.prototype.getDirection = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.joblet.TelematicsSocketDataData} returns this
+ */
+proto.joblet.TelematicsSocketDataData.prototype.setDirection = function(value) {
+  return jspb.Message.setProto3StringField(this, 2, value);
+};
+
+
+/**
+ * optional string dst_addr = 3;
+ * @return {string}
+ */
+proto.joblet.TelematicsSocketDataData.prototype.getDstAddr = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.joblet.TelematicsSocketDataData} returns this
+ */
+proto.joblet.TelematicsSocketDataData.prototype.setDstAddr = function(value) {
+  return jspb.Message.setProto3StringField(this, 3, value);
+};
+
+
+/**
+ * optional uint32 dst_port = 4;
+ * @return {number}
+ */
+proto.joblet.TelematicsSocketDataData.prototype.getDstPort = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.TelematicsSocketDataData} returns this
+ */
+proto.joblet.TelematicsSocketDataData.prototype.setDstPort = function(value) {
+  return jspb.Message.setProto3IntField(this, 4, value);
+};
+
+
+/**
+ * optional string src_addr = 5;
+ * @return {string}
+ */
+proto.joblet.TelematicsSocketDataData.prototype.getSrcAddr = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.joblet.TelematicsSocketDataData} returns this
+ */
+proto.joblet.TelematicsSocketDataData.prototype.setSrcAddr = function(value) {
+  return jspb.Message.setProto3StringField(this, 5, value);
+};
+
+
+/**
+ * optional uint32 src_port = 6;
+ * @return {number}
+ */
+proto.joblet.TelematicsSocketDataData.prototype.getSrcPort = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.TelematicsSocketDataData} returns this
+ */
+proto.joblet.TelematicsSocketDataData.prototype.setSrcPort = function(value) {
+  return jspb.Message.setProto3IntField(this, 6, value);
+};
+
+
+/**
+ * optional string protocol = 7;
+ * @return {string}
+ */
+proto.joblet.TelematicsSocketDataData.prototype.getProtocol = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 7, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.joblet.TelematicsSocketDataData} returns this
+ */
+proto.joblet.TelematicsSocketDataData.prototype.setProtocol = function(value) {
+  return jspb.Message.setProto3StringField(this, 7, value);
+};
+
+
+/**
+ * optional int64 bytes = 8;
+ * @return {number}
+ */
+proto.joblet.TelematicsSocketDataData.prototype.getBytes = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 8, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.joblet.TelematicsSocketDataData} returns this
+ */
+proto.joblet.TelematicsSocketDataData.prototype.setBytes = function(value) {
+  return jspb.Message.setProto3IntField(this, 8, value);
 };
 
 

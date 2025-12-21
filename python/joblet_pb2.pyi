@@ -234,43 +234,109 @@ class DataChunk(_message.Message):
     payload: bytes
     def __init__(self, payload: _Optional[bytes] = ...) -> None: ...
 
-class RuntimeInstallationChunk(_message.Message):
-    __slots__ = ("progress", "log", "result")
-    PROGRESS_FIELD_NUMBER: _ClassVar[int]
+class BuildRuntimeRequest(_message.Message):
+    __slots__ = ("yaml_content", "dry_run", "verbose", "force_rebuild")
+    YAML_CONTENT_FIELD_NUMBER: _ClassVar[int]
+    DRY_RUN_FIELD_NUMBER: _ClassVar[int]
+    VERBOSE_FIELD_NUMBER: _ClassVar[int]
+    FORCE_REBUILD_FIELD_NUMBER: _ClassVar[int]
+    yaml_content: str
+    dry_run: bool
+    verbose: bool
+    force_rebuild: bool
+    def __init__(self, yaml_content: _Optional[str] = ..., dry_run: bool = ..., verbose: bool = ..., force_rebuild: bool = ...) -> None: ...
+
+class BuildRuntimeProgress(_message.Message):
+    __slots__ = ("phase", "log", "result")
+    PHASE_FIELD_NUMBER: _ClassVar[int]
     LOG_FIELD_NUMBER: _ClassVar[int]
     RESULT_FIELD_NUMBER: _ClassVar[int]
-    progress: RuntimeInstallationProgress
-    log: RuntimeInstallationLog
-    result: RuntimeInstallationResult
-    def __init__(self, progress: _Optional[_Union[RuntimeInstallationProgress, _Mapping]] = ..., log: _Optional[_Union[RuntimeInstallationLog, _Mapping]] = ..., result: _Optional[_Union[RuntimeInstallationResult, _Mapping]] = ...) -> None: ...
+    phase: BuildPhaseProgress
+    log: BuildLogLine
+    result: BuildResult
+    def __init__(self, phase: _Optional[_Union[BuildPhaseProgress, _Mapping]] = ..., log: _Optional[_Union[BuildLogLine, _Mapping]] = ..., result: _Optional[_Union[BuildResult, _Mapping]] = ...) -> None: ...
 
-class RuntimeInstallationProgress(_message.Message):
-    __slots__ = ("message", "step", "total_steps")
+class BuildPhaseProgress(_message.Message):
+    __slots__ = ("phase_number", "total_phases", "phase_name", "message")
+    PHASE_NUMBER_FIELD_NUMBER: _ClassVar[int]
+    TOTAL_PHASES_FIELD_NUMBER: _ClassVar[int]
+    PHASE_NAME_FIELD_NUMBER: _ClassVar[int]
     MESSAGE_FIELD_NUMBER: _ClassVar[int]
-    STEP_FIELD_NUMBER: _ClassVar[int]
-    TOTAL_STEPS_FIELD_NUMBER: _ClassVar[int]
+    phase_number: int
+    total_phases: int
+    phase_name: str
     message: str
-    step: int
-    total_steps: int
-    def __init__(self, message: _Optional[str] = ..., step: _Optional[int] = ..., total_steps: _Optional[int] = ...) -> None: ...
+    def __init__(self, phase_number: _Optional[int] = ..., total_phases: _Optional[int] = ..., phase_name: _Optional[str] = ..., message: _Optional[str] = ...) -> None: ...
 
-class RuntimeInstallationLog(_message.Message):
-    __slots__ = ("data",)
-    DATA_FIELD_NUMBER: _ClassVar[int]
-    data: bytes
-    def __init__(self, data: _Optional[bytes] = ...) -> None: ...
+class BuildLogLine(_message.Message):
+    __slots__ = ("level", "message", "timestamp")
+    LEVEL_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    TIMESTAMP_FIELD_NUMBER: _ClassVar[int]
+    level: str
+    message: str
+    timestamp: int
+    def __init__(self, level: _Optional[str] = ..., message: _Optional[str] = ..., timestamp: _Optional[int] = ...) -> None: ...
 
-class RuntimeInstallationResult(_message.Message):
-    __slots__ = ("success", "message", "runtime_spec", "install_path")
+class BuildResult(_message.Message):
+    __slots__ = ("success", "message", "runtime_name", "runtime_version", "install_path", "size_bytes", "build_duration_ms")
     SUCCESS_FIELD_NUMBER: _ClassVar[int]
     MESSAGE_FIELD_NUMBER: _ClassVar[int]
-    RUNTIME_SPEC_FIELD_NUMBER: _ClassVar[int]
+    RUNTIME_NAME_FIELD_NUMBER: _ClassVar[int]
+    RUNTIME_VERSION_FIELD_NUMBER: _ClassVar[int]
     INSTALL_PATH_FIELD_NUMBER: _ClassVar[int]
+    SIZE_BYTES_FIELD_NUMBER: _ClassVar[int]
+    BUILD_DURATION_MS_FIELD_NUMBER: _ClassVar[int]
     success: bool
     message: str
-    runtime_spec: str
+    runtime_name: str
+    runtime_version: str
     install_path: str
-    def __init__(self, success: bool = ..., message: _Optional[str] = ..., runtime_spec: _Optional[str] = ..., install_path: _Optional[str] = ...) -> None: ...
+    size_bytes: int
+    build_duration_ms: int
+    def __init__(self, success: bool = ..., message: _Optional[str] = ..., runtime_name: _Optional[str] = ..., runtime_version: _Optional[str] = ..., install_path: _Optional[str] = ..., size_bytes: _Optional[int] = ..., build_duration_ms: _Optional[int] = ...) -> None: ...
+
+class ValidateRuntimeYAMLRequest(_message.Message):
+    __slots__ = ("yaml_content",)
+    YAML_CONTENT_FIELD_NUMBER: _ClassVar[int]
+    yaml_content: str
+    def __init__(self, yaml_content: _Optional[str] = ...) -> None: ...
+
+class ValidateRuntimeYAMLResponse(_message.Message):
+    __slots__ = ("valid", "message", "errors", "warnings", "spec_info")
+    VALID_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    ERRORS_FIELD_NUMBER: _ClassVar[int]
+    WARNINGS_FIELD_NUMBER: _ClassVar[int]
+    SPEC_INFO_FIELD_NUMBER: _ClassVar[int]
+    valid: bool
+    message: str
+    errors: _containers.RepeatedScalarFieldContainer[str]
+    warnings: _containers.RepeatedScalarFieldContainer[str]
+    spec_info: RuntimeYAMLInfo
+    def __init__(self, valid: bool = ..., message: _Optional[str] = ..., errors: _Optional[_Iterable[str]] = ..., warnings: _Optional[_Iterable[str]] = ..., spec_info: _Optional[_Union[RuntimeYAMLInfo, _Mapping]] = ...) -> None: ...
+
+class RuntimeYAMLInfo(_message.Message):
+    __slots__ = ("name", "version", "language", "language_version", "description", "pip_packages", "npm_packages", "has_hooks", "requires_gpu")
+    NAME_FIELD_NUMBER: _ClassVar[int]
+    VERSION_FIELD_NUMBER: _ClassVar[int]
+    LANGUAGE_FIELD_NUMBER: _ClassVar[int]
+    LANGUAGE_VERSION_FIELD_NUMBER: _ClassVar[int]
+    DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
+    PIP_PACKAGES_FIELD_NUMBER: _ClassVar[int]
+    NPM_PACKAGES_FIELD_NUMBER: _ClassVar[int]
+    HAS_HOOKS_FIELD_NUMBER: _ClassVar[int]
+    REQUIRES_GPU_FIELD_NUMBER: _ClassVar[int]
+    name: str
+    version: str
+    language: str
+    language_version: str
+    description: str
+    pip_packages: _containers.RepeatedScalarFieldContainer[str]
+    npm_packages: _containers.RepeatedScalarFieldContainer[str]
+    has_hooks: bool
+    requires_gpu: bool
+    def __init__(self, name: _Optional[str] = ..., version: _Optional[str] = ..., language: _Optional[str] = ..., language_version: _Optional[str] = ..., description: _Optional[str] = ..., pip_packages: _Optional[_Iterable[str]] = ..., npm_packages: _Optional[_Iterable[str]] = ..., has_hooks: bool = ..., requires_gpu: bool = ...) -> None: ...
 
 class CreateNetworkReq(_message.Message):
     __slots__ = ("name", "cidr")
@@ -857,76 +923,6 @@ class Timestamp(_message.Message):
     nanos: int
     def __init__(self, seconds: _Optional[int] = ..., nanos: _Optional[int] = ...) -> None: ...
 
-class InstallRuntimeRequest(_message.Message):
-    __slots__ = ("runtimeSpec", "repository", "branch", "path", "forceReinstall", "registry_url")
-    RUNTIMESPEC_FIELD_NUMBER: _ClassVar[int]
-    REPOSITORY_FIELD_NUMBER: _ClassVar[int]
-    BRANCH_FIELD_NUMBER: _ClassVar[int]
-    PATH_FIELD_NUMBER: _ClassVar[int]
-    FORCEREINSTALL_FIELD_NUMBER: _ClassVar[int]
-    REGISTRY_URL_FIELD_NUMBER: _ClassVar[int]
-    runtimeSpec: str
-    repository: str
-    branch: str
-    path: str
-    forceReinstall: bool
-    registry_url: str
-    def __init__(self, runtimeSpec: _Optional[str] = ..., repository: _Optional[str] = ..., branch: _Optional[str] = ..., path: _Optional[str] = ..., forceReinstall: bool = ..., registry_url: _Optional[str] = ...) -> None: ...
-
-class InstallRuntimeResponse(_message.Message):
-    __slots__ = ("buildJobUuid", "runtimeSpec", "status", "message", "repository", "resolvedPath")
-    BUILDJOBUUID_FIELD_NUMBER: _ClassVar[int]
-    RUNTIMESPEC_FIELD_NUMBER: _ClassVar[int]
-    STATUS_FIELD_NUMBER: _ClassVar[int]
-    MESSAGE_FIELD_NUMBER: _ClassVar[int]
-    REPOSITORY_FIELD_NUMBER: _ClassVar[int]
-    RESOLVEDPATH_FIELD_NUMBER: _ClassVar[int]
-    buildJobUuid: str
-    runtimeSpec: str
-    status: str
-    message: str
-    repository: str
-    resolvedPath: str
-    def __init__(self, buildJobUuid: _Optional[str] = ..., runtimeSpec: _Optional[str] = ..., status: _Optional[str] = ..., message: _Optional[str] = ..., repository: _Optional[str] = ..., resolvedPath: _Optional[str] = ...) -> None: ...
-
-class InstallRuntimeFromLocalRequest(_message.Message):
-    __slots__ = ("runtimeSpec", "files", "forceReinstall")
-    RUNTIMESPEC_FIELD_NUMBER: _ClassVar[int]
-    FILES_FIELD_NUMBER: _ClassVar[int]
-    FORCEREINSTALL_FIELD_NUMBER: _ClassVar[int]
-    runtimeSpec: str
-    files: _containers.RepeatedCompositeFieldContainer[RuntimeFile]
-    forceReinstall: bool
-    def __init__(self, runtimeSpec: _Optional[str] = ..., files: _Optional[_Iterable[_Union[RuntimeFile, _Mapping]]] = ..., forceReinstall: bool = ...) -> None: ...
-
-class RuntimeFile(_message.Message):
-    __slots__ = ("path", "content", "executable")
-    PATH_FIELD_NUMBER: _ClassVar[int]
-    CONTENT_FIELD_NUMBER: _ClassVar[int]
-    EXECUTABLE_FIELD_NUMBER: _ClassVar[int]
-    path: str
-    content: bytes
-    executable: bool
-    def __init__(self, path: _Optional[str] = ..., content: _Optional[bytes] = ..., executable: bool = ...) -> None: ...
-
-class ValidateRuntimeSpecRequest(_message.Message):
-    __slots__ = ("runtimeSpec",)
-    RUNTIMESPEC_FIELD_NUMBER: _ClassVar[int]
-    runtimeSpec: str
-    def __init__(self, runtimeSpec: _Optional[str] = ...) -> None: ...
-
-class ValidateRuntimeSpecResponse(_message.Message):
-    __slots__ = ("valid", "message", "normalizedSpec", "specInfo")
-    VALID_FIELD_NUMBER: _ClassVar[int]
-    MESSAGE_FIELD_NUMBER: _ClassVar[int]
-    NORMALIZEDSPEC_FIELD_NUMBER: _ClassVar[int]
-    SPECINFO_FIELD_NUMBER: _ClassVar[int]
-    valid: bool
-    message: str
-    normalizedSpec: str
-    specInfo: RuntimeSpecInfo
-    def __init__(self, valid: bool = ..., message: _Optional[str] = ..., normalizedSpec: _Optional[str] = ..., specInfo: _Optional[_Union[RuntimeSpecInfo, _Mapping]] = ...) -> None: ...
-
 class RuntimeRemoveReq(_message.Message):
     __slots__ = ("runtime",)
     RUNTIME_FIELD_NUMBER: _ClassVar[int]
@@ -942,122 +938,6 @@ class RuntimeRemoveRes(_message.Message):
     message: str
     freedSpaceBytes: int
     def __init__(self, success: bool = ..., message: _Optional[str] = ..., freedSpaceBytes: _Optional[int] = ...) -> None: ...
-
-class RuntimeSpecInfo(_message.Message):
-    __slots__ = ("language", "version", "variants", "architecture")
-    LANGUAGE_FIELD_NUMBER: _ClassVar[int]
-    VERSION_FIELD_NUMBER: _ClassVar[int]
-    VARIANTS_FIELD_NUMBER: _ClassVar[int]
-    ARCHITECTURE_FIELD_NUMBER: _ClassVar[int]
-    language: str
-    version: str
-    variants: _containers.RepeatedScalarFieldContainer[str]
-    architecture: str
-    def __init__(self, language: _Optional[str] = ..., version: _Optional[str] = ..., variants: _Optional[_Iterable[str]] = ..., architecture: _Optional[str] = ...) -> None: ...
-
-class StreamTelemetryRequest(_message.Message):
-    __slots__ = ("job_uuid", "types")
-    JOB_UUID_FIELD_NUMBER: _ClassVar[int]
-    TYPES_FIELD_NUMBER: _ClassVar[int]
-    job_uuid: str
-    types: _containers.RepeatedScalarFieldContainer[str]
-    def __init__(self, job_uuid: _Optional[str] = ..., types: _Optional[_Iterable[str]] = ...) -> None: ...
-
-class GetTelemetryRequest(_message.Message):
-    __slots__ = ("job_uuid", "types", "start_time", "end_time", "limit")
-    JOB_UUID_FIELD_NUMBER: _ClassVar[int]
-    TYPES_FIELD_NUMBER: _ClassVar[int]
-    START_TIME_FIELD_NUMBER: _ClassVar[int]
-    END_TIME_FIELD_NUMBER: _ClassVar[int]
-    LIMIT_FIELD_NUMBER: _ClassVar[int]
-    job_uuid: str
-    types: _containers.RepeatedScalarFieldContainer[str]
-    start_time: int
-    end_time: int
-    limit: int
-    def __init__(self, job_uuid: _Optional[str] = ..., types: _Optional[_Iterable[str]] = ..., start_time: _Optional[int] = ..., end_time: _Optional[int] = ..., limit: _Optional[int] = ...) -> None: ...
-
-class TelemetryEvent(_message.Message):
-    __slots__ = ("timestamp", "job_id", "type", "metrics", "exec", "connect", "file")
-    TIMESTAMP_FIELD_NUMBER: _ClassVar[int]
-    JOB_ID_FIELD_NUMBER: _ClassVar[int]
-    TYPE_FIELD_NUMBER: _ClassVar[int]
-    METRICS_FIELD_NUMBER: _ClassVar[int]
-    EXEC_FIELD_NUMBER: _ClassVar[int]
-    CONNECT_FIELD_NUMBER: _ClassVar[int]
-    FILE_FIELD_NUMBER: _ClassVar[int]
-    timestamp: int
-    job_id: str
-    type: str
-    metrics: TelemetryMetricsData
-    exec: TelemetryExecData
-    connect: TelemetryConnectData
-    file: TelemetryFileData
-    def __init__(self, timestamp: _Optional[int] = ..., job_id: _Optional[str] = ..., type: _Optional[str] = ..., metrics: _Optional[_Union[TelemetryMetricsData, _Mapping]] = ..., exec: _Optional[_Union[TelemetryExecData, _Mapping]] = ..., connect: _Optional[_Union[TelemetryConnectData, _Mapping]] = ..., file: _Optional[_Union[TelemetryFileData, _Mapping]] = ...) -> None: ...
-
-class TelemetryMetricsData(_message.Message):
-    __slots__ = ("cpu_percent", "memory_bytes", "memory_limit", "disk_read_bytes", "disk_write_bytes", "net_recv_bytes", "net_sent_bytes", "gpu_percent", "gpu_memory_bytes")
-    CPU_PERCENT_FIELD_NUMBER: _ClassVar[int]
-    MEMORY_BYTES_FIELD_NUMBER: _ClassVar[int]
-    MEMORY_LIMIT_FIELD_NUMBER: _ClassVar[int]
-    DISK_READ_BYTES_FIELD_NUMBER: _ClassVar[int]
-    DISK_WRITE_BYTES_FIELD_NUMBER: _ClassVar[int]
-    NET_RECV_BYTES_FIELD_NUMBER: _ClassVar[int]
-    NET_SENT_BYTES_FIELD_NUMBER: _ClassVar[int]
-    GPU_PERCENT_FIELD_NUMBER: _ClassVar[int]
-    GPU_MEMORY_BYTES_FIELD_NUMBER: _ClassVar[int]
-    cpu_percent: float
-    memory_bytes: int
-    memory_limit: int
-    disk_read_bytes: int
-    disk_write_bytes: int
-    net_recv_bytes: int
-    net_sent_bytes: int
-    gpu_percent: float
-    gpu_memory_bytes: int
-    def __init__(self, cpu_percent: _Optional[float] = ..., memory_bytes: _Optional[int] = ..., memory_limit: _Optional[int] = ..., disk_read_bytes: _Optional[int] = ..., disk_write_bytes: _Optional[int] = ..., net_recv_bytes: _Optional[int] = ..., net_sent_bytes: _Optional[int] = ..., gpu_percent: _Optional[float] = ..., gpu_memory_bytes: _Optional[int] = ...) -> None: ...
-
-class TelemetryExecData(_message.Message):
-    __slots__ = ("pid", "binary", "args", "exit_code", "ppid")
-    PID_FIELD_NUMBER: _ClassVar[int]
-    BINARY_FIELD_NUMBER: _ClassVar[int]
-    ARGS_FIELD_NUMBER: _ClassVar[int]
-    EXIT_CODE_FIELD_NUMBER: _ClassVar[int]
-    PPID_FIELD_NUMBER: _ClassVar[int]
-    pid: int
-    binary: str
-    args: _containers.RepeatedScalarFieldContainer[str]
-    exit_code: int
-    ppid: int
-    def __init__(self, pid: _Optional[int] = ..., binary: _Optional[str] = ..., args: _Optional[_Iterable[str]] = ..., exit_code: _Optional[int] = ..., ppid: _Optional[int] = ...) -> None: ...
-
-class TelemetryConnectData(_message.Message):
-    __slots__ = ("pid", "address", "port", "protocol", "local_address", "local_port")
-    PID_FIELD_NUMBER: _ClassVar[int]
-    ADDRESS_FIELD_NUMBER: _ClassVar[int]
-    PORT_FIELD_NUMBER: _ClassVar[int]
-    PROTOCOL_FIELD_NUMBER: _ClassVar[int]
-    LOCAL_ADDRESS_FIELD_NUMBER: _ClassVar[int]
-    LOCAL_PORT_FIELD_NUMBER: _ClassVar[int]
-    pid: int
-    address: str
-    port: int
-    protocol: str
-    local_address: str
-    local_port: int
-    def __init__(self, pid: _Optional[int] = ..., address: _Optional[str] = ..., port: _Optional[int] = ..., protocol: _Optional[str] = ..., local_address: _Optional[str] = ..., local_port: _Optional[int] = ...) -> None: ...
-
-class TelemetryFileData(_message.Message):
-    __slots__ = ("pid", "path", "operation", "bytes")
-    PID_FIELD_NUMBER: _ClassVar[int]
-    PATH_FIELD_NUMBER: _ClassVar[int]
-    OPERATION_FIELD_NUMBER: _ClassVar[int]
-    BYTES_FIELD_NUMBER: _ClassVar[int]
-    pid: int
-    path: str
-    operation: str
-    bytes: int
-    def __init__(self, pid: _Optional[int] = ..., path: _Optional[str] = ..., operation: _Optional[str] = ..., bytes: _Optional[int] = ...) -> None: ...
 
 class StreamJobMetricsRequest(_message.Message):
     __slots__ = ("job_uuid",)
@@ -1103,7 +983,7 @@ class JobMetricsEvent(_message.Message):
     gpu_memory_bytes: int
     def __init__(self, timestamp: _Optional[int] = ..., job_id: _Optional[str] = ..., cpu_percent: _Optional[float] = ..., memory_bytes: _Optional[int] = ..., memory_limit: _Optional[int] = ..., disk_read_bytes: _Optional[int] = ..., disk_write_bytes: _Optional[int] = ..., net_recv_bytes: _Optional[int] = ..., net_sent_bytes: _Optional[int] = ..., gpu_percent: _Optional[float] = ..., gpu_memory_bytes: _Optional[int] = ...) -> None: ...
 
-class StreamJobVisibilityRequest(_message.Message):
+class StreamJobTelematicsRequest(_message.Message):
     __slots__ = ("job_uuid", "types")
     JOB_UUID_FIELD_NUMBER: _ClassVar[int]
     TYPES_FIELD_NUMBER: _ClassVar[int]
@@ -1111,7 +991,7 @@ class StreamJobVisibilityRequest(_message.Message):
     types: _containers.RepeatedScalarFieldContainer[str]
     def __init__(self, job_uuid: _Optional[str] = ..., types: _Optional[_Iterable[str]] = ...) -> None: ...
 
-class GetJobVisibilityRequest(_message.Message):
+class GetJobTelematicsRequest(_message.Message):
     __slots__ = ("job_uuid", "types", "start_time", "end_time", "limit")
     JOB_UUID_FIELD_NUMBER: _ClassVar[int]
     TYPES_FIELD_NUMBER: _ClassVar[int]
@@ -1125,7 +1005,7 @@ class GetJobVisibilityRequest(_message.Message):
     limit: int
     def __init__(self, job_uuid: _Optional[str] = ..., types: _Optional[_Iterable[str]] = ..., start_time: _Optional[int] = ..., end_time: _Optional[int] = ..., limit: _Optional[int] = ...) -> None: ...
 
-class VisibilityEvent(_message.Message):
+class TelematicsEvent(_message.Message):
     __slots__ = ("timestamp", "job_id", "type", "exec", "connect", "accept", "file", "mmap", "mprotect", "socket_data")
     TIMESTAMP_FIELD_NUMBER: _ClassVar[int]
     JOB_ID_FIELD_NUMBER: _ClassVar[int]
@@ -1140,16 +1020,16 @@ class VisibilityEvent(_message.Message):
     timestamp: int
     job_id: str
     type: str
-    exec: VisibilityExecData
-    connect: VisibilityConnectData
-    accept: VisibilityAcceptData
-    file: VisibilityFileData
-    mmap: VisibilityMmapData
-    mprotect: VisibilityMprotectData
-    socket_data: VisibilitySocketDataData
-    def __init__(self, timestamp: _Optional[int] = ..., job_id: _Optional[str] = ..., type: _Optional[str] = ..., exec: _Optional[_Union[VisibilityExecData, _Mapping]] = ..., connect: _Optional[_Union[VisibilityConnectData, _Mapping]] = ..., accept: _Optional[_Union[VisibilityAcceptData, _Mapping]] = ..., file: _Optional[_Union[VisibilityFileData, _Mapping]] = ..., mmap: _Optional[_Union[VisibilityMmapData, _Mapping]] = ..., mprotect: _Optional[_Union[VisibilityMprotectData, _Mapping]] = ..., socket_data: _Optional[_Union[VisibilitySocketDataData, _Mapping]] = ...) -> None: ...
+    exec: TelematicsExecData
+    connect: TelematicsConnectData
+    accept: TelematicsAcceptData
+    file: TelematicsFileData
+    mmap: TelematicsMmapData
+    mprotect: TelematicsMprotectData
+    socket_data: TelematicsSocketDataData
+    def __init__(self, timestamp: _Optional[int] = ..., job_id: _Optional[str] = ..., type: _Optional[str] = ..., exec: _Optional[_Union[TelematicsExecData, _Mapping]] = ..., connect: _Optional[_Union[TelematicsConnectData, _Mapping]] = ..., accept: _Optional[_Union[TelematicsAcceptData, _Mapping]] = ..., file: _Optional[_Union[TelematicsFileData, _Mapping]] = ..., mmap: _Optional[_Union[TelematicsMmapData, _Mapping]] = ..., mprotect: _Optional[_Union[TelematicsMprotectData, _Mapping]] = ..., socket_data: _Optional[_Union[TelematicsSocketDataData, _Mapping]] = ...) -> None: ...
 
-class VisibilityExecData(_message.Message):
+class TelematicsExecData(_message.Message):
     __slots__ = ("pid", "ppid", "binary", "args", "exit_code")
     PID_FIELD_NUMBER: _ClassVar[int]
     PPID_FIELD_NUMBER: _ClassVar[int]
@@ -1163,7 +1043,7 @@ class VisibilityExecData(_message.Message):
     exit_code: int
     def __init__(self, pid: _Optional[int] = ..., ppid: _Optional[int] = ..., binary: _Optional[str] = ..., args: _Optional[_Iterable[str]] = ..., exit_code: _Optional[int] = ...) -> None: ...
 
-class VisibilityConnectData(_message.Message):
+class TelematicsConnectData(_message.Message):
     __slots__ = ("pid", "dst_addr", "dst_port", "protocol", "src_addr", "src_port")
     PID_FIELD_NUMBER: _ClassVar[int]
     DST_ADDR_FIELD_NUMBER: _ClassVar[int]
@@ -1179,7 +1059,7 @@ class VisibilityConnectData(_message.Message):
     src_port: int
     def __init__(self, pid: _Optional[int] = ..., dst_addr: _Optional[str] = ..., dst_port: _Optional[int] = ..., protocol: _Optional[str] = ..., src_addr: _Optional[str] = ..., src_port: _Optional[int] = ...) -> None: ...
 
-class VisibilityAcceptData(_message.Message):
+class TelematicsAcceptData(_message.Message):
     __slots__ = ("pid", "src_addr", "src_port", "dst_addr", "dst_port", "protocol")
     PID_FIELD_NUMBER: _ClassVar[int]
     SRC_ADDR_FIELD_NUMBER: _ClassVar[int]
@@ -1195,7 +1075,7 @@ class VisibilityAcceptData(_message.Message):
     protocol: str
     def __init__(self, pid: _Optional[int] = ..., src_addr: _Optional[str] = ..., src_port: _Optional[int] = ..., dst_addr: _Optional[str] = ..., dst_port: _Optional[int] = ..., protocol: _Optional[str] = ...) -> None: ...
 
-class VisibilityFileData(_message.Message):
+class TelematicsFileData(_message.Message):
     __slots__ = ("pid", "path", "operation", "bytes", "flags")
     PID_FIELD_NUMBER: _ClassVar[int]
     PATH_FIELD_NUMBER: _ClassVar[int]
@@ -1209,7 +1089,7 @@ class VisibilityFileData(_message.Message):
     flags: int
     def __init__(self, pid: _Optional[int] = ..., path: _Optional[str] = ..., operation: _Optional[str] = ..., bytes: _Optional[int] = ..., flags: _Optional[int] = ...) -> None: ...
 
-class VisibilityMmapData(_message.Message):
+class TelematicsMmapData(_message.Message):
     __slots__ = ("pid", "addr", "length", "prot", "flags", "file_path")
     PID_FIELD_NUMBER: _ClassVar[int]
     ADDR_FIELD_NUMBER: _ClassVar[int]
@@ -1225,7 +1105,7 @@ class VisibilityMmapData(_message.Message):
     file_path: str
     def __init__(self, pid: _Optional[int] = ..., addr: _Optional[int] = ..., length: _Optional[int] = ..., prot: _Optional[int] = ..., flags: _Optional[int] = ..., file_path: _Optional[str] = ...) -> None: ...
 
-class VisibilityMprotectData(_message.Message):
+class TelematicsMprotectData(_message.Message):
     __slots__ = ("pid", "addr", "length", "prot")
     PID_FIELD_NUMBER: _ClassVar[int]
     ADDR_FIELD_NUMBER: _ClassVar[int]
@@ -1237,7 +1117,7 @@ class VisibilityMprotectData(_message.Message):
     prot: int
     def __init__(self, pid: _Optional[int] = ..., addr: _Optional[int] = ..., length: _Optional[int] = ..., prot: _Optional[int] = ...) -> None: ...
 
-class VisibilitySocketDataData(_message.Message):
+class TelematicsSocketDataData(_message.Message):
     __slots__ = ("pid", "direction", "dst_addr", "dst_port", "src_addr", "src_port", "protocol", "bytes")
     PID_FIELD_NUMBER: _ClassVar[int]
     DIRECTION_FIELD_NUMBER: _ClassVar[int]

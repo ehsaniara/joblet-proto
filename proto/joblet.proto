@@ -54,13 +54,14 @@ service RuntimeService {
   rpc ListRuntimes(EmptyRequest) returns (RuntimesRes){}
   rpc GetRuntimeInfo(RuntimeInfoReq) returns (RuntimeInfoRes){}
   rpc TestRuntime(RuntimeTestReq) returns (RuntimeTestRes){}
-
-  rpc InstallRuntimeFromGithub(InstallRuntimeRequest) returns (InstallRuntimeResponse){}
-  rpc InstallRuntimeFromLocal(InstallRuntimeFromLocalRequest) returns (InstallRuntimeResponse){}
-  rpc StreamingInstallRuntimeFromGithub(InstallRuntimeRequest) returns (stream RuntimeInstallationChunk){}
-  rpc StreamingInstallRuntimeFromLocal(InstallRuntimeFromLocalRequest) returns (stream RuntimeInstallationChunk){}
-  rpc ValidateRuntimeSpec(ValidateRuntimeSpecRequest) returns (ValidateRuntimeSpecResponse){}
   rpc RemoveRuntime(RuntimeRemoveReq) returns (RuntimeRemoveRes){}
+
+  // BuildRuntime builds a runtime from a YAML specification
+  // The build process runs on the server and streams progress back to the client
+  rpc BuildRuntime(BuildRuntimeRequest) returns (stream BuildRuntimeProgress){}
+
+  // ValidateRuntimeYAML validates a runtime YAML specification without building
+  rpc ValidateRuntimeYAML(ValidateRuntimeYAMLRequest) returns (ValidateRuntimeYAMLResponse){}
 }
 
 message Jobs{
@@ -191,29 +192,70 @@ message DataChunk {
   bytes payload = 1;
 }
 
-message RuntimeInstallationChunk {
-  oneof chunk_type {
-    RuntimeInstallationProgress progress = 1;
-    RuntimeInstallationLog log = 2;
-    RuntimeInstallationResult result = 3;
+// BuildRuntime messages
+
+message BuildRuntimeRequest {
+  string yaml_content = 1;         // YAML specification content
+  bool dry_run = 2;                // If true, validate only without building
+  bool verbose = 3;                // If true, include detailed logs
+  bool force_rebuild = 4;          // If true, rebuild even if runtime exists
+}
+
+message BuildRuntimeProgress {
+  oneof progress_type {
+    BuildPhaseProgress phase = 1;
+    BuildLogLine log = 2;
+    BuildResult result = 3;
   }
 }
 
-message RuntimeInstallationProgress {
-  string message = 1;
-  int32 step = 2;
-  int32 total_steps = 3;
+message BuildPhaseProgress {
+  int32 phase_number = 1;          // Current phase (1-14)
+  int32 total_phases = 2;          // Total phases (14)
+  string phase_name = 3;           // e.g., "Installing system packages"
+  string message = 4;              // Progress message
 }
 
-message RuntimeInstallationLog {
-  bytes data = 1;
+message BuildLogLine {
+  string level = 1;                // "debug", "info", "warn", "error"
+  string message = 2;              // Log message
+  int64 timestamp = 3;             // Unix timestamp in nanoseconds
 }
 
-message RuntimeInstallationResult {
-  bool success = 1;
-  string message = 2;
-  string runtime_spec = 3;
-  string install_path = 4;
+message BuildResult {
+  bool success = 1;                // Build succeeded
+  string message = 2;              // Final message
+  string runtime_name = 3;         // Runtime name (e.g., "python-3.11-ml")
+  string runtime_version = 4;      // Runtime version
+  string install_path = 5;         // Path where runtime was installed
+  int64 size_bytes = 6;            // Total size of the runtime
+  int64 build_duration_ms = 7;     // Build duration in milliseconds
+}
+
+// ValidateRuntimeYAML messages
+
+message ValidateRuntimeYAMLRequest {
+  string yaml_content = 1;         // YAML specification content
+}
+
+message ValidateRuntimeYAMLResponse {
+  bool valid = 1;                  // Is the YAML valid
+  string message = 2;              // Validation message
+  repeated string errors = 3;      // List of validation errors
+  repeated string warnings = 4;    // List of warnings
+  RuntimeYAMLInfo spec_info = 5;   // Parsed spec info (if valid)
+}
+
+message RuntimeYAMLInfo {
+  string name = 1;                 // Runtime name
+  string version = 2;              // Version
+  string language = 3;             // Language (python, java, node, etc.)
+  string language_version = 4;     // Language version (e.g., "3.11")
+  string description = 5;          // Description
+  repeated string pip_packages = 6;   // Pip packages to install
+  repeated string npm_packages = 7;   // NPM packages to install
+  bool has_hooks = 8;              // Has pre/post install hooks
+  bool requires_gpu = 9;           // Requires GPU
 }
 
 message CreateNetworkReq {
@@ -543,46 +585,6 @@ message Timestamp {
   int32 nanos = 2;
 }
 
-message InstallRuntimeRequest {
-  string runtimeSpec = 1;          // Runtime spec
-  string repository = 2;           // GitHub repo
-  string branch = 3;               // Branch
-  string path = 4;                 // Path in repo
-  bool forceReinstall = 5;         // Force reinstall
-  string registry_url = 6;         // Registry URL (for installing from external registry)
-}
-
-message InstallRuntimeResponse {
-  string buildJobUuid = 1;         // Install job UUID
-  string runtimeSpec = 2;          // Runtime spec
-  string status = 3;               // Status
-  string message = 4;              // Message
-  string repository = 5;           // Repo
-  string resolvedPath = 6;         // Path in repo
-}
-
-message InstallRuntimeFromLocalRequest {
-  string runtimeSpec = 1;          // Runtime spec
-  repeated RuntimeFile files = 2;   // Files to upload
-  bool forceReinstall = 3;         // Force reinstall
-}
-
-message RuntimeFile {
-  string path = 1;                 // Path in runtime dir
-  bytes content = 2;               // Content
-  bool executable = 3;             // Make executable
-}
-
-message ValidateRuntimeSpecRequest {
-  string runtimeSpec = 1;          // Runtime spec to validate
-}
-
-message ValidateRuntimeSpecResponse {
-  bool valid = 1;                  // Is valid
-  string message = 2;              // Message
-  string normalizedSpec = 3;       // Normalized spec
-  RuntimeSpecInfo specInfo = 4;    // Parsed spec
-}
 
 message RuntimeRemoveReq {
   string runtime = 1;              // Runtime to remove
@@ -592,13 +594,6 @@ message RuntimeRemoveRes {
   bool success = 1;                // Success
   string message = 2;              // Message
   int64 freedSpaceBytes = 3;       // Space freed
-}
-
-message RuntimeSpecInfo {
-  string language = 1;             // Language
-  string version = 2;              // Version
-  repeated string variants = 3;    // Variants
-  string architecture = 4;         // Architecture
 }
 
 // =============================================================================

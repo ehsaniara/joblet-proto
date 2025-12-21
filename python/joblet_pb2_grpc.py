@@ -75,16 +75,6 @@ class JobServiceStub(object):
                 request_serializer=joblet__pb2.EmptyRequest.SerializeToString,
                 response_deserializer=joblet__pb2.Jobs.FromString,
                 _registered_method=True)
-        self.StreamJobTelemetry = channel.unary_stream(
-                '/joblet.JobService/StreamJobTelemetry',
-                request_serializer=joblet__pb2.StreamTelemetryRequest.SerializeToString,
-                response_deserializer=joblet__pb2.TelemetryEvent.FromString,
-                _registered_method=True)
-        self.GetJobTelemetry = channel.unary_stream(
-                '/joblet.JobService/GetJobTelemetry',
-                request_serializer=joblet__pb2.GetTelemetryRequest.SerializeToString,
-                response_deserializer=joblet__pb2.TelemetryEvent.FromString,
-                _registered_method=True)
         self.StreamJobMetrics = channel.unary_stream(
                 '/joblet.JobService/StreamJobMetrics',
                 request_serializer=joblet__pb2.StreamJobMetricsRequest.SerializeToString,
@@ -95,15 +85,15 @@ class JobServiceStub(object):
                 request_serializer=joblet__pb2.GetJobMetricsRequest.SerializeToString,
                 response_deserializer=joblet__pb2.JobMetricsEvent.FromString,
                 _registered_method=True)
-        self.StreamJobVisibility = channel.unary_stream(
-                '/joblet.JobService/StreamJobVisibility',
-                request_serializer=joblet__pb2.StreamJobVisibilityRequest.SerializeToString,
-                response_deserializer=joblet__pb2.VisibilityEvent.FromString,
+        self.StreamJobTelematics = channel.unary_stream(
+                '/joblet.JobService/StreamJobTelematics',
+                request_serializer=joblet__pb2.StreamJobTelematicsRequest.SerializeToString,
+                response_deserializer=joblet__pb2.TelematicsEvent.FromString,
                 _registered_method=True)
-        self.GetJobVisibility = channel.unary_stream(
-                '/joblet.JobService/GetJobVisibility',
-                request_serializer=joblet__pb2.GetJobVisibilityRequest.SerializeToString,
-                response_deserializer=joblet__pb2.VisibilityEvent.FromString,
+        self.GetJobTelematics = channel.unary_stream(
+                '/joblet.JobService/GetJobTelematics',
+                request_serializer=joblet__pb2.GetJobTelematicsRequest.SerializeToString,
+                response_deserializer=joblet__pb2.TelematicsEvent.FromString,
                 _registered_method=True)
 
 
@@ -160,21 +150,6 @@ class JobServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def StreamJobTelemetry(self, request, context):
-        """Unified telemetry (metrics + eBPF activity events) - DEPRECATED: Use separate methods below
-        Stream live telemetry for a running job
-        """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def GetJobTelemetry(self, request, context):
-        """Get historical telemetry for a completed job
-        """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
     def StreamJobMetrics(self, request, context):
         """Job Metrics (resource usage from cgroups - sampled every 5s)
         Stream live metrics for a running job
@@ -190,16 +165,16 @@ class JobServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def StreamJobVisibility(self, request, context):
-        """Job Visibility (eBPF security events - event-driven)
-        Stream live visibility events for a running job
+    def StreamJobTelematics(self, request, context):
+        """Job Telematics (eBPF security events - event-driven)
+        Stream live telematics events for a running job
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def GetJobVisibility(self, request, context):
-        """Get historical visibility events for a completed job
+    def GetJobTelematics(self, request, context):
+        """Get historical telematics events for a completed job
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -248,16 +223,6 @@ def add_JobServiceServicer_to_server(servicer, server):
                     request_deserializer=joblet__pb2.EmptyRequest.FromString,
                     response_serializer=joblet__pb2.Jobs.SerializeToString,
             ),
-            'StreamJobTelemetry': grpc.unary_stream_rpc_method_handler(
-                    servicer.StreamJobTelemetry,
-                    request_deserializer=joblet__pb2.StreamTelemetryRequest.FromString,
-                    response_serializer=joblet__pb2.TelemetryEvent.SerializeToString,
-            ),
-            'GetJobTelemetry': grpc.unary_stream_rpc_method_handler(
-                    servicer.GetJobTelemetry,
-                    request_deserializer=joblet__pb2.GetTelemetryRequest.FromString,
-                    response_serializer=joblet__pb2.TelemetryEvent.SerializeToString,
-            ),
             'StreamJobMetrics': grpc.unary_stream_rpc_method_handler(
                     servicer.StreamJobMetrics,
                     request_deserializer=joblet__pb2.StreamJobMetricsRequest.FromString,
@@ -268,15 +233,15 @@ def add_JobServiceServicer_to_server(servicer, server):
                     request_deserializer=joblet__pb2.GetJobMetricsRequest.FromString,
                     response_serializer=joblet__pb2.JobMetricsEvent.SerializeToString,
             ),
-            'StreamJobVisibility': grpc.unary_stream_rpc_method_handler(
-                    servicer.StreamJobVisibility,
-                    request_deserializer=joblet__pb2.StreamJobVisibilityRequest.FromString,
-                    response_serializer=joblet__pb2.VisibilityEvent.SerializeToString,
+            'StreamJobTelematics': grpc.unary_stream_rpc_method_handler(
+                    servicer.StreamJobTelematics,
+                    request_deserializer=joblet__pb2.StreamJobTelematicsRequest.FromString,
+                    response_serializer=joblet__pb2.TelematicsEvent.SerializeToString,
             ),
-            'GetJobVisibility': grpc.unary_stream_rpc_method_handler(
-                    servicer.GetJobVisibility,
-                    request_deserializer=joblet__pb2.GetJobVisibilityRequest.FromString,
-                    response_serializer=joblet__pb2.VisibilityEvent.SerializeToString,
+            'GetJobTelematics': grpc.unary_stream_rpc_method_handler(
+                    servicer.GetJobTelematics,
+                    request_deserializer=joblet__pb2.GetJobTelematicsRequest.FromString,
+                    response_serializer=joblet__pb2.TelematicsEvent.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -507,60 +472,6 @@ class JobService(object):
             _registered_method=True)
 
     @staticmethod
-    def StreamJobTelemetry(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_stream(
-            request,
-            target,
-            '/joblet.JobService/StreamJobTelemetry',
-            joblet__pb2.StreamTelemetryRequest.SerializeToString,
-            joblet__pb2.TelemetryEvent.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def GetJobTelemetry(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_stream(
-            request,
-            target,
-            '/joblet.JobService/GetJobTelemetry',
-            joblet__pb2.GetTelemetryRequest.SerializeToString,
-            joblet__pb2.TelemetryEvent.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
     def StreamJobMetrics(request,
             target,
             options=(),
@@ -615,7 +526,7 @@ class JobService(object):
             _registered_method=True)
 
     @staticmethod
-    def StreamJobVisibility(request,
+    def StreamJobTelematics(request,
             target,
             options=(),
             channel_credentials=None,
@@ -628,9 +539,9 @@ class JobService(object):
         return grpc.experimental.unary_stream(
             request,
             target,
-            '/joblet.JobService/StreamJobVisibility',
-            joblet__pb2.StreamJobVisibilityRequest.SerializeToString,
-            joblet__pb2.VisibilityEvent.FromString,
+            '/joblet.JobService/StreamJobTelematics',
+            joblet__pb2.StreamJobTelematicsRequest.SerializeToString,
+            joblet__pb2.TelematicsEvent.FromString,
             options,
             channel_credentials,
             insecure,
@@ -642,7 +553,7 @@ class JobService(object):
             _registered_method=True)
 
     @staticmethod
-    def GetJobVisibility(request,
+    def GetJobTelematics(request,
             target,
             options=(),
             channel_credentials=None,
@@ -655,9 +566,9 @@ class JobService(object):
         return grpc.experimental.unary_stream(
             request,
             target,
-            '/joblet.JobService/GetJobVisibility',
-            joblet__pb2.GetJobVisibilityRequest.SerializeToString,
-            joblet__pb2.VisibilityEvent.FromString,
+            '/joblet.JobService/GetJobTelematics',
+            joblet__pb2.GetJobTelematicsRequest.SerializeToString,
+            joblet__pb2.TelematicsEvent.FromString,
             options,
             channel_credentials,
             insecure,
@@ -1134,35 +1045,20 @@ class RuntimeServiceStub(object):
                 request_serializer=joblet__pb2.RuntimeTestReq.SerializeToString,
                 response_deserializer=joblet__pb2.RuntimeTestRes.FromString,
                 _registered_method=True)
-        self.InstallRuntimeFromGithub = channel.unary_unary(
-                '/joblet.RuntimeService/InstallRuntimeFromGithub',
-                request_serializer=joblet__pb2.InstallRuntimeRequest.SerializeToString,
-                response_deserializer=joblet__pb2.InstallRuntimeResponse.FromString,
-                _registered_method=True)
-        self.InstallRuntimeFromLocal = channel.unary_unary(
-                '/joblet.RuntimeService/InstallRuntimeFromLocal',
-                request_serializer=joblet__pb2.InstallRuntimeFromLocalRequest.SerializeToString,
-                response_deserializer=joblet__pb2.InstallRuntimeResponse.FromString,
-                _registered_method=True)
-        self.StreamingInstallRuntimeFromGithub = channel.unary_stream(
-                '/joblet.RuntimeService/StreamingInstallRuntimeFromGithub',
-                request_serializer=joblet__pb2.InstallRuntimeRequest.SerializeToString,
-                response_deserializer=joblet__pb2.RuntimeInstallationChunk.FromString,
-                _registered_method=True)
-        self.StreamingInstallRuntimeFromLocal = channel.unary_stream(
-                '/joblet.RuntimeService/StreamingInstallRuntimeFromLocal',
-                request_serializer=joblet__pb2.InstallRuntimeFromLocalRequest.SerializeToString,
-                response_deserializer=joblet__pb2.RuntimeInstallationChunk.FromString,
-                _registered_method=True)
-        self.ValidateRuntimeSpec = channel.unary_unary(
-                '/joblet.RuntimeService/ValidateRuntimeSpec',
-                request_serializer=joblet__pb2.ValidateRuntimeSpecRequest.SerializeToString,
-                response_deserializer=joblet__pb2.ValidateRuntimeSpecResponse.FromString,
-                _registered_method=True)
         self.RemoveRuntime = channel.unary_unary(
                 '/joblet.RuntimeService/RemoveRuntime',
                 request_serializer=joblet__pb2.RuntimeRemoveReq.SerializeToString,
                 response_deserializer=joblet__pb2.RuntimeRemoveRes.FromString,
+                _registered_method=True)
+        self.BuildRuntime = channel.unary_stream(
+                '/joblet.RuntimeService/BuildRuntime',
+                request_serializer=joblet__pb2.BuildRuntimeRequest.SerializeToString,
+                response_deserializer=joblet__pb2.BuildRuntimeProgress.FromString,
+                _registered_method=True)
+        self.ValidateRuntimeYAML = channel.unary_unary(
+                '/joblet.RuntimeService/ValidateRuntimeYAML',
+                request_serializer=joblet__pb2.ValidateRuntimeYAMLRequest.SerializeToString,
+                response_deserializer=joblet__pb2.ValidateRuntimeYAMLResponse.FromString,
                 _registered_method=True)
 
 
@@ -1188,38 +1084,23 @@ class RuntimeServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def InstallRuntimeFromGithub(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def InstallRuntimeFromLocal(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def StreamingInstallRuntimeFromGithub(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def StreamingInstallRuntimeFromLocal(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def ValidateRuntimeSpec(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
     def RemoveRuntime(self, request, context):
         """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def BuildRuntime(self, request, context):
+        """BuildRuntime builds a runtime from a YAML specification
+        The build process runs on the server and streams progress back to the client
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ValidateRuntimeYAML(self, request, context):
+        """ValidateRuntimeYAML validates a runtime YAML specification without building
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -1242,35 +1123,20 @@ def add_RuntimeServiceServicer_to_server(servicer, server):
                     request_deserializer=joblet__pb2.RuntimeTestReq.FromString,
                     response_serializer=joblet__pb2.RuntimeTestRes.SerializeToString,
             ),
-            'InstallRuntimeFromGithub': grpc.unary_unary_rpc_method_handler(
-                    servicer.InstallRuntimeFromGithub,
-                    request_deserializer=joblet__pb2.InstallRuntimeRequest.FromString,
-                    response_serializer=joblet__pb2.InstallRuntimeResponse.SerializeToString,
-            ),
-            'InstallRuntimeFromLocal': grpc.unary_unary_rpc_method_handler(
-                    servicer.InstallRuntimeFromLocal,
-                    request_deserializer=joblet__pb2.InstallRuntimeFromLocalRequest.FromString,
-                    response_serializer=joblet__pb2.InstallRuntimeResponse.SerializeToString,
-            ),
-            'StreamingInstallRuntimeFromGithub': grpc.unary_stream_rpc_method_handler(
-                    servicer.StreamingInstallRuntimeFromGithub,
-                    request_deserializer=joblet__pb2.InstallRuntimeRequest.FromString,
-                    response_serializer=joblet__pb2.RuntimeInstallationChunk.SerializeToString,
-            ),
-            'StreamingInstallRuntimeFromLocal': grpc.unary_stream_rpc_method_handler(
-                    servicer.StreamingInstallRuntimeFromLocal,
-                    request_deserializer=joblet__pb2.InstallRuntimeFromLocalRequest.FromString,
-                    response_serializer=joblet__pb2.RuntimeInstallationChunk.SerializeToString,
-            ),
-            'ValidateRuntimeSpec': grpc.unary_unary_rpc_method_handler(
-                    servicer.ValidateRuntimeSpec,
-                    request_deserializer=joblet__pb2.ValidateRuntimeSpecRequest.FromString,
-                    response_serializer=joblet__pb2.ValidateRuntimeSpecResponse.SerializeToString,
-            ),
             'RemoveRuntime': grpc.unary_unary_rpc_method_handler(
                     servicer.RemoveRuntime,
                     request_deserializer=joblet__pb2.RuntimeRemoveReq.FromString,
                     response_serializer=joblet__pb2.RuntimeRemoveRes.SerializeToString,
+            ),
+            'BuildRuntime': grpc.unary_stream_rpc_method_handler(
+                    servicer.BuildRuntime,
+                    request_deserializer=joblet__pb2.BuildRuntimeRequest.FromString,
+                    response_serializer=joblet__pb2.BuildRuntimeProgress.SerializeToString,
+            ),
+            'ValidateRuntimeYAML': grpc.unary_unary_rpc_method_handler(
+                    servicer.ValidateRuntimeYAML,
+                    request_deserializer=joblet__pb2.ValidateRuntimeYAMLRequest.FromString,
+                    response_serializer=joblet__pb2.ValidateRuntimeYAMLResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -1366,141 +1232,6 @@ class RuntimeService(object):
             _registered_method=True)
 
     @staticmethod
-    def InstallRuntimeFromGithub(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/joblet.RuntimeService/InstallRuntimeFromGithub',
-            joblet__pb2.InstallRuntimeRequest.SerializeToString,
-            joblet__pb2.InstallRuntimeResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def InstallRuntimeFromLocal(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/joblet.RuntimeService/InstallRuntimeFromLocal',
-            joblet__pb2.InstallRuntimeFromLocalRequest.SerializeToString,
-            joblet__pb2.InstallRuntimeResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def StreamingInstallRuntimeFromGithub(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_stream(
-            request,
-            target,
-            '/joblet.RuntimeService/StreamingInstallRuntimeFromGithub',
-            joblet__pb2.InstallRuntimeRequest.SerializeToString,
-            joblet__pb2.RuntimeInstallationChunk.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def StreamingInstallRuntimeFromLocal(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_stream(
-            request,
-            target,
-            '/joblet.RuntimeService/StreamingInstallRuntimeFromLocal',
-            joblet__pb2.InstallRuntimeFromLocalRequest.SerializeToString,
-            joblet__pb2.RuntimeInstallationChunk.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def ValidateRuntimeSpec(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/joblet.RuntimeService/ValidateRuntimeSpec',
-            joblet__pb2.ValidateRuntimeSpecRequest.SerializeToString,
-            joblet__pb2.ValidateRuntimeSpecResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
     def RemoveRuntime(request,
             target,
             options=(),
@@ -1517,6 +1248,60 @@ class RuntimeService(object):
             '/joblet.RuntimeService/RemoveRuntime',
             joblet__pb2.RuntimeRemoveReq.SerializeToString,
             joblet__pb2.RuntimeRemoveRes.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def BuildRuntime(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(
+            request,
+            target,
+            '/joblet.RuntimeService/BuildRuntime',
+            joblet__pb2.BuildRuntimeRequest.SerializeToString,
+            joblet__pb2.BuildRuntimeProgress.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ValidateRuntimeYAML(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/joblet.RuntimeService/ValidateRuntimeYAML',
+            joblet__pb2.ValidateRuntimeYAMLRequest.SerializeToString,
+            joblet__pb2.ValidateRuntimeYAMLResponse.FromString,
             options,
             channel_credentials,
             insecure,

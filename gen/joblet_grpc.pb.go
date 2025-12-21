@@ -1085,15 +1085,12 @@ var MonitoringService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	RuntimeService_ListRuntimes_FullMethodName                      = "/joblet.RuntimeService/ListRuntimes"
-	RuntimeService_GetRuntimeInfo_FullMethodName                    = "/joblet.RuntimeService/GetRuntimeInfo"
-	RuntimeService_TestRuntime_FullMethodName                       = "/joblet.RuntimeService/TestRuntime"
-	RuntimeService_InstallRuntimeFromGithub_FullMethodName          = "/joblet.RuntimeService/InstallRuntimeFromGithub"
-	RuntimeService_InstallRuntimeFromLocal_FullMethodName           = "/joblet.RuntimeService/InstallRuntimeFromLocal"
-	RuntimeService_StreamingInstallRuntimeFromGithub_FullMethodName = "/joblet.RuntimeService/StreamingInstallRuntimeFromGithub"
-	RuntimeService_StreamingInstallRuntimeFromLocal_FullMethodName  = "/joblet.RuntimeService/StreamingInstallRuntimeFromLocal"
-	RuntimeService_ValidateRuntimeSpec_FullMethodName               = "/joblet.RuntimeService/ValidateRuntimeSpec"
-	RuntimeService_RemoveRuntime_FullMethodName                     = "/joblet.RuntimeService/RemoveRuntime"
+	RuntimeService_ListRuntimes_FullMethodName        = "/joblet.RuntimeService/ListRuntimes"
+	RuntimeService_GetRuntimeInfo_FullMethodName      = "/joblet.RuntimeService/GetRuntimeInfo"
+	RuntimeService_TestRuntime_FullMethodName         = "/joblet.RuntimeService/TestRuntime"
+	RuntimeService_RemoveRuntime_FullMethodName       = "/joblet.RuntimeService/RemoveRuntime"
+	RuntimeService_BuildRuntime_FullMethodName        = "/joblet.RuntimeService/BuildRuntime"
+	RuntimeService_ValidateRuntimeYAML_FullMethodName = "/joblet.RuntimeService/ValidateRuntimeYAML"
 )
 
 // RuntimeServiceClient is the client API for RuntimeService service.
@@ -1105,12 +1102,12 @@ type RuntimeServiceClient interface {
 	ListRuntimes(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*RuntimesRes, error)
 	GetRuntimeInfo(ctx context.Context, in *RuntimeInfoReq, opts ...grpc.CallOption) (*RuntimeInfoRes, error)
 	TestRuntime(ctx context.Context, in *RuntimeTestReq, opts ...grpc.CallOption) (*RuntimeTestRes, error)
-	InstallRuntimeFromGithub(ctx context.Context, in *InstallRuntimeRequest, opts ...grpc.CallOption) (*InstallRuntimeResponse, error)
-	InstallRuntimeFromLocal(ctx context.Context, in *InstallRuntimeFromLocalRequest, opts ...grpc.CallOption) (*InstallRuntimeResponse, error)
-	StreamingInstallRuntimeFromGithub(ctx context.Context, in *InstallRuntimeRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[RuntimeInstallationChunk], error)
-	StreamingInstallRuntimeFromLocal(ctx context.Context, in *InstallRuntimeFromLocalRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[RuntimeInstallationChunk], error)
-	ValidateRuntimeSpec(ctx context.Context, in *ValidateRuntimeSpecRequest, opts ...grpc.CallOption) (*ValidateRuntimeSpecResponse, error)
 	RemoveRuntime(ctx context.Context, in *RuntimeRemoveReq, opts ...grpc.CallOption) (*RuntimeRemoveRes, error)
+	// BuildRuntime builds a runtime from a YAML specification
+	// The build process runs on the server and streams progress back to the client
+	BuildRuntime(ctx context.Context, in *BuildRuntimeRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[BuildRuntimeProgress], error)
+	// ValidateRuntimeYAML validates a runtime YAML specification without building
+	ValidateRuntimeYAML(ctx context.Context, in *ValidateRuntimeYAMLRequest, opts ...grpc.CallOption) (*ValidateRuntimeYAMLResponse, error)
 }
 
 type runtimeServiceClient struct {
@@ -1151,78 +1148,39 @@ func (c *runtimeServiceClient) TestRuntime(ctx context.Context, in *RuntimeTestR
 	return out, nil
 }
 
-func (c *runtimeServiceClient) InstallRuntimeFromGithub(ctx context.Context, in *InstallRuntimeRequest, opts ...grpc.CallOption) (*InstallRuntimeResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(InstallRuntimeResponse)
-	err := c.cc.Invoke(ctx, RuntimeService_InstallRuntimeFromGithub_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *runtimeServiceClient) InstallRuntimeFromLocal(ctx context.Context, in *InstallRuntimeFromLocalRequest, opts ...grpc.CallOption) (*InstallRuntimeResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(InstallRuntimeResponse)
-	err := c.cc.Invoke(ctx, RuntimeService_InstallRuntimeFromLocal_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *runtimeServiceClient) StreamingInstallRuntimeFromGithub(ctx context.Context, in *InstallRuntimeRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[RuntimeInstallationChunk], error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &RuntimeService_ServiceDesc.Streams[0], RuntimeService_StreamingInstallRuntimeFromGithub_FullMethodName, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	x := &grpc.GenericClientStream[InstallRuntimeRequest, RuntimeInstallationChunk]{ClientStream: stream}
-	if err := x.ClientStream.SendMsg(in); err != nil {
-		return nil, err
-	}
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	return x, nil
-}
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type RuntimeService_StreamingInstallRuntimeFromGithubClient = grpc.ServerStreamingClient[RuntimeInstallationChunk]
-
-func (c *runtimeServiceClient) StreamingInstallRuntimeFromLocal(ctx context.Context, in *InstallRuntimeFromLocalRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[RuntimeInstallationChunk], error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &RuntimeService_ServiceDesc.Streams[1], RuntimeService_StreamingInstallRuntimeFromLocal_FullMethodName, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	x := &grpc.GenericClientStream[InstallRuntimeFromLocalRequest, RuntimeInstallationChunk]{ClientStream: stream}
-	if err := x.ClientStream.SendMsg(in); err != nil {
-		return nil, err
-	}
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	return x, nil
-}
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type RuntimeService_StreamingInstallRuntimeFromLocalClient = grpc.ServerStreamingClient[RuntimeInstallationChunk]
-
-func (c *runtimeServiceClient) ValidateRuntimeSpec(ctx context.Context, in *ValidateRuntimeSpecRequest, opts ...grpc.CallOption) (*ValidateRuntimeSpecResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ValidateRuntimeSpecResponse)
-	err := c.cc.Invoke(ctx, RuntimeService_ValidateRuntimeSpec_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *runtimeServiceClient) RemoveRuntime(ctx context.Context, in *RuntimeRemoveReq, opts ...grpc.CallOption) (*RuntimeRemoveRes, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(RuntimeRemoveRes)
 	err := c.cc.Invoke(ctx, RuntimeService_RemoveRuntime_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *runtimeServiceClient) BuildRuntime(ctx context.Context, in *BuildRuntimeRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[BuildRuntimeProgress], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &RuntimeService_ServiceDesc.Streams[0], RuntimeService_BuildRuntime_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[BuildRuntimeRequest, BuildRuntimeProgress]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type RuntimeService_BuildRuntimeClient = grpc.ServerStreamingClient[BuildRuntimeProgress]
+
+func (c *runtimeServiceClient) ValidateRuntimeYAML(ctx context.Context, in *ValidateRuntimeYAMLRequest, opts ...grpc.CallOption) (*ValidateRuntimeYAMLResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ValidateRuntimeYAMLResponse)
+	err := c.cc.Invoke(ctx, RuntimeService_ValidateRuntimeYAML_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1238,12 +1196,12 @@ type RuntimeServiceServer interface {
 	ListRuntimes(context.Context, *EmptyRequest) (*RuntimesRes, error)
 	GetRuntimeInfo(context.Context, *RuntimeInfoReq) (*RuntimeInfoRes, error)
 	TestRuntime(context.Context, *RuntimeTestReq) (*RuntimeTestRes, error)
-	InstallRuntimeFromGithub(context.Context, *InstallRuntimeRequest) (*InstallRuntimeResponse, error)
-	InstallRuntimeFromLocal(context.Context, *InstallRuntimeFromLocalRequest) (*InstallRuntimeResponse, error)
-	StreamingInstallRuntimeFromGithub(*InstallRuntimeRequest, grpc.ServerStreamingServer[RuntimeInstallationChunk]) error
-	StreamingInstallRuntimeFromLocal(*InstallRuntimeFromLocalRequest, grpc.ServerStreamingServer[RuntimeInstallationChunk]) error
-	ValidateRuntimeSpec(context.Context, *ValidateRuntimeSpecRequest) (*ValidateRuntimeSpecResponse, error)
 	RemoveRuntime(context.Context, *RuntimeRemoveReq) (*RuntimeRemoveRes, error)
+	// BuildRuntime builds a runtime from a YAML specification
+	// The build process runs on the server and streams progress back to the client
+	BuildRuntime(*BuildRuntimeRequest, grpc.ServerStreamingServer[BuildRuntimeProgress]) error
+	// ValidateRuntimeYAML validates a runtime YAML specification without building
+	ValidateRuntimeYAML(context.Context, *ValidateRuntimeYAMLRequest) (*ValidateRuntimeYAMLResponse, error)
 	mustEmbedUnimplementedRuntimeServiceServer()
 }
 
@@ -1263,23 +1221,14 @@ func (UnimplementedRuntimeServiceServer) GetRuntimeInfo(context.Context, *Runtim
 func (UnimplementedRuntimeServiceServer) TestRuntime(context.Context, *RuntimeTestReq) (*RuntimeTestRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TestRuntime not implemented")
 }
-func (UnimplementedRuntimeServiceServer) InstallRuntimeFromGithub(context.Context, *InstallRuntimeRequest) (*InstallRuntimeResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method InstallRuntimeFromGithub not implemented")
-}
-func (UnimplementedRuntimeServiceServer) InstallRuntimeFromLocal(context.Context, *InstallRuntimeFromLocalRequest) (*InstallRuntimeResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method InstallRuntimeFromLocal not implemented")
-}
-func (UnimplementedRuntimeServiceServer) StreamingInstallRuntimeFromGithub(*InstallRuntimeRequest, grpc.ServerStreamingServer[RuntimeInstallationChunk]) error {
-	return status.Errorf(codes.Unimplemented, "method StreamingInstallRuntimeFromGithub not implemented")
-}
-func (UnimplementedRuntimeServiceServer) StreamingInstallRuntimeFromLocal(*InstallRuntimeFromLocalRequest, grpc.ServerStreamingServer[RuntimeInstallationChunk]) error {
-	return status.Errorf(codes.Unimplemented, "method StreamingInstallRuntimeFromLocal not implemented")
-}
-func (UnimplementedRuntimeServiceServer) ValidateRuntimeSpec(context.Context, *ValidateRuntimeSpecRequest) (*ValidateRuntimeSpecResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ValidateRuntimeSpec not implemented")
-}
 func (UnimplementedRuntimeServiceServer) RemoveRuntime(context.Context, *RuntimeRemoveReq) (*RuntimeRemoveRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveRuntime not implemented")
+}
+func (UnimplementedRuntimeServiceServer) BuildRuntime(*BuildRuntimeRequest, grpc.ServerStreamingServer[BuildRuntimeProgress]) error {
+	return status.Errorf(codes.Unimplemented, "method BuildRuntime not implemented")
+}
+func (UnimplementedRuntimeServiceServer) ValidateRuntimeYAML(context.Context, *ValidateRuntimeYAMLRequest) (*ValidateRuntimeYAMLResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidateRuntimeYAML not implemented")
 }
 func (UnimplementedRuntimeServiceServer) mustEmbedUnimplementedRuntimeServiceServer() {}
 func (UnimplementedRuntimeServiceServer) testEmbeddedByValue()                        {}
@@ -1356,82 +1305,6 @@ func _RuntimeService_TestRuntime_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
-func _RuntimeService_InstallRuntimeFromGithub_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(InstallRuntimeRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RuntimeServiceServer).InstallRuntimeFromGithub(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: RuntimeService_InstallRuntimeFromGithub_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RuntimeServiceServer).InstallRuntimeFromGithub(ctx, req.(*InstallRuntimeRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _RuntimeService_InstallRuntimeFromLocal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(InstallRuntimeFromLocalRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RuntimeServiceServer).InstallRuntimeFromLocal(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: RuntimeService_InstallRuntimeFromLocal_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RuntimeServiceServer).InstallRuntimeFromLocal(ctx, req.(*InstallRuntimeFromLocalRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _RuntimeService_StreamingInstallRuntimeFromGithub_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(InstallRuntimeRequest)
-	if err := stream.RecvMsg(m); err != nil {
-		return err
-	}
-	return srv.(RuntimeServiceServer).StreamingInstallRuntimeFromGithub(m, &grpc.GenericServerStream[InstallRuntimeRequest, RuntimeInstallationChunk]{ServerStream: stream})
-}
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type RuntimeService_StreamingInstallRuntimeFromGithubServer = grpc.ServerStreamingServer[RuntimeInstallationChunk]
-
-func _RuntimeService_StreamingInstallRuntimeFromLocal_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(InstallRuntimeFromLocalRequest)
-	if err := stream.RecvMsg(m); err != nil {
-		return err
-	}
-	return srv.(RuntimeServiceServer).StreamingInstallRuntimeFromLocal(m, &grpc.GenericServerStream[InstallRuntimeFromLocalRequest, RuntimeInstallationChunk]{ServerStream: stream})
-}
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type RuntimeService_StreamingInstallRuntimeFromLocalServer = grpc.ServerStreamingServer[RuntimeInstallationChunk]
-
-func _RuntimeService_ValidateRuntimeSpec_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ValidateRuntimeSpecRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RuntimeServiceServer).ValidateRuntimeSpec(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: RuntimeService_ValidateRuntimeSpec_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RuntimeServiceServer).ValidateRuntimeSpec(ctx, req.(*ValidateRuntimeSpecRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _RuntimeService_RemoveRuntime_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(RuntimeRemoveReq)
 	if err := dec(in); err != nil {
@@ -1446,6 +1319,35 @@ func _RuntimeService_RemoveRuntime_Handler(srv interface{}, ctx context.Context,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(RuntimeServiceServer).RemoveRuntime(ctx, req.(*RuntimeRemoveReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RuntimeService_BuildRuntime_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(BuildRuntimeRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(RuntimeServiceServer).BuildRuntime(m, &grpc.GenericServerStream[BuildRuntimeRequest, BuildRuntimeProgress]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type RuntimeService_BuildRuntimeServer = grpc.ServerStreamingServer[BuildRuntimeProgress]
+
+func _RuntimeService_ValidateRuntimeYAML_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ValidateRuntimeYAMLRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RuntimeServiceServer).ValidateRuntimeYAML(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RuntimeService_ValidateRuntimeYAML_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RuntimeServiceServer).ValidateRuntimeYAML(ctx, req.(*ValidateRuntimeYAMLRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1470,31 +1372,18 @@ var RuntimeService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _RuntimeService_TestRuntime_Handler,
 		},
 		{
-			MethodName: "InstallRuntimeFromGithub",
-			Handler:    _RuntimeService_InstallRuntimeFromGithub_Handler,
-		},
-		{
-			MethodName: "InstallRuntimeFromLocal",
-			Handler:    _RuntimeService_InstallRuntimeFromLocal_Handler,
-		},
-		{
-			MethodName: "ValidateRuntimeSpec",
-			Handler:    _RuntimeService_ValidateRuntimeSpec_Handler,
-		},
-		{
 			MethodName: "RemoveRuntime",
 			Handler:    _RuntimeService_RemoveRuntime_Handler,
+		},
+		{
+			MethodName: "ValidateRuntimeYAML",
+			Handler:    _RuntimeService_ValidateRuntimeYAML_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "StreamingInstallRuntimeFromGithub",
-			Handler:       _RuntimeService_StreamingInstallRuntimeFromGithub_Handler,
-			ServerStreams: true,
-		},
-		{
-			StreamName:    "StreamingInstallRuntimeFromLocal",
-			Handler:       _RuntimeService_StreamingInstallRuntimeFromLocal_Handler,
+			StreamName:    "BuildRuntime",
+			Handler:       _RuntimeService_BuildRuntime_Handler,
 			ServerStreams: true,
 		},
 	},

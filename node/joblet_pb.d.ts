@@ -508,125 +508,277 @@ export namespace DataChunk {
     }
 }
 
-export class RuntimeInstallationChunk extends jspb.Message { 
+export class BuildRuntimeRequest extends jspb.Message { 
+    getYamlContent(): string;
+    setYamlContent(value: string): BuildRuntimeRequest;
+    getDryRun(): boolean;
+    setDryRun(value: boolean): BuildRuntimeRequest;
+    getVerbose(): boolean;
+    setVerbose(value: boolean): BuildRuntimeRequest;
+    getForceRebuild(): boolean;
+    setForceRebuild(value: boolean): BuildRuntimeRequest;
 
-    hasProgress(): boolean;
-    clearProgress(): void;
-    getProgress(): RuntimeInstallationProgress | undefined;
-    setProgress(value?: RuntimeInstallationProgress): RuntimeInstallationChunk;
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): BuildRuntimeRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: BuildRuntimeRequest): BuildRuntimeRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: BuildRuntimeRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): BuildRuntimeRequest;
+    static deserializeBinaryFromReader(message: BuildRuntimeRequest, reader: jspb.BinaryReader): BuildRuntimeRequest;
+}
+
+export namespace BuildRuntimeRequest {
+    export type AsObject = {
+        yamlContent: string,
+        dryRun: boolean,
+        verbose: boolean,
+        forceRebuild: boolean,
+    }
+}
+
+export class BuildRuntimeProgress extends jspb.Message { 
+
+    hasPhase(): boolean;
+    clearPhase(): void;
+    getPhase(): BuildPhaseProgress | undefined;
+    setPhase(value?: BuildPhaseProgress): BuildRuntimeProgress;
 
     hasLog(): boolean;
     clearLog(): void;
-    getLog(): RuntimeInstallationLog | undefined;
-    setLog(value?: RuntimeInstallationLog): RuntimeInstallationChunk;
+    getLog(): BuildLogLine | undefined;
+    setLog(value?: BuildLogLine): BuildRuntimeProgress;
 
     hasResult(): boolean;
     clearResult(): void;
-    getResult(): RuntimeInstallationResult | undefined;
-    setResult(value?: RuntimeInstallationResult): RuntimeInstallationChunk;
+    getResult(): BuildResult | undefined;
+    setResult(value?: BuildResult): BuildRuntimeProgress;
 
-    getChunkTypeCase(): RuntimeInstallationChunk.ChunkTypeCase;
+    getProgressTypeCase(): BuildRuntimeProgress.ProgressTypeCase;
 
     serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): RuntimeInstallationChunk.AsObject;
-    static toObject(includeInstance: boolean, msg: RuntimeInstallationChunk): RuntimeInstallationChunk.AsObject;
+    toObject(includeInstance?: boolean): BuildRuntimeProgress.AsObject;
+    static toObject(includeInstance: boolean, msg: BuildRuntimeProgress): BuildRuntimeProgress.AsObject;
     static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
     static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: RuntimeInstallationChunk, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): RuntimeInstallationChunk;
-    static deserializeBinaryFromReader(message: RuntimeInstallationChunk, reader: jspb.BinaryReader): RuntimeInstallationChunk;
+    static serializeBinaryToWriter(message: BuildRuntimeProgress, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): BuildRuntimeProgress;
+    static deserializeBinaryFromReader(message: BuildRuntimeProgress, reader: jspb.BinaryReader): BuildRuntimeProgress;
 }
 
-export namespace RuntimeInstallationChunk {
+export namespace BuildRuntimeProgress {
     export type AsObject = {
-        progress?: RuntimeInstallationProgress.AsObject,
-        log?: RuntimeInstallationLog.AsObject,
-        result?: RuntimeInstallationResult.AsObject,
+        phase?: BuildPhaseProgress.AsObject,
+        log?: BuildLogLine.AsObject,
+        result?: BuildResult.AsObject,
     }
 
-    export enum ChunkTypeCase {
-        CHUNK_TYPE_NOT_SET = 0,
-        PROGRESS = 1,
+    export enum ProgressTypeCase {
+        PROGRESS_TYPE_NOT_SET = 0,
+        PHASE = 1,
         LOG = 2,
         RESULT = 3,
     }
 
 }
 
-export class RuntimeInstallationProgress extends jspb.Message { 
+export class BuildPhaseProgress extends jspb.Message { 
+    getPhaseNumber(): number;
+    setPhaseNumber(value: number): BuildPhaseProgress;
+    getTotalPhases(): number;
+    setTotalPhases(value: number): BuildPhaseProgress;
+    getPhaseName(): string;
+    setPhaseName(value: string): BuildPhaseProgress;
     getMessage(): string;
-    setMessage(value: string): RuntimeInstallationProgress;
-    getStep(): number;
-    setStep(value: number): RuntimeInstallationProgress;
-    getTotalSteps(): number;
-    setTotalSteps(value: number): RuntimeInstallationProgress;
+    setMessage(value: string): BuildPhaseProgress;
 
     serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): RuntimeInstallationProgress.AsObject;
-    static toObject(includeInstance: boolean, msg: RuntimeInstallationProgress): RuntimeInstallationProgress.AsObject;
+    toObject(includeInstance?: boolean): BuildPhaseProgress.AsObject;
+    static toObject(includeInstance: boolean, msg: BuildPhaseProgress): BuildPhaseProgress.AsObject;
     static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
     static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: RuntimeInstallationProgress, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): RuntimeInstallationProgress;
-    static deserializeBinaryFromReader(message: RuntimeInstallationProgress, reader: jspb.BinaryReader): RuntimeInstallationProgress;
+    static serializeBinaryToWriter(message: BuildPhaseProgress, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): BuildPhaseProgress;
+    static deserializeBinaryFromReader(message: BuildPhaseProgress, reader: jspb.BinaryReader): BuildPhaseProgress;
 }
 
-export namespace RuntimeInstallationProgress {
+export namespace BuildPhaseProgress {
     export type AsObject = {
+        phaseNumber: number,
+        totalPhases: number,
+        phaseName: string,
         message: string,
-        step: number,
-        totalSteps: number,
     }
 }
 
-export class RuntimeInstallationLog extends jspb.Message { 
-    getData(): Uint8Array | string;
-    getData_asU8(): Uint8Array;
-    getData_asB64(): string;
-    setData(value: Uint8Array | string): RuntimeInstallationLog;
-
-    serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): RuntimeInstallationLog.AsObject;
-    static toObject(includeInstance: boolean, msg: RuntimeInstallationLog): RuntimeInstallationLog.AsObject;
-    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: RuntimeInstallationLog, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): RuntimeInstallationLog;
-    static deserializeBinaryFromReader(message: RuntimeInstallationLog, reader: jspb.BinaryReader): RuntimeInstallationLog;
-}
-
-export namespace RuntimeInstallationLog {
-    export type AsObject = {
-        data: Uint8Array | string,
-    }
-}
-
-export class RuntimeInstallationResult extends jspb.Message { 
-    getSuccess(): boolean;
-    setSuccess(value: boolean): RuntimeInstallationResult;
+export class BuildLogLine extends jspb.Message { 
+    getLevel(): string;
+    setLevel(value: string): BuildLogLine;
     getMessage(): string;
-    setMessage(value: string): RuntimeInstallationResult;
-    getRuntimeSpec(): string;
-    setRuntimeSpec(value: string): RuntimeInstallationResult;
-    getInstallPath(): string;
-    setInstallPath(value: string): RuntimeInstallationResult;
+    setMessage(value: string): BuildLogLine;
+    getTimestamp(): number;
+    setTimestamp(value: number): BuildLogLine;
 
     serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): RuntimeInstallationResult.AsObject;
-    static toObject(includeInstance: boolean, msg: RuntimeInstallationResult): RuntimeInstallationResult.AsObject;
+    toObject(includeInstance?: boolean): BuildLogLine.AsObject;
+    static toObject(includeInstance: boolean, msg: BuildLogLine): BuildLogLine.AsObject;
     static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
     static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: RuntimeInstallationResult, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): RuntimeInstallationResult;
-    static deserializeBinaryFromReader(message: RuntimeInstallationResult, reader: jspb.BinaryReader): RuntimeInstallationResult;
+    static serializeBinaryToWriter(message: BuildLogLine, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): BuildLogLine;
+    static deserializeBinaryFromReader(message: BuildLogLine, reader: jspb.BinaryReader): BuildLogLine;
 }
 
-export namespace RuntimeInstallationResult {
+export namespace BuildLogLine {
+    export type AsObject = {
+        level: string,
+        message: string,
+        timestamp: number,
+    }
+}
+
+export class BuildResult extends jspb.Message { 
+    getSuccess(): boolean;
+    setSuccess(value: boolean): BuildResult;
+    getMessage(): string;
+    setMessage(value: string): BuildResult;
+    getRuntimeName(): string;
+    setRuntimeName(value: string): BuildResult;
+    getRuntimeVersion(): string;
+    setRuntimeVersion(value: string): BuildResult;
+    getInstallPath(): string;
+    setInstallPath(value: string): BuildResult;
+    getSizeBytes(): number;
+    setSizeBytes(value: number): BuildResult;
+    getBuildDurationMs(): number;
+    setBuildDurationMs(value: number): BuildResult;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): BuildResult.AsObject;
+    static toObject(includeInstance: boolean, msg: BuildResult): BuildResult.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: BuildResult, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): BuildResult;
+    static deserializeBinaryFromReader(message: BuildResult, reader: jspb.BinaryReader): BuildResult;
+}
+
+export namespace BuildResult {
     export type AsObject = {
         success: boolean,
         message: string,
-        runtimeSpec: string,
+        runtimeName: string,
+        runtimeVersion: string,
         installPath: string,
+        sizeBytes: number,
+        buildDurationMs: number,
+    }
+}
+
+export class ValidateRuntimeYAMLRequest extends jspb.Message { 
+    getYamlContent(): string;
+    setYamlContent(value: string): ValidateRuntimeYAMLRequest;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): ValidateRuntimeYAMLRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: ValidateRuntimeYAMLRequest): ValidateRuntimeYAMLRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: ValidateRuntimeYAMLRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): ValidateRuntimeYAMLRequest;
+    static deserializeBinaryFromReader(message: ValidateRuntimeYAMLRequest, reader: jspb.BinaryReader): ValidateRuntimeYAMLRequest;
+}
+
+export namespace ValidateRuntimeYAMLRequest {
+    export type AsObject = {
+        yamlContent: string,
+    }
+}
+
+export class ValidateRuntimeYAMLResponse extends jspb.Message { 
+    getValid(): boolean;
+    setValid(value: boolean): ValidateRuntimeYAMLResponse;
+    getMessage(): string;
+    setMessage(value: string): ValidateRuntimeYAMLResponse;
+    clearErrorsList(): void;
+    getErrorsList(): Array<string>;
+    setErrorsList(value: Array<string>): ValidateRuntimeYAMLResponse;
+    addErrors(value: string, index?: number): string;
+    clearWarningsList(): void;
+    getWarningsList(): Array<string>;
+    setWarningsList(value: Array<string>): ValidateRuntimeYAMLResponse;
+    addWarnings(value: string, index?: number): string;
+
+    hasSpecInfo(): boolean;
+    clearSpecInfo(): void;
+    getSpecInfo(): RuntimeYAMLInfo | undefined;
+    setSpecInfo(value?: RuntimeYAMLInfo): ValidateRuntimeYAMLResponse;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): ValidateRuntimeYAMLResponse.AsObject;
+    static toObject(includeInstance: boolean, msg: ValidateRuntimeYAMLResponse): ValidateRuntimeYAMLResponse.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: ValidateRuntimeYAMLResponse, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): ValidateRuntimeYAMLResponse;
+    static deserializeBinaryFromReader(message: ValidateRuntimeYAMLResponse, reader: jspb.BinaryReader): ValidateRuntimeYAMLResponse;
+}
+
+export namespace ValidateRuntimeYAMLResponse {
+    export type AsObject = {
+        valid: boolean,
+        message: string,
+        errorsList: Array<string>,
+        warningsList: Array<string>,
+        specInfo?: RuntimeYAMLInfo.AsObject,
+    }
+}
+
+export class RuntimeYAMLInfo extends jspb.Message { 
+    getName(): string;
+    setName(value: string): RuntimeYAMLInfo;
+    getVersion(): string;
+    setVersion(value: string): RuntimeYAMLInfo;
+    getLanguage(): string;
+    setLanguage(value: string): RuntimeYAMLInfo;
+    getLanguageVersion(): string;
+    setLanguageVersion(value: string): RuntimeYAMLInfo;
+    getDescription(): string;
+    setDescription(value: string): RuntimeYAMLInfo;
+    clearPipPackagesList(): void;
+    getPipPackagesList(): Array<string>;
+    setPipPackagesList(value: Array<string>): RuntimeYAMLInfo;
+    addPipPackages(value: string, index?: number): string;
+    clearNpmPackagesList(): void;
+    getNpmPackagesList(): Array<string>;
+    setNpmPackagesList(value: Array<string>): RuntimeYAMLInfo;
+    addNpmPackages(value: string, index?: number): string;
+    getHasHooks(): boolean;
+    setHasHooks(value: boolean): RuntimeYAMLInfo;
+    getRequiresGpu(): boolean;
+    setRequiresGpu(value: boolean): RuntimeYAMLInfo;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): RuntimeYAMLInfo.AsObject;
+    static toObject(includeInstance: boolean, msg: RuntimeYAMLInfo): RuntimeYAMLInfo.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: RuntimeYAMLInfo, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): RuntimeYAMLInfo;
+    static deserializeBinaryFromReader(message: RuntimeYAMLInfo, reader: jspb.BinaryReader): RuntimeYAMLInfo;
+}
+
+export namespace RuntimeYAMLInfo {
+    export type AsObject = {
+        name: string,
+        version: string,
+        language: string,
+        languageVersion: string,
+        description: string,
+        pipPackagesList: Array<string>,
+        npmPackagesList: Array<string>,
+        hasHooks: boolean,
+        requiresGpu: boolean,
     }
 }
 
@@ -1967,184 +2119,6 @@ export namespace Timestamp {
     }
 }
 
-export class InstallRuntimeRequest extends jspb.Message { 
-    getRuntimespec(): string;
-    setRuntimespec(value: string): InstallRuntimeRequest;
-    getRepository(): string;
-    setRepository(value: string): InstallRuntimeRequest;
-    getBranch(): string;
-    setBranch(value: string): InstallRuntimeRequest;
-    getPath(): string;
-    setPath(value: string): InstallRuntimeRequest;
-    getForcereinstall(): boolean;
-    setForcereinstall(value: boolean): InstallRuntimeRequest;
-    getRegistryUrl(): string;
-    setRegistryUrl(value: string): InstallRuntimeRequest;
-
-    serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): InstallRuntimeRequest.AsObject;
-    static toObject(includeInstance: boolean, msg: InstallRuntimeRequest): InstallRuntimeRequest.AsObject;
-    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: InstallRuntimeRequest, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): InstallRuntimeRequest;
-    static deserializeBinaryFromReader(message: InstallRuntimeRequest, reader: jspb.BinaryReader): InstallRuntimeRequest;
-}
-
-export namespace InstallRuntimeRequest {
-    export type AsObject = {
-        runtimespec: string,
-        repository: string,
-        branch: string,
-        path: string,
-        forcereinstall: boolean,
-        registryUrl: string,
-    }
-}
-
-export class InstallRuntimeResponse extends jspb.Message { 
-    getBuildjobuuid(): string;
-    setBuildjobuuid(value: string): InstallRuntimeResponse;
-    getRuntimespec(): string;
-    setRuntimespec(value: string): InstallRuntimeResponse;
-    getStatus(): string;
-    setStatus(value: string): InstallRuntimeResponse;
-    getMessage(): string;
-    setMessage(value: string): InstallRuntimeResponse;
-    getRepository(): string;
-    setRepository(value: string): InstallRuntimeResponse;
-    getResolvedpath(): string;
-    setResolvedpath(value: string): InstallRuntimeResponse;
-
-    serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): InstallRuntimeResponse.AsObject;
-    static toObject(includeInstance: boolean, msg: InstallRuntimeResponse): InstallRuntimeResponse.AsObject;
-    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: InstallRuntimeResponse, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): InstallRuntimeResponse;
-    static deserializeBinaryFromReader(message: InstallRuntimeResponse, reader: jspb.BinaryReader): InstallRuntimeResponse;
-}
-
-export namespace InstallRuntimeResponse {
-    export type AsObject = {
-        buildjobuuid: string,
-        runtimespec: string,
-        status: string,
-        message: string,
-        repository: string,
-        resolvedpath: string,
-    }
-}
-
-export class InstallRuntimeFromLocalRequest extends jspb.Message { 
-    getRuntimespec(): string;
-    setRuntimespec(value: string): InstallRuntimeFromLocalRequest;
-    clearFilesList(): void;
-    getFilesList(): Array<RuntimeFile>;
-    setFilesList(value: Array<RuntimeFile>): InstallRuntimeFromLocalRequest;
-    addFiles(value?: RuntimeFile, index?: number): RuntimeFile;
-    getForcereinstall(): boolean;
-    setForcereinstall(value: boolean): InstallRuntimeFromLocalRequest;
-
-    serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): InstallRuntimeFromLocalRequest.AsObject;
-    static toObject(includeInstance: boolean, msg: InstallRuntimeFromLocalRequest): InstallRuntimeFromLocalRequest.AsObject;
-    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: InstallRuntimeFromLocalRequest, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): InstallRuntimeFromLocalRequest;
-    static deserializeBinaryFromReader(message: InstallRuntimeFromLocalRequest, reader: jspb.BinaryReader): InstallRuntimeFromLocalRequest;
-}
-
-export namespace InstallRuntimeFromLocalRequest {
-    export type AsObject = {
-        runtimespec: string,
-        filesList: Array<RuntimeFile.AsObject>,
-        forcereinstall: boolean,
-    }
-}
-
-export class RuntimeFile extends jspb.Message { 
-    getPath(): string;
-    setPath(value: string): RuntimeFile;
-    getContent(): Uint8Array | string;
-    getContent_asU8(): Uint8Array;
-    getContent_asB64(): string;
-    setContent(value: Uint8Array | string): RuntimeFile;
-    getExecutable(): boolean;
-    setExecutable(value: boolean): RuntimeFile;
-
-    serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): RuntimeFile.AsObject;
-    static toObject(includeInstance: boolean, msg: RuntimeFile): RuntimeFile.AsObject;
-    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: RuntimeFile, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): RuntimeFile;
-    static deserializeBinaryFromReader(message: RuntimeFile, reader: jspb.BinaryReader): RuntimeFile;
-}
-
-export namespace RuntimeFile {
-    export type AsObject = {
-        path: string,
-        content: Uint8Array | string,
-        executable: boolean,
-    }
-}
-
-export class ValidateRuntimeSpecRequest extends jspb.Message { 
-    getRuntimespec(): string;
-    setRuntimespec(value: string): ValidateRuntimeSpecRequest;
-
-    serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): ValidateRuntimeSpecRequest.AsObject;
-    static toObject(includeInstance: boolean, msg: ValidateRuntimeSpecRequest): ValidateRuntimeSpecRequest.AsObject;
-    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: ValidateRuntimeSpecRequest, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): ValidateRuntimeSpecRequest;
-    static deserializeBinaryFromReader(message: ValidateRuntimeSpecRequest, reader: jspb.BinaryReader): ValidateRuntimeSpecRequest;
-}
-
-export namespace ValidateRuntimeSpecRequest {
-    export type AsObject = {
-        runtimespec: string,
-    }
-}
-
-export class ValidateRuntimeSpecResponse extends jspb.Message { 
-    getValid(): boolean;
-    setValid(value: boolean): ValidateRuntimeSpecResponse;
-    getMessage(): string;
-    setMessage(value: string): ValidateRuntimeSpecResponse;
-    getNormalizedspec(): string;
-    setNormalizedspec(value: string): ValidateRuntimeSpecResponse;
-
-    hasSpecinfo(): boolean;
-    clearSpecinfo(): void;
-    getSpecinfo(): RuntimeSpecInfo | undefined;
-    setSpecinfo(value?: RuntimeSpecInfo): ValidateRuntimeSpecResponse;
-
-    serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): ValidateRuntimeSpecResponse.AsObject;
-    static toObject(includeInstance: boolean, msg: ValidateRuntimeSpecResponse): ValidateRuntimeSpecResponse.AsObject;
-    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: ValidateRuntimeSpecResponse, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): ValidateRuntimeSpecResponse;
-    static deserializeBinaryFromReader(message: ValidateRuntimeSpecResponse, reader: jspb.BinaryReader): ValidateRuntimeSpecResponse;
-}
-
-export namespace ValidateRuntimeSpecResponse {
-    export type AsObject = {
-        valid: boolean,
-        message: string,
-        normalizedspec: string,
-        specinfo?: RuntimeSpecInfo.AsObject,
-    }
-}
-
 export class RuntimeRemoveReq extends jspb.Message { 
     getRuntime(): string;
     setRuntime(value: string): RuntimeRemoveReq;
@@ -2191,189 +2165,93 @@ export namespace RuntimeRemoveRes {
     }
 }
 
-export class RuntimeSpecInfo extends jspb.Message { 
-    getLanguage(): string;
-    setLanguage(value: string): RuntimeSpecInfo;
-    getVersion(): string;
-    setVersion(value: string): RuntimeSpecInfo;
-    clearVariantsList(): void;
-    getVariantsList(): Array<string>;
-    setVariantsList(value: Array<string>): RuntimeSpecInfo;
-    addVariants(value: string, index?: number): string;
-    getArchitecture(): string;
-    setArchitecture(value: string): RuntimeSpecInfo;
-
-    serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): RuntimeSpecInfo.AsObject;
-    static toObject(includeInstance: boolean, msg: RuntimeSpecInfo): RuntimeSpecInfo.AsObject;
-    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: RuntimeSpecInfo, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): RuntimeSpecInfo;
-    static deserializeBinaryFromReader(message: RuntimeSpecInfo, reader: jspb.BinaryReader): RuntimeSpecInfo;
-}
-
-export namespace RuntimeSpecInfo {
-    export type AsObject = {
-        language: string,
-        version: string,
-        variantsList: Array<string>,
-        architecture: string,
-    }
-}
-
-export class StreamTelemetryRequest extends jspb.Message { 
+export class StreamJobMetricsRequest extends jspb.Message { 
     getJobUuid(): string;
-    setJobUuid(value: string): StreamTelemetryRequest;
-    clearTypesList(): void;
-    getTypesList(): Array<string>;
-    setTypesList(value: Array<string>): StreamTelemetryRequest;
-    addTypes(value: string, index?: number): string;
+    setJobUuid(value: string): StreamJobMetricsRequest;
 
     serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): StreamTelemetryRequest.AsObject;
-    static toObject(includeInstance: boolean, msg: StreamTelemetryRequest): StreamTelemetryRequest.AsObject;
+    toObject(includeInstance?: boolean): StreamJobMetricsRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: StreamJobMetricsRequest): StreamJobMetricsRequest.AsObject;
     static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
     static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: StreamTelemetryRequest, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): StreamTelemetryRequest;
-    static deserializeBinaryFromReader(message: StreamTelemetryRequest, reader: jspb.BinaryReader): StreamTelemetryRequest;
+    static serializeBinaryToWriter(message: StreamJobMetricsRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): StreamJobMetricsRequest;
+    static deserializeBinaryFromReader(message: StreamJobMetricsRequest, reader: jspb.BinaryReader): StreamJobMetricsRequest;
 }
 
-export namespace StreamTelemetryRequest {
+export namespace StreamJobMetricsRequest {
     export type AsObject = {
         jobUuid: string,
-        typesList: Array<string>,
     }
 }
 
-export class GetTelemetryRequest extends jspb.Message { 
+export class GetJobMetricsRequest extends jspb.Message { 
     getJobUuid(): string;
-    setJobUuid(value: string): GetTelemetryRequest;
-    clearTypesList(): void;
-    getTypesList(): Array<string>;
-    setTypesList(value: Array<string>): GetTelemetryRequest;
-    addTypes(value: string, index?: number): string;
+    setJobUuid(value: string): GetJobMetricsRequest;
     getStartTime(): number;
-    setStartTime(value: number): GetTelemetryRequest;
+    setStartTime(value: number): GetJobMetricsRequest;
     getEndTime(): number;
-    setEndTime(value: number): GetTelemetryRequest;
+    setEndTime(value: number): GetJobMetricsRequest;
     getLimit(): number;
-    setLimit(value: number): GetTelemetryRequest;
+    setLimit(value: number): GetJobMetricsRequest;
 
     serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): GetTelemetryRequest.AsObject;
-    static toObject(includeInstance: boolean, msg: GetTelemetryRequest): GetTelemetryRequest.AsObject;
+    toObject(includeInstance?: boolean): GetJobMetricsRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: GetJobMetricsRequest): GetJobMetricsRequest.AsObject;
     static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
     static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: GetTelemetryRequest, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): GetTelemetryRequest;
-    static deserializeBinaryFromReader(message: GetTelemetryRequest, reader: jspb.BinaryReader): GetTelemetryRequest;
+    static serializeBinaryToWriter(message: GetJobMetricsRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): GetJobMetricsRequest;
+    static deserializeBinaryFromReader(message: GetJobMetricsRequest, reader: jspb.BinaryReader): GetJobMetricsRequest;
 }
 
-export namespace GetTelemetryRequest {
+export namespace GetJobMetricsRequest {
     export type AsObject = {
         jobUuid: string,
-        typesList: Array<string>,
         startTime: number,
         endTime: number,
         limit: number,
     }
 }
 
-export class TelemetryEvent extends jspb.Message { 
+export class JobMetricsEvent extends jspb.Message { 
     getTimestamp(): number;
-    setTimestamp(value: number): TelemetryEvent;
+    setTimestamp(value: number): JobMetricsEvent;
     getJobId(): string;
-    setJobId(value: string): TelemetryEvent;
-    getType(): string;
-    setType(value: string): TelemetryEvent;
-
-    hasMetrics(): boolean;
-    clearMetrics(): void;
-    getMetrics(): TelemetryMetricsData | undefined;
-    setMetrics(value?: TelemetryMetricsData): TelemetryEvent;
-
-    hasExec(): boolean;
-    clearExec(): void;
-    getExec(): TelemetryExecData | undefined;
-    setExec(value?: TelemetryExecData): TelemetryEvent;
-
-    hasConnect(): boolean;
-    clearConnect(): void;
-    getConnect(): TelemetryConnectData | undefined;
-    setConnect(value?: TelemetryConnectData): TelemetryEvent;
-
-    hasFile(): boolean;
-    clearFile(): void;
-    getFile(): TelemetryFileData | undefined;
-    setFile(value?: TelemetryFileData): TelemetryEvent;
-
-    getDataCase(): TelemetryEvent.DataCase;
+    setJobId(value: string): JobMetricsEvent;
+    getCpuPercent(): number;
+    setCpuPercent(value: number): JobMetricsEvent;
+    getMemoryBytes(): number;
+    setMemoryBytes(value: number): JobMetricsEvent;
+    getMemoryLimit(): number;
+    setMemoryLimit(value: number): JobMetricsEvent;
+    getDiskReadBytes(): number;
+    setDiskReadBytes(value: number): JobMetricsEvent;
+    getDiskWriteBytes(): number;
+    setDiskWriteBytes(value: number): JobMetricsEvent;
+    getNetRecvBytes(): number;
+    setNetRecvBytes(value: number): JobMetricsEvent;
+    getNetSentBytes(): number;
+    setNetSentBytes(value: number): JobMetricsEvent;
+    getGpuPercent(): number;
+    setGpuPercent(value: number): JobMetricsEvent;
+    getGpuMemoryBytes(): number;
+    setGpuMemoryBytes(value: number): JobMetricsEvent;
 
     serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): TelemetryEvent.AsObject;
-    static toObject(includeInstance: boolean, msg: TelemetryEvent): TelemetryEvent.AsObject;
+    toObject(includeInstance?: boolean): JobMetricsEvent.AsObject;
+    static toObject(includeInstance: boolean, msg: JobMetricsEvent): JobMetricsEvent.AsObject;
     static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
     static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: TelemetryEvent, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): TelemetryEvent;
-    static deserializeBinaryFromReader(message: TelemetryEvent, reader: jspb.BinaryReader): TelemetryEvent;
+    static serializeBinaryToWriter(message: JobMetricsEvent, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): JobMetricsEvent;
+    static deserializeBinaryFromReader(message: JobMetricsEvent, reader: jspb.BinaryReader): JobMetricsEvent;
 }
 
-export namespace TelemetryEvent {
+export namespace JobMetricsEvent {
     export type AsObject = {
         timestamp: number,
         jobId: string,
-        type: string,
-        metrics?: TelemetryMetricsData.AsObject,
-        exec?: TelemetryExecData.AsObject,
-        connect?: TelemetryConnectData.AsObject,
-        file?: TelemetryFileData.AsObject,
-    }
-
-    export enum DataCase {
-        DATA_NOT_SET = 0,
-        METRICS = 10,
-        EXEC = 11,
-        CONNECT = 12,
-        FILE = 13,
-    }
-
-}
-
-export class TelemetryMetricsData extends jspb.Message { 
-    getCpuPercent(): number;
-    setCpuPercent(value: number): TelemetryMetricsData;
-    getMemoryBytes(): number;
-    setMemoryBytes(value: number): TelemetryMetricsData;
-    getMemoryLimit(): number;
-    setMemoryLimit(value: number): TelemetryMetricsData;
-    getDiskReadBytes(): number;
-    setDiskReadBytes(value: number): TelemetryMetricsData;
-    getDiskWriteBytes(): number;
-    setDiskWriteBytes(value: number): TelemetryMetricsData;
-    getNetRecvBytes(): number;
-    setNetRecvBytes(value: number): TelemetryMetricsData;
-    getNetSentBytes(): number;
-    setNetSentBytes(value: number): TelemetryMetricsData;
-    getGpuPercent(): number;
-    setGpuPercent(value: number): TelemetryMetricsData;
-    getGpuMemoryBytes(): number;
-    setGpuMemoryBytes(value: number): TelemetryMetricsData;
-
-    serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): TelemetryMetricsData.AsObject;
-    static toObject(includeInstance: boolean, msg: TelemetryMetricsData): TelemetryMetricsData.AsObject;
-    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: TelemetryMetricsData, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): TelemetryMetricsData;
-    static deserializeBinaryFromReader(message: TelemetryMetricsData, reader: jspb.BinaryReader): TelemetryMetricsData;
-}
-
-export namespace TelemetryMetricsData {
-    export type AsObject = {
         cpuPercent: number,
         memoryBytes: number,
         memoryLimit: number,
@@ -2386,100 +2264,384 @@ export namespace TelemetryMetricsData {
     }
 }
 
-export class TelemetryExecData extends jspb.Message { 
-    getPid(): number;
-    setPid(value: number): TelemetryExecData;
-    getBinary(): string;
-    setBinary(value: string): TelemetryExecData;
-    clearArgsList(): void;
-    getArgsList(): Array<string>;
-    setArgsList(value: Array<string>): TelemetryExecData;
-    addArgs(value: string, index?: number): string;
-    getExitCode(): number;
-    setExitCode(value: number): TelemetryExecData;
-    getPpid(): number;
-    setPpid(value: number): TelemetryExecData;
+export class StreamJobTelematicsRequest extends jspb.Message { 
+    getJobUuid(): string;
+    setJobUuid(value: string): StreamJobTelematicsRequest;
+    clearTypesList(): void;
+    getTypesList(): Array<string>;
+    setTypesList(value: Array<string>): StreamJobTelematicsRequest;
+    addTypes(value: string, index?: number): string;
 
     serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): TelemetryExecData.AsObject;
-    static toObject(includeInstance: boolean, msg: TelemetryExecData): TelemetryExecData.AsObject;
+    toObject(includeInstance?: boolean): StreamJobTelematicsRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: StreamJobTelematicsRequest): StreamJobTelematicsRequest.AsObject;
     static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
     static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: TelemetryExecData, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): TelemetryExecData;
-    static deserializeBinaryFromReader(message: TelemetryExecData, reader: jspb.BinaryReader): TelemetryExecData;
+    static serializeBinaryToWriter(message: StreamJobTelematicsRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): StreamJobTelematicsRequest;
+    static deserializeBinaryFromReader(message: StreamJobTelematicsRequest, reader: jspb.BinaryReader): StreamJobTelematicsRequest;
 }
 
-export namespace TelemetryExecData {
+export namespace StreamJobTelematicsRequest {
+    export type AsObject = {
+        jobUuid: string,
+        typesList: Array<string>,
+    }
+}
+
+export class GetJobTelematicsRequest extends jspb.Message { 
+    getJobUuid(): string;
+    setJobUuid(value: string): GetJobTelematicsRequest;
+    clearTypesList(): void;
+    getTypesList(): Array<string>;
+    setTypesList(value: Array<string>): GetJobTelematicsRequest;
+    addTypes(value: string, index?: number): string;
+    getStartTime(): number;
+    setStartTime(value: number): GetJobTelematicsRequest;
+    getEndTime(): number;
+    setEndTime(value: number): GetJobTelematicsRequest;
+    getLimit(): number;
+    setLimit(value: number): GetJobTelematicsRequest;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): GetJobTelematicsRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: GetJobTelematicsRequest): GetJobTelematicsRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: GetJobTelematicsRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): GetJobTelematicsRequest;
+    static deserializeBinaryFromReader(message: GetJobTelematicsRequest, reader: jspb.BinaryReader): GetJobTelematicsRequest;
+}
+
+export namespace GetJobTelematicsRequest {
+    export type AsObject = {
+        jobUuid: string,
+        typesList: Array<string>,
+        startTime: number,
+        endTime: number,
+        limit: number,
+    }
+}
+
+export class TelematicsEvent extends jspb.Message { 
+    getTimestamp(): number;
+    setTimestamp(value: number): TelematicsEvent;
+    getJobId(): string;
+    setJobId(value: string): TelematicsEvent;
+    getType(): string;
+    setType(value: string): TelematicsEvent;
+
+    hasExec(): boolean;
+    clearExec(): void;
+    getExec(): TelematicsExecData | undefined;
+    setExec(value?: TelematicsExecData): TelematicsEvent;
+
+    hasConnect(): boolean;
+    clearConnect(): void;
+    getConnect(): TelematicsConnectData | undefined;
+    setConnect(value?: TelematicsConnectData): TelematicsEvent;
+
+    hasAccept(): boolean;
+    clearAccept(): void;
+    getAccept(): TelematicsAcceptData | undefined;
+    setAccept(value?: TelematicsAcceptData): TelematicsEvent;
+
+    hasFile(): boolean;
+    clearFile(): void;
+    getFile(): TelematicsFileData | undefined;
+    setFile(value?: TelematicsFileData): TelematicsEvent;
+
+    hasMmap(): boolean;
+    clearMmap(): void;
+    getMmap(): TelematicsMmapData | undefined;
+    setMmap(value?: TelematicsMmapData): TelematicsEvent;
+
+    hasMprotect(): boolean;
+    clearMprotect(): void;
+    getMprotect(): TelematicsMprotectData | undefined;
+    setMprotect(value?: TelematicsMprotectData): TelematicsEvent;
+
+    hasSocketData(): boolean;
+    clearSocketData(): void;
+    getSocketData(): TelematicsSocketDataData | undefined;
+    setSocketData(value?: TelematicsSocketDataData): TelematicsEvent;
+
+    getDataCase(): TelematicsEvent.DataCase;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): TelematicsEvent.AsObject;
+    static toObject(includeInstance: boolean, msg: TelematicsEvent): TelematicsEvent.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: TelematicsEvent, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): TelematicsEvent;
+    static deserializeBinaryFromReader(message: TelematicsEvent, reader: jspb.BinaryReader): TelematicsEvent;
+}
+
+export namespace TelematicsEvent {
+    export type AsObject = {
+        timestamp: number,
+        jobId: string,
+        type: string,
+        exec?: TelematicsExecData.AsObject,
+        connect?: TelematicsConnectData.AsObject,
+        accept?: TelematicsAcceptData.AsObject,
+        file?: TelematicsFileData.AsObject,
+        mmap?: TelematicsMmapData.AsObject,
+        mprotect?: TelematicsMprotectData.AsObject,
+        socketData?: TelematicsSocketDataData.AsObject,
+    }
+
+    export enum DataCase {
+        DATA_NOT_SET = 0,
+        EXEC = 10,
+        CONNECT = 11,
+        ACCEPT = 12,
+        FILE = 13,
+        MMAP = 14,
+        MPROTECT = 15,
+        SOCKET_DATA = 16,
+    }
+
+}
+
+export class TelematicsExecData extends jspb.Message { 
+    getPid(): number;
+    setPid(value: number): TelematicsExecData;
+    getPpid(): number;
+    setPpid(value: number): TelematicsExecData;
+    getBinary(): string;
+    setBinary(value: string): TelematicsExecData;
+    clearArgsList(): void;
+    getArgsList(): Array<string>;
+    setArgsList(value: Array<string>): TelematicsExecData;
+    addArgs(value: string, index?: number): string;
+    getExitCode(): number;
+    setExitCode(value: number): TelematicsExecData;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): TelematicsExecData.AsObject;
+    static toObject(includeInstance: boolean, msg: TelematicsExecData): TelematicsExecData.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: TelematicsExecData, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): TelematicsExecData;
+    static deserializeBinaryFromReader(message: TelematicsExecData, reader: jspb.BinaryReader): TelematicsExecData;
+}
+
+export namespace TelematicsExecData {
     export type AsObject = {
         pid: number,
+        ppid: number,
         binary: string,
         argsList: Array<string>,
         exitCode: number,
-        ppid: number,
     }
 }
 
-export class TelemetryConnectData extends jspb.Message { 
+export class TelematicsConnectData extends jspb.Message { 
     getPid(): number;
-    setPid(value: number): TelemetryConnectData;
-    getAddress(): string;
-    setAddress(value: string): TelemetryConnectData;
-    getPort(): number;
-    setPort(value: number): TelemetryConnectData;
+    setPid(value: number): TelematicsConnectData;
+    getDstAddr(): string;
+    setDstAddr(value: string): TelematicsConnectData;
+    getDstPort(): number;
+    setDstPort(value: number): TelematicsConnectData;
     getProtocol(): string;
-    setProtocol(value: string): TelemetryConnectData;
-    getLocalAddress(): string;
-    setLocalAddress(value: string): TelemetryConnectData;
-    getLocalPort(): number;
-    setLocalPort(value: number): TelemetryConnectData;
+    setProtocol(value: string): TelematicsConnectData;
+    getSrcAddr(): string;
+    setSrcAddr(value: string): TelematicsConnectData;
+    getSrcPort(): number;
+    setSrcPort(value: number): TelematicsConnectData;
 
     serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): TelemetryConnectData.AsObject;
-    static toObject(includeInstance: boolean, msg: TelemetryConnectData): TelemetryConnectData.AsObject;
+    toObject(includeInstance?: boolean): TelematicsConnectData.AsObject;
+    static toObject(includeInstance: boolean, msg: TelematicsConnectData): TelematicsConnectData.AsObject;
     static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
     static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: TelemetryConnectData, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): TelemetryConnectData;
-    static deserializeBinaryFromReader(message: TelemetryConnectData, reader: jspb.BinaryReader): TelemetryConnectData;
+    static serializeBinaryToWriter(message: TelematicsConnectData, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): TelematicsConnectData;
+    static deserializeBinaryFromReader(message: TelematicsConnectData, reader: jspb.BinaryReader): TelematicsConnectData;
 }
 
-export namespace TelemetryConnectData {
+export namespace TelematicsConnectData {
     export type AsObject = {
         pid: number,
-        address: string,
-        port: number,
+        dstAddr: string,
+        dstPort: number,
         protocol: string,
-        localAddress: string,
-        localPort: number,
+        srcAddr: string,
+        srcPort: number,
     }
 }
 
-export class TelemetryFileData extends jspb.Message { 
+export class TelematicsAcceptData extends jspb.Message { 
     getPid(): number;
-    setPid(value: number): TelemetryFileData;
-    getPath(): string;
-    setPath(value: string): TelemetryFileData;
-    getOperation(): string;
-    setOperation(value: string): TelemetryFileData;
-    getBytes(): number;
-    setBytes(value: number): TelemetryFileData;
+    setPid(value: number): TelematicsAcceptData;
+    getSrcAddr(): string;
+    setSrcAddr(value: string): TelematicsAcceptData;
+    getSrcPort(): number;
+    setSrcPort(value: number): TelematicsAcceptData;
+    getDstAddr(): string;
+    setDstAddr(value: string): TelematicsAcceptData;
+    getDstPort(): number;
+    setDstPort(value: number): TelematicsAcceptData;
+    getProtocol(): string;
+    setProtocol(value: string): TelematicsAcceptData;
 
     serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): TelemetryFileData.AsObject;
-    static toObject(includeInstance: boolean, msg: TelemetryFileData): TelemetryFileData.AsObject;
+    toObject(includeInstance?: boolean): TelematicsAcceptData.AsObject;
+    static toObject(includeInstance: boolean, msg: TelematicsAcceptData): TelematicsAcceptData.AsObject;
     static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
     static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: TelemetryFileData, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): TelemetryFileData;
-    static deserializeBinaryFromReader(message: TelemetryFileData, reader: jspb.BinaryReader): TelemetryFileData;
+    static serializeBinaryToWriter(message: TelematicsAcceptData, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): TelematicsAcceptData;
+    static deserializeBinaryFromReader(message: TelematicsAcceptData, reader: jspb.BinaryReader): TelematicsAcceptData;
 }
 
-export namespace TelemetryFileData {
+export namespace TelematicsAcceptData {
+    export type AsObject = {
+        pid: number,
+        srcAddr: string,
+        srcPort: number,
+        dstAddr: string,
+        dstPort: number,
+        protocol: string,
+    }
+}
+
+export class TelematicsFileData extends jspb.Message { 
+    getPid(): number;
+    setPid(value: number): TelematicsFileData;
+    getPath(): string;
+    setPath(value: string): TelematicsFileData;
+    getOperation(): string;
+    setOperation(value: string): TelematicsFileData;
+    getBytes(): number;
+    setBytes(value: number): TelematicsFileData;
+    getFlags(): number;
+    setFlags(value: number): TelematicsFileData;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): TelematicsFileData.AsObject;
+    static toObject(includeInstance: boolean, msg: TelematicsFileData): TelematicsFileData.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: TelematicsFileData, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): TelematicsFileData;
+    static deserializeBinaryFromReader(message: TelematicsFileData, reader: jspb.BinaryReader): TelematicsFileData;
+}
+
+export namespace TelematicsFileData {
     export type AsObject = {
         pid: number,
         path: string,
         operation: string,
+        bytes: number,
+        flags: number,
+    }
+}
+
+export class TelematicsMmapData extends jspb.Message { 
+    getPid(): number;
+    setPid(value: number): TelematicsMmapData;
+    getAddr(): number;
+    setAddr(value: number): TelematicsMmapData;
+    getLength(): number;
+    setLength(value: number): TelematicsMmapData;
+    getProt(): number;
+    setProt(value: number): TelematicsMmapData;
+    getFlags(): number;
+    setFlags(value: number): TelematicsMmapData;
+    getFilePath(): string;
+    setFilePath(value: string): TelematicsMmapData;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): TelematicsMmapData.AsObject;
+    static toObject(includeInstance: boolean, msg: TelematicsMmapData): TelematicsMmapData.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: TelematicsMmapData, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): TelematicsMmapData;
+    static deserializeBinaryFromReader(message: TelematicsMmapData, reader: jspb.BinaryReader): TelematicsMmapData;
+}
+
+export namespace TelematicsMmapData {
+    export type AsObject = {
+        pid: number,
+        addr: number,
+        length: number,
+        prot: number,
+        flags: number,
+        filePath: string,
+    }
+}
+
+export class TelematicsMprotectData extends jspb.Message { 
+    getPid(): number;
+    setPid(value: number): TelematicsMprotectData;
+    getAddr(): number;
+    setAddr(value: number): TelematicsMprotectData;
+    getLength(): number;
+    setLength(value: number): TelematicsMprotectData;
+    getProt(): number;
+    setProt(value: number): TelematicsMprotectData;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): TelematicsMprotectData.AsObject;
+    static toObject(includeInstance: boolean, msg: TelematicsMprotectData): TelematicsMprotectData.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: TelematicsMprotectData, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): TelematicsMprotectData;
+    static deserializeBinaryFromReader(message: TelematicsMprotectData, reader: jspb.BinaryReader): TelematicsMprotectData;
+}
+
+export namespace TelematicsMprotectData {
+    export type AsObject = {
+        pid: number,
+        addr: number,
+        length: number,
+        prot: number,
+    }
+}
+
+export class TelematicsSocketDataData extends jspb.Message { 
+    getPid(): number;
+    setPid(value: number): TelematicsSocketDataData;
+    getDirection(): string;
+    setDirection(value: string): TelematicsSocketDataData;
+    getDstAddr(): string;
+    setDstAddr(value: string): TelematicsSocketDataData;
+    getDstPort(): number;
+    setDstPort(value: number): TelematicsSocketDataData;
+    getSrcAddr(): string;
+    setSrcAddr(value: string): TelematicsSocketDataData;
+    getSrcPort(): number;
+    setSrcPort(value: number): TelematicsSocketDataData;
+    getProtocol(): string;
+    setProtocol(value: string): TelematicsSocketDataData;
+    getBytes(): number;
+    setBytes(value: number): TelematicsSocketDataData;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): TelematicsSocketDataData.AsObject;
+    static toObject(includeInstance: boolean, msg: TelematicsSocketDataData): TelematicsSocketDataData.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: TelematicsSocketDataData, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): TelematicsSocketDataData;
+    static deserializeBinaryFromReader(message: TelematicsSocketDataData, reader: jspb.BinaryReader): TelematicsSocketDataData;
+}
+
+export namespace TelematicsSocketDataData {
+    export type AsObject = {
+        pid: number,
+        direction: string,
+        dstAddr: string,
+        dstPort: number,
+        srcAddr: string,
+        srcPort: number,
+        protocol: string,
         bytes: number,
     }
 }
