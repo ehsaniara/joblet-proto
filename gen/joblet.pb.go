@@ -4027,17 +4027,22 @@ func (x *RuntimesRes) GetRuntimes() []*RuntimeInfo {
 }
 
 type RuntimeInfo struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`               // Runtime name (e.g., "python-3.11-ml")
-	Language      string                 `protobuf:"bytes,2,opt,name=language,proto3" json:"language,omitempty"`       // Language (e.g., "python")
-	Version       string                 `protobuf:"bytes,3,opt,name=version,proto3" json:"version,omitempty"`         // Version (e.g., "3.11")
-	Description   string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"` // Description
-	SizeBytes     int64                  `protobuf:"varint,5,opt,name=sizeBytes,proto3" json:"sizeBytes,omitempty"`    // Size in bytes
-	Packages      []string               `protobuf:"bytes,6,rep,name=packages,proto3" json:"packages,omitempty"`       // Installed packages
-	Available     bool                   `protobuf:"varint,7,opt,name=available,proto3" json:"available,omitempty"`    // Ready to use
-	Requirements  *RuntimeRequirements   `protobuf:"bytes,8,opt,name=requirements,proto3" json:"requirements,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	Name            string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`               // Runtime name (e.g., "python-3.11-ml")
+	Language        string                 `protobuf:"bytes,2,opt,name=language,proto3" json:"language,omitempty"`       // Language (e.g., "python")
+	Version         string                 `protobuf:"bytes,3,opt,name=version,proto3" json:"version,omitempty"`         // Runtime version (e.g., "1.0.0")
+	Description     string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"` // Description
+	SizeBytes       int64                  `protobuf:"varint,5,opt,name=sizeBytes,proto3" json:"sizeBytes,omitempty"`    // Size in bytes
+	Packages        []string               `protobuf:"bytes,6,rep,name=packages,proto3" json:"packages,omitempty"`       // Installed packages (pip, npm, etc.)
+	Available       bool                   `protobuf:"varint,7,opt,name=available,proto3" json:"available,omitempty"`    // Ready to use
+	Requirements    *RuntimeRequirements   `protobuf:"bytes,8,opt,name=requirements,proto3" json:"requirements,omitempty"`
+	LanguageVersion string                 `protobuf:"bytes,9,opt,name=language_version,json=languageVersion,proto3" json:"language_version,omitempty"`                                             // Language version (e.g., "3.11" for Python)
+	Libraries       []string               `protobuf:"bytes,10,rep,name=libraries,proto3" json:"libraries,omitempty"`                                                                               // Library patterns copied (e.g., "libopenblas*")
+	Environment     map[string]string      `protobuf:"bytes,11,rep,name=environment,proto3" json:"environment,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // Environment variables
+	BuildInfo       *RuntimeBuildInfo      `protobuf:"bytes,12,opt,name=build_info,json=buildInfo,proto3" json:"build_info,omitempty"`                                                              // Build metadata
+	OriginalYaml    string                 `protobuf:"bytes,13,opt,name=original_yaml,json=originalYaml,proto3" json:"original_yaml,omitempty"`                                                     // Original runtime.yaml content (for display)
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *RuntimeInfo) Reset() {
@@ -4126,6 +4131,101 @@ func (x *RuntimeInfo) GetRequirements() *RuntimeRequirements {
 	return nil
 }
 
+func (x *RuntimeInfo) GetLanguageVersion() string {
+	if x != nil {
+		return x.LanguageVersion
+	}
+	return ""
+}
+
+func (x *RuntimeInfo) GetLibraries() []string {
+	if x != nil {
+		return x.Libraries
+	}
+	return nil
+}
+
+func (x *RuntimeInfo) GetEnvironment() map[string]string {
+	if x != nil {
+		return x.Environment
+	}
+	return nil
+}
+
+func (x *RuntimeInfo) GetBuildInfo() *RuntimeBuildInfo {
+	if x != nil {
+		return x.BuildInfo
+	}
+	return nil
+}
+
+func (x *RuntimeInfo) GetOriginalYaml() string {
+	if x != nil {
+		return x.OriginalYaml
+	}
+	return ""
+}
+
+type RuntimeBuildInfo struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	BuiltAt       string                 `protobuf:"bytes,1,opt,name=built_at,json=builtAt,proto3" json:"built_at,omitempty"`       // When built (RFC3339)
+	BuiltWith     string                 `protobuf:"bytes,2,opt,name=built_with,json=builtWith,proto3" json:"built_with,omitempty"` // Builder version
+	Platform      string                 `protobuf:"bytes,3,opt,name=platform,proto3" json:"platform,omitempty"`                    // Platform (e.g., "ubuntu-amd64")
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RuntimeBuildInfo) Reset() {
+	*x = RuntimeBuildInfo{}
+	mi := &file_joblet_proto_msgTypes[52]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RuntimeBuildInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RuntimeBuildInfo) ProtoMessage() {}
+
+func (x *RuntimeBuildInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_joblet_proto_msgTypes[52]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RuntimeBuildInfo.ProtoReflect.Descriptor instead.
+func (*RuntimeBuildInfo) Descriptor() ([]byte, []int) {
+	return file_joblet_proto_rawDescGZIP(), []int{52}
+}
+
+func (x *RuntimeBuildInfo) GetBuiltAt() string {
+	if x != nil {
+		return x.BuiltAt
+	}
+	return ""
+}
+
+func (x *RuntimeBuildInfo) GetBuiltWith() string {
+	if x != nil {
+		return x.BuiltWith
+	}
+	return ""
+}
+
+func (x *RuntimeBuildInfo) GetPlatform() string {
+	if x != nil {
+		return x.Platform
+	}
+	return ""
+}
+
 type RuntimeRequirements struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Architectures []string               `protobuf:"bytes,1,rep,name=architectures,proto3" json:"architectures,omitempty"` // Supported archs
@@ -4136,7 +4236,7 @@ type RuntimeRequirements struct {
 
 func (x *RuntimeRequirements) Reset() {
 	*x = RuntimeRequirements{}
-	mi := &file_joblet_proto_msgTypes[52]
+	mi := &file_joblet_proto_msgTypes[53]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4148,7 +4248,7 @@ func (x *RuntimeRequirements) String() string {
 func (*RuntimeRequirements) ProtoMessage() {}
 
 func (x *RuntimeRequirements) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[52]
+	mi := &file_joblet_proto_msgTypes[53]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4161,7 +4261,7 @@ func (x *RuntimeRequirements) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RuntimeRequirements.ProtoReflect.Descriptor instead.
 func (*RuntimeRequirements) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{52}
+	return file_joblet_proto_rawDescGZIP(), []int{53}
 }
 
 func (x *RuntimeRequirements) GetArchitectures() []string {
@@ -4187,7 +4287,7 @@ type RuntimeInfoReq struct {
 
 func (x *RuntimeInfoReq) Reset() {
 	*x = RuntimeInfoReq{}
-	mi := &file_joblet_proto_msgTypes[53]
+	mi := &file_joblet_proto_msgTypes[54]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4199,7 +4299,7 @@ func (x *RuntimeInfoReq) String() string {
 func (*RuntimeInfoReq) ProtoMessage() {}
 
 func (x *RuntimeInfoReq) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[53]
+	mi := &file_joblet_proto_msgTypes[54]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4212,7 +4312,7 @@ func (x *RuntimeInfoReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RuntimeInfoReq.ProtoReflect.Descriptor instead.
 func (*RuntimeInfoReq) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{53}
+	return file_joblet_proto_rawDescGZIP(), []int{54}
 }
 
 func (x *RuntimeInfoReq) GetRuntime() string {
@@ -4232,7 +4332,7 @@ type RuntimeInfoRes struct {
 
 func (x *RuntimeInfoRes) Reset() {
 	*x = RuntimeInfoRes{}
-	mi := &file_joblet_proto_msgTypes[54]
+	mi := &file_joblet_proto_msgTypes[55]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4244,7 +4344,7 @@ func (x *RuntimeInfoRes) String() string {
 func (*RuntimeInfoRes) ProtoMessage() {}
 
 func (x *RuntimeInfoRes) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[54]
+	mi := &file_joblet_proto_msgTypes[55]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4257,7 +4357,7 @@ func (x *RuntimeInfoRes) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RuntimeInfoRes.ProtoReflect.Descriptor instead.
 func (*RuntimeInfoRes) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{54}
+	return file_joblet_proto_rawDescGZIP(), []int{55}
 }
 
 func (x *RuntimeInfoRes) GetRuntime() *RuntimeInfo {
@@ -4283,7 +4383,7 @@ type RuntimeTestReq struct {
 
 func (x *RuntimeTestReq) Reset() {
 	*x = RuntimeTestReq{}
-	mi := &file_joblet_proto_msgTypes[55]
+	mi := &file_joblet_proto_msgTypes[56]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4295,7 +4395,7 @@ func (x *RuntimeTestReq) String() string {
 func (*RuntimeTestReq) ProtoMessage() {}
 
 func (x *RuntimeTestReq) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[55]
+	mi := &file_joblet_proto_msgTypes[56]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4308,7 +4408,7 @@ func (x *RuntimeTestReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RuntimeTestReq.ProtoReflect.Descriptor instead.
 func (*RuntimeTestReq) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{55}
+	return file_joblet_proto_rawDescGZIP(), []int{56}
 }
 
 func (x *RuntimeTestReq) GetRuntime() string {
@@ -4330,7 +4430,7 @@ type RuntimeTestRes struct {
 
 func (x *RuntimeTestRes) Reset() {
 	*x = RuntimeTestRes{}
-	mi := &file_joblet_proto_msgTypes[56]
+	mi := &file_joblet_proto_msgTypes[57]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4342,7 +4442,7 @@ func (x *RuntimeTestRes) String() string {
 func (*RuntimeTestRes) ProtoMessage() {}
 
 func (x *RuntimeTestRes) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[56]
+	mi := &file_joblet_proto_msgTypes[57]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4355,7 +4455,7 @@ func (x *RuntimeTestRes) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RuntimeTestRes.ProtoReflect.Descriptor instead.
 func (*RuntimeTestRes) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{56}
+	return file_joblet_proto_rawDescGZIP(), []int{57}
 }
 
 func (x *RuntimeTestRes) GetSuccess() bool {
@@ -4412,7 +4512,7 @@ type RunJobRequest struct {
 
 func (x *RunJobRequest) Reset() {
 	*x = RunJobRequest{}
-	mi := &file_joblet_proto_msgTypes[57]
+	mi := &file_joblet_proto_msgTypes[58]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4424,7 +4524,7 @@ func (x *RunJobRequest) String() string {
 func (*RunJobRequest) ProtoMessage() {}
 
 func (x *RunJobRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[57]
+	mi := &file_joblet_proto_msgTypes[58]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4437,7 +4537,7 @@ func (x *RunJobRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RunJobRequest.ProtoReflect.Descriptor instead.
 func (*RunJobRequest) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{57}
+	return file_joblet_proto_rawDescGZIP(), []int{58}
 }
 
 func (x *RunJobRequest) GetName() string {
@@ -4579,7 +4679,7 @@ type RunJobResponse struct {
 
 func (x *RunJobResponse) Reset() {
 	*x = RunJobResponse{}
-	mi := &file_joblet_proto_msgTypes[58]
+	mi := &file_joblet_proto_msgTypes[59]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4591,7 +4691,7 @@ func (x *RunJobResponse) String() string {
 func (*RunJobResponse) ProtoMessage() {}
 
 func (x *RunJobResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[58]
+	mi := &file_joblet_proto_msgTypes[59]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4604,7 +4704,7 @@ func (x *RunJobResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RunJobResponse.ProtoReflect.Descriptor instead.
 func (*RunJobResponse) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{58}
+	return file_joblet_proto_rawDescGZIP(), []int{59}
 }
 
 func (x *RunJobResponse) GetJobUuid() string {
@@ -4701,7 +4801,7 @@ type Timestamp struct {
 
 func (x *Timestamp) Reset() {
 	*x = Timestamp{}
-	mi := &file_joblet_proto_msgTypes[59]
+	mi := &file_joblet_proto_msgTypes[60]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4713,7 +4813,7 @@ func (x *Timestamp) String() string {
 func (*Timestamp) ProtoMessage() {}
 
 func (x *Timestamp) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[59]
+	mi := &file_joblet_proto_msgTypes[60]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4726,7 +4826,7 @@ func (x *Timestamp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Timestamp.ProtoReflect.Descriptor instead.
 func (*Timestamp) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{59}
+	return file_joblet_proto_rawDescGZIP(), []int{60}
 }
 
 func (x *Timestamp) GetSeconds() int64 {
@@ -4752,7 +4852,7 @@ type RuntimeRemoveReq struct {
 
 func (x *RuntimeRemoveReq) Reset() {
 	*x = RuntimeRemoveReq{}
-	mi := &file_joblet_proto_msgTypes[60]
+	mi := &file_joblet_proto_msgTypes[61]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4764,7 +4864,7 @@ func (x *RuntimeRemoveReq) String() string {
 func (*RuntimeRemoveReq) ProtoMessage() {}
 
 func (x *RuntimeRemoveReq) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[60]
+	mi := &file_joblet_proto_msgTypes[61]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4777,7 +4877,7 @@ func (x *RuntimeRemoveReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RuntimeRemoveReq.ProtoReflect.Descriptor instead.
 func (*RuntimeRemoveReq) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{60}
+	return file_joblet_proto_rawDescGZIP(), []int{61}
 }
 
 func (x *RuntimeRemoveReq) GetRuntime() string {
@@ -4798,7 +4898,7 @@ type RuntimeRemoveRes struct {
 
 func (x *RuntimeRemoveRes) Reset() {
 	*x = RuntimeRemoveRes{}
-	mi := &file_joblet_proto_msgTypes[61]
+	mi := &file_joblet_proto_msgTypes[62]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4810,7 +4910,7 @@ func (x *RuntimeRemoveRes) String() string {
 func (*RuntimeRemoveRes) ProtoMessage() {}
 
 func (x *RuntimeRemoveRes) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[61]
+	mi := &file_joblet_proto_msgTypes[62]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4823,7 +4923,7 @@ func (x *RuntimeRemoveRes) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RuntimeRemoveRes.ProtoReflect.Descriptor instead.
 func (*RuntimeRemoveRes) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{61}
+	return file_joblet_proto_rawDescGZIP(), []int{62}
 }
 
 func (x *RuntimeRemoveRes) GetSuccess() bool {
@@ -4857,7 +4957,7 @@ type StreamJobMetricsRequest struct {
 
 func (x *StreamJobMetricsRequest) Reset() {
 	*x = StreamJobMetricsRequest{}
-	mi := &file_joblet_proto_msgTypes[62]
+	mi := &file_joblet_proto_msgTypes[63]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4869,7 +4969,7 @@ func (x *StreamJobMetricsRequest) String() string {
 func (*StreamJobMetricsRequest) ProtoMessage() {}
 
 func (x *StreamJobMetricsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[62]
+	mi := &file_joblet_proto_msgTypes[63]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4882,7 +4982,7 @@ func (x *StreamJobMetricsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StreamJobMetricsRequest.ProtoReflect.Descriptor instead.
 func (*StreamJobMetricsRequest) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{62}
+	return file_joblet_proto_rawDescGZIP(), []int{63}
 }
 
 func (x *StreamJobMetricsRequest) GetJobUuid() string {
@@ -4905,7 +5005,7 @@ type GetJobMetricsRequest struct {
 
 func (x *GetJobMetricsRequest) Reset() {
 	*x = GetJobMetricsRequest{}
-	mi := &file_joblet_proto_msgTypes[63]
+	mi := &file_joblet_proto_msgTypes[64]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4917,7 +5017,7 @@ func (x *GetJobMetricsRequest) String() string {
 func (*GetJobMetricsRequest) ProtoMessage() {}
 
 func (x *GetJobMetricsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[63]
+	mi := &file_joblet_proto_msgTypes[64]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4930,7 +5030,7 @@ func (x *GetJobMetricsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetJobMetricsRequest.ProtoReflect.Descriptor instead.
 func (*GetJobMetricsRequest) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{63}
+	return file_joblet_proto_rawDescGZIP(), []int{64}
 }
 
 func (x *GetJobMetricsRequest) GetJobUuid() string {
@@ -4981,7 +5081,7 @@ type JobMetricsEvent struct {
 
 func (x *JobMetricsEvent) Reset() {
 	*x = JobMetricsEvent{}
-	mi := &file_joblet_proto_msgTypes[64]
+	mi := &file_joblet_proto_msgTypes[65]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4993,7 +5093,7 @@ func (x *JobMetricsEvent) String() string {
 func (*JobMetricsEvent) ProtoMessage() {}
 
 func (x *JobMetricsEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[64]
+	mi := &file_joblet_proto_msgTypes[65]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5006,7 +5106,7 @@ func (x *JobMetricsEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use JobMetricsEvent.ProtoReflect.Descriptor instead.
 func (*JobMetricsEvent) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{64}
+	return file_joblet_proto_rawDescGZIP(), []int{65}
 }
 
 func (x *JobMetricsEvent) GetTimestamp() int64 {
@@ -5097,7 +5197,7 @@ type StreamJobTelematicsRequest struct {
 
 func (x *StreamJobTelematicsRequest) Reset() {
 	*x = StreamJobTelematicsRequest{}
-	mi := &file_joblet_proto_msgTypes[65]
+	mi := &file_joblet_proto_msgTypes[66]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5109,7 +5209,7 @@ func (x *StreamJobTelematicsRequest) String() string {
 func (*StreamJobTelematicsRequest) ProtoMessage() {}
 
 func (x *StreamJobTelematicsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[65]
+	mi := &file_joblet_proto_msgTypes[66]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5122,7 +5222,7 @@ func (x *StreamJobTelematicsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StreamJobTelematicsRequest.ProtoReflect.Descriptor instead.
 func (*StreamJobTelematicsRequest) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{65}
+	return file_joblet_proto_rawDescGZIP(), []int{66}
 }
 
 func (x *StreamJobTelematicsRequest) GetJobUuid() string {
@@ -5153,7 +5253,7 @@ type GetJobTelematicsRequest struct {
 
 func (x *GetJobTelematicsRequest) Reset() {
 	*x = GetJobTelematicsRequest{}
-	mi := &file_joblet_proto_msgTypes[66]
+	mi := &file_joblet_proto_msgTypes[67]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5165,7 +5265,7 @@ func (x *GetJobTelematicsRequest) String() string {
 func (*GetJobTelematicsRequest) ProtoMessage() {}
 
 func (x *GetJobTelematicsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[66]
+	mi := &file_joblet_proto_msgTypes[67]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5178,7 +5278,7 @@ func (x *GetJobTelematicsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetJobTelematicsRequest.ProtoReflect.Descriptor instead.
 func (*GetJobTelematicsRequest) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{66}
+	return file_joblet_proto_rawDescGZIP(), []int{67}
 }
 
 func (x *GetJobTelematicsRequest) GetJobUuid() string {
@@ -5238,7 +5338,7 @@ type TelematicsEvent struct {
 
 func (x *TelematicsEvent) Reset() {
 	*x = TelematicsEvent{}
-	mi := &file_joblet_proto_msgTypes[67]
+	mi := &file_joblet_proto_msgTypes[68]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5250,7 +5350,7 @@ func (x *TelematicsEvent) String() string {
 func (*TelematicsEvent) ProtoMessage() {}
 
 func (x *TelematicsEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[67]
+	mi := &file_joblet_proto_msgTypes[68]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5263,7 +5363,7 @@ func (x *TelematicsEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TelematicsEvent.ProtoReflect.Descriptor instead.
 func (*TelematicsEvent) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{67}
+	return file_joblet_proto_rawDescGZIP(), []int{68}
 }
 
 func (x *TelematicsEvent) GetTimestamp() int64 {
@@ -5417,7 +5517,7 @@ type TelematicsExecData struct {
 
 func (x *TelematicsExecData) Reset() {
 	*x = TelematicsExecData{}
-	mi := &file_joblet_proto_msgTypes[68]
+	mi := &file_joblet_proto_msgTypes[69]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5429,7 +5529,7 @@ func (x *TelematicsExecData) String() string {
 func (*TelematicsExecData) ProtoMessage() {}
 
 func (x *TelematicsExecData) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[68]
+	mi := &file_joblet_proto_msgTypes[69]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5442,7 +5542,7 @@ func (x *TelematicsExecData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TelematicsExecData.ProtoReflect.Descriptor instead.
 func (*TelematicsExecData) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{68}
+	return file_joblet_proto_rawDescGZIP(), []int{69}
 }
 
 func (x *TelematicsExecData) GetPid() uint32 {
@@ -5495,7 +5595,7 @@ type TelematicsConnectData struct {
 
 func (x *TelematicsConnectData) Reset() {
 	*x = TelematicsConnectData{}
-	mi := &file_joblet_proto_msgTypes[69]
+	mi := &file_joblet_proto_msgTypes[70]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5507,7 +5607,7 @@ func (x *TelematicsConnectData) String() string {
 func (*TelematicsConnectData) ProtoMessage() {}
 
 func (x *TelematicsConnectData) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[69]
+	mi := &file_joblet_proto_msgTypes[70]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5520,7 +5620,7 @@ func (x *TelematicsConnectData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TelematicsConnectData.ProtoReflect.Descriptor instead.
 func (*TelematicsConnectData) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{69}
+	return file_joblet_proto_rawDescGZIP(), []int{70}
 }
 
 func (x *TelematicsConnectData) GetPid() uint32 {
@@ -5580,7 +5680,7 @@ type TelematicsAcceptData struct {
 
 func (x *TelematicsAcceptData) Reset() {
 	*x = TelematicsAcceptData{}
-	mi := &file_joblet_proto_msgTypes[70]
+	mi := &file_joblet_proto_msgTypes[71]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5592,7 +5692,7 @@ func (x *TelematicsAcceptData) String() string {
 func (*TelematicsAcceptData) ProtoMessage() {}
 
 func (x *TelematicsAcceptData) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[70]
+	mi := &file_joblet_proto_msgTypes[71]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5605,7 +5705,7 @@ func (x *TelematicsAcceptData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TelematicsAcceptData.ProtoReflect.Descriptor instead.
 func (*TelematicsAcceptData) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{70}
+	return file_joblet_proto_rawDescGZIP(), []int{71}
 }
 
 func (x *TelematicsAcceptData) GetPid() uint32 {
@@ -5664,7 +5764,7 @@ type TelematicsFileData struct {
 
 func (x *TelematicsFileData) Reset() {
 	*x = TelematicsFileData{}
-	mi := &file_joblet_proto_msgTypes[71]
+	mi := &file_joblet_proto_msgTypes[72]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5676,7 +5776,7 @@ func (x *TelematicsFileData) String() string {
 func (*TelematicsFileData) ProtoMessage() {}
 
 func (x *TelematicsFileData) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[71]
+	mi := &file_joblet_proto_msgTypes[72]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5689,7 +5789,7 @@ func (x *TelematicsFileData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TelematicsFileData.ProtoReflect.Descriptor instead.
 func (*TelematicsFileData) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{71}
+	return file_joblet_proto_rawDescGZIP(), []int{72}
 }
 
 func (x *TelematicsFileData) GetPid() uint32 {
@@ -5742,7 +5842,7 @@ type TelematicsMmapData struct {
 
 func (x *TelematicsMmapData) Reset() {
 	*x = TelematicsMmapData{}
-	mi := &file_joblet_proto_msgTypes[72]
+	mi := &file_joblet_proto_msgTypes[73]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5754,7 +5854,7 @@ func (x *TelematicsMmapData) String() string {
 func (*TelematicsMmapData) ProtoMessage() {}
 
 func (x *TelematicsMmapData) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[72]
+	mi := &file_joblet_proto_msgTypes[73]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5767,7 +5867,7 @@ func (x *TelematicsMmapData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TelematicsMmapData.ProtoReflect.Descriptor instead.
 func (*TelematicsMmapData) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{72}
+	return file_joblet_proto_rawDescGZIP(), []int{73}
 }
 
 func (x *TelematicsMmapData) GetPid() uint32 {
@@ -5825,7 +5925,7 @@ type TelematicsMprotectData struct {
 
 func (x *TelematicsMprotectData) Reset() {
 	*x = TelematicsMprotectData{}
-	mi := &file_joblet_proto_msgTypes[73]
+	mi := &file_joblet_proto_msgTypes[74]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5837,7 +5937,7 @@ func (x *TelematicsMprotectData) String() string {
 func (*TelematicsMprotectData) ProtoMessage() {}
 
 func (x *TelematicsMprotectData) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[73]
+	mi := &file_joblet_proto_msgTypes[74]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5850,7 +5950,7 @@ func (x *TelematicsMprotectData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TelematicsMprotectData.ProtoReflect.Descriptor instead.
 func (*TelematicsMprotectData) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{73}
+	return file_joblet_proto_rawDescGZIP(), []int{74}
 }
 
 func (x *TelematicsMprotectData) GetPid() uint32 {
@@ -5898,7 +5998,7 @@ type TelematicsSocketDataData struct {
 
 func (x *TelematicsSocketDataData) Reset() {
 	*x = TelematicsSocketDataData{}
-	mi := &file_joblet_proto_msgTypes[74]
+	mi := &file_joblet_proto_msgTypes[75]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5910,7 +6010,7 @@ func (x *TelematicsSocketDataData) String() string {
 func (*TelematicsSocketDataData) ProtoMessage() {}
 
 func (x *TelematicsSocketDataData) ProtoReflect() protoreflect.Message {
-	mi := &file_joblet_proto_msgTypes[74]
+	mi := &file_joblet_proto_msgTypes[75]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5923,7 +6023,7 @@ func (x *TelematicsSocketDataData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TelematicsSocketDataData.ProtoReflect.Descriptor instead.
 func (*TelematicsSocketDataData) Descriptor() ([]byte, []int) {
-	return file_joblet_proto_rawDescGZIP(), []int{74}
+	return file_joblet_proto_rawDescGZIP(), []int{75}
 }
 
 func (x *TelematicsSocketDataData) GetPid() uint32 {
@@ -6367,7 +6467,7 @@ const file_joblet_proto_rawDesc = "" +
 	"\fproto_commit\x18\b \x01(\tR\vprotoCommit\x12\x1b\n" +
 	"\tproto_tag\x18\t \x01(\tR\bprotoTag\">\n" +
 	"\vRuntimesRes\x12/\n" +
-	"\bruntimes\x18\x01 \x03(\v2\x13.joblet.RuntimeInfoR\bruntimes\"\x92\x02\n" +
+	"\bruntimes\x18\x01 \x03(\v2\x13.joblet.RuntimeInfoR\bruntimes\"\xc1\x04\n" +
 	"\vRuntimeInfo\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1a\n" +
 	"\blanguage\x18\x02 \x01(\tR\blanguage\x12\x18\n" +
@@ -6376,7 +6476,22 @@ const file_joblet_proto_rawDesc = "" +
 	"\tsizeBytes\x18\x05 \x01(\x03R\tsizeBytes\x12\x1a\n" +
 	"\bpackages\x18\x06 \x03(\tR\bpackages\x12\x1c\n" +
 	"\tavailable\x18\a \x01(\bR\tavailable\x12?\n" +
-	"\frequirements\x18\b \x01(\v2\x1b.joblet.RuntimeRequirementsR\frequirements\"M\n" +
+	"\frequirements\x18\b \x01(\v2\x1b.joblet.RuntimeRequirementsR\frequirements\x12)\n" +
+	"\x10language_version\x18\t \x01(\tR\x0flanguageVersion\x12\x1c\n" +
+	"\tlibraries\x18\n" +
+	" \x03(\tR\tlibraries\x12F\n" +
+	"\venvironment\x18\v \x03(\v2$.joblet.RuntimeInfo.EnvironmentEntryR\venvironment\x127\n" +
+	"\n" +
+	"build_info\x18\f \x01(\v2\x18.joblet.RuntimeBuildInfoR\tbuildInfo\x12#\n" +
+	"\roriginal_yaml\x18\r \x01(\tR\foriginalYaml\x1a>\n" +
+	"\x10EnvironmentEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"h\n" +
+	"\x10RuntimeBuildInfo\x12\x19\n" +
+	"\bbuilt_at\x18\x01 \x01(\tR\abuiltAt\x12\x1d\n" +
+	"\n" +
+	"built_with\x18\x02 \x01(\tR\tbuiltWith\x12\x1a\n" +
+	"\bplatform\x18\x03 \x01(\tR\bplatform\"M\n" +
 	"\x13RuntimeRequirements\x12$\n" +
 	"\rarchitectures\x18\x01 \x03(\tR\rarchitectures\x12\x10\n" +
 	"\x03gpu\x18\x02 \x01(\bR\x03gpu\"*\n" +
@@ -6580,7 +6695,7 @@ func file_joblet_proto_rawDescGZIP() []byte {
 	return file_joblet_proto_rawDescData
 }
 
-var file_joblet_proto_msgTypes = make([]protoimpl.MessageInfo, 82)
+var file_joblet_proto_msgTypes = make([]protoimpl.MessageInfo, 84)
 var file_joblet_proto_goTypes = []any{
 	(*Jobs)(nil),                        // 0: joblet.Jobs
 	(*Job)(nil),                         // 1: joblet.Job
@@ -6634,43 +6749,45 @@ var file_joblet_proto_goTypes = []any{
 	(*ServerVersionInfo)(nil),           // 49: joblet.ServerVersionInfo
 	(*RuntimesRes)(nil),                 // 50: joblet.RuntimesRes
 	(*RuntimeInfo)(nil),                 // 51: joblet.RuntimeInfo
-	(*RuntimeRequirements)(nil),         // 52: joblet.RuntimeRequirements
-	(*RuntimeInfoReq)(nil),              // 53: joblet.RuntimeInfoReq
-	(*RuntimeInfoRes)(nil),              // 54: joblet.RuntimeInfoRes
-	(*RuntimeTestReq)(nil),              // 55: joblet.RuntimeTestReq
-	(*RuntimeTestRes)(nil),              // 56: joblet.RuntimeTestRes
-	(*RunJobRequest)(nil),               // 57: joblet.RunJobRequest
-	(*RunJobResponse)(nil),              // 58: joblet.RunJobResponse
-	(*Timestamp)(nil),                   // 59: joblet.Timestamp
-	(*RuntimeRemoveReq)(nil),            // 60: joblet.RuntimeRemoveReq
-	(*RuntimeRemoveRes)(nil),            // 61: joblet.RuntimeRemoveRes
-	(*StreamJobMetricsRequest)(nil),     // 62: joblet.StreamJobMetricsRequest
-	(*GetJobMetricsRequest)(nil),        // 63: joblet.GetJobMetricsRequest
-	(*JobMetricsEvent)(nil),             // 64: joblet.JobMetricsEvent
-	(*StreamJobTelematicsRequest)(nil),  // 65: joblet.StreamJobTelematicsRequest
-	(*GetJobTelematicsRequest)(nil),     // 66: joblet.GetJobTelematicsRequest
-	(*TelematicsEvent)(nil),             // 67: joblet.TelematicsEvent
-	(*TelematicsExecData)(nil),          // 68: joblet.TelematicsExecData
-	(*TelematicsConnectData)(nil),       // 69: joblet.TelematicsConnectData
-	(*TelematicsAcceptData)(nil),        // 70: joblet.TelematicsAcceptData
-	(*TelematicsFileData)(nil),          // 71: joblet.TelematicsFileData
-	(*TelematicsMmapData)(nil),          // 72: joblet.TelematicsMmapData
-	(*TelematicsMprotectData)(nil),      // 73: joblet.TelematicsMprotectData
-	(*TelematicsSocketDataData)(nil),    // 74: joblet.TelematicsSocketDataData
-	nil,                                 // 75: joblet.Job.EnvironmentEntry
-	nil,                                 // 76: joblet.Job.SecretEnvironmentEntry
-	nil,                                 // 77: joblet.GetJobStatusRes.EnvironmentEntry
-	nil,                                 // 78: joblet.GetJobStatusRes.SecretEnvironmentEntry
-	nil,                                 // 79: joblet.CloudInfo.MetadataEntry
-	nil,                                 // 80: joblet.RunJobRequest.EnvironmentEntry
-	nil,                                 // 81: joblet.RunJobRequest.SecretEnvironmentEntry
+	(*RuntimeBuildInfo)(nil),            // 52: joblet.RuntimeBuildInfo
+	(*RuntimeRequirements)(nil),         // 53: joblet.RuntimeRequirements
+	(*RuntimeInfoReq)(nil),              // 54: joblet.RuntimeInfoReq
+	(*RuntimeInfoRes)(nil),              // 55: joblet.RuntimeInfoRes
+	(*RuntimeTestReq)(nil),              // 56: joblet.RuntimeTestReq
+	(*RuntimeTestRes)(nil),              // 57: joblet.RuntimeTestRes
+	(*RunJobRequest)(nil),               // 58: joblet.RunJobRequest
+	(*RunJobResponse)(nil),              // 59: joblet.RunJobResponse
+	(*Timestamp)(nil),                   // 60: joblet.Timestamp
+	(*RuntimeRemoveReq)(nil),            // 61: joblet.RuntimeRemoveReq
+	(*RuntimeRemoveRes)(nil),            // 62: joblet.RuntimeRemoveRes
+	(*StreamJobMetricsRequest)(nil),     // 63: joblet.StreamJobMetricsRequest
+	(*GetJobMetricsRequest)(nil),        // 64: joblet.GetJobMetricsRequest
+	(*JobMetricsEvent)(nil),             // 65: joblet.JobMetricsEvent
+	(*StreamJobTelematicsRequest)(nil),  // 66: joblet.StreamJobTelematicsRequest
+	(*GetJobTelematicsRequest)(nil),     // 67: joblet.GetJobTelematicsRequest
+	(*TelematicsEvent)(nil),             // 68: joblet.TelematicsEvent
+	(*TelematicsExecData)(nil),          // 69: joblet.TelematicsExecData
+	(*TelematicsConnectData)(nil),       // 70: joblet.TelematicsConnectData
+	(*TelematicsAcceptData)(nil),        // 71: joblet.TelematicsAcceptData
+	(*TelematicsFileData)(nil),          // 72: joblet.TelematicsFileData
+	(*TelematicsMmapData)(nil),          // 73: joblet.TelematicsMmapData
+	(*TelematicsMprotectData)(nil),      // 74: joblet.TelematicsMprotectData
+	(*TelematicsSocketDataData)(nil),    // 75: joblet.TelematicsSocketDataData
+	nil,                                 // 76: joblet.Job.EnvironmentEntry
+	nil,                                 // 77: joblet.Job.SecretEnvironmentEntry
+	nil,                                 // 78: joblet.GetJobStatusRes.EnvironmentEntry
+	nil,                                 // 79: joblet.GetJobStatusRes.SecretEnvironmentEntry
+	nil,                                 // 80: joblet.CloudInfo.MetadataEntry
+	nil,                                 // 81: joblet.RuntimeInfo.EnvironmentEntry
+	nil,                                 // 82: joblet.RunJobRequest.EnvironmentEntry
+	nil,                                 // 83: joblet.RunJobRequest.SecretEnvironmentEntry
 }
 var file_joblet_proto_depIdxs = []int32{
 	1,  // 0: joblet.Jobs.jobs:type_name -> joblet.Job
-	75, // 1: joblet.Job.environment:type_name -> joblet.Job.EnvironmentEntry
-	76, // 2: joblet.Job.secret_environment:type_name -> joblet.Job.SecretEnvironmentEntry
-	77, // 3: joblet.GetJobStatusRes.environment:type_name -> joblet.GetJobStatusRes.EnvironmentEntry
-	78, // 4: joblet.GetJobStatusRes.secret_environment:type_name -> joblet.GetJobStatusRes.SecretEnvironmentEntry
+	76, // 1: joblet.Job.environment:type_name -> joblet.Job.EnvironmentEntry
+	77, // 2: joblet.Job.secret_environment:type_name -> joblet.Job.SecretEnvironmentEntry
+	78, // 3: joblet.GetJobStatusRes.environment:type_name -> joblet.GetJobStatusRes.EnvironmentEntry
+	79, // 4: joblet.GetJobStatusRes.secret_environment:type_name -> joblet.GetJobStatusRes.SecretEnvironmentEntry
 	18, // 5: joblet.BuildRuntimeProgress.phase:type_name -> joblet.BuildPhaseProgress
 	19, // 6: joblet.BuildRuntimeProgress.log:type_name -> joblet.BuildLogLine
 	20, // 7: joblet.BuildRuntimeProgress.result:type_name -> joblet.BuildResult
@@ -6697,77 +6814,79 @@ var file_joblet_proto_depIdxs = []int32{
 	45, // 28: joblet.IOMetrics.diskIO:type_name -> joblet.DiskIOMetrics
 	47, // 29: joblet.ProcessMetrics.topByCPU:type_name -> joblet.ProcessInfo
 	47, // 30: joblet.ProcessMetrics.topByMemory:type_name -> joblet.ProcessInfo
-	79, // 31: joblet.CloudInfo.metadata:type_name -> joblet.CloudInfo.MetadataEntry
+	80, // 31: joblet.CloudInfo.metadata:type_name -> joblet.CloudInfo.MetadataEntry
 	51, // 32: joblet.RuntimesRes.runtimes:type_name -> joblet.RuntimeInfo
-	52, // 33: joblet.RuntimeInfo.requirements:type_name -> joblet.RuntimeRequirements
-	51, // 34: joblet.RuntimeInfoRes.runtime:type_name -> joblet.RuntimeInfo
-	3,  // 35: joblet.RunJobRequest.uploads:type_name -> joblet.FileUpload
-	80, // 36: joblet.RunJobRequest.environment:type_name -> joblet.RunJobRequest.EnvironmentEntry
-	81, // 37: joblet.RunJobRequest.secret_environment:type_name -> joblet.RunJobRequest.SecretEnvironmentEntry
-	68, // 38: joblet.TelematicsEvent.exec:type_name -> joblet.TelematicsExecData
-	69, // 39: joblet.TelematicsEvent.connect:type_name -> joblet.TelematicsConnectData
-	70, // 40: joblet.TelematicsEvent.accept:type_name -> joblet.TelematicsAcceptData
-	71, // 41: joblet.TelematicsEvent.file:type_name -> joblet.TelematicsFileData
-	72, // 42: joblet.TelematicsEvent.mmap:type_name -> joblet.TelematicsMmapData
-	73, // 43: joblet.TelematicsEvent.mprotect:type_name -> joblet.TelematicsMprotectData
-	74, // 44: joblet.TelematicsEvent.socket_data:type_name -> joblet.TelematicsSocketDataData
-	57, // 45: joblet.JobService.RunJob:input_type -> joblet.RunJobRequest
-	4,  // 46: joblet.JobService.GetJobStatus:input_type -> joblet.GetJobStatusReq
-	6,  // 47: joblet.JobService.StopJob:input_type -> joblet.StopJobReq
-	8,  // 48: joblet.JobService.CancelJob:input_type -> joblet.CancelJobReq
-	10, // 49: joblet.JobService.DeleteJob:input_type -> joblet.DeleteJobReq
-	12, // 50: joblet.JobService.DeleteAllJobs:input_type -> joblet.DeleteAllJobsReq
-	14, // 51: joblet.JobService.GetJobLogs:input_type -> joblet.GetJobLogsReq
-	2,  // 52: joblet.JobService.ListJobs:input_type -> joblet.EmptyRequest
-	62, // 53: joblet.JobService.StreamJobMetrics:input_type -> joblet.StreamJobMetricsRequest
-	63, // 54: joblet.JobService.GetJobMetrics:input_type -> joblet.GetJobMetricsRequest
-	65, // 55: joblet.JobService.StreamJobTelematics:input_type -> joblet.StreamJobTelematicsRequest
-	66, // 56: joblet.JobService.GetJobTelematics:input_type -> joblet.GetJobTelematicsRequest
-	24, // 57: joblet.NetworkService.CreateNetwork:input_type -> joblet.CreateNetworkReq
-	2,  // 58: joblet.NetworkService.ListNetworks:input_type -> joblet.EmptyRequest
-	26, // 59: joblet.NetworkService.RemoveNetwork:input_type -> joblet.RemoveNetworkReq
-	30, // 60: joblet.VolumeService.CreateVolume:input_type -> joblet.CreateVolumeReq
-	2,  // 61: joblet.VolumeService.ListVolumes:input_type -> joblet.EmptyRequest
-	32, // 62: joblet.VolumeService.RemoveVolume:input_type -> joblet.RemoveVolumeReq
-	2,  // 63: joblet.MonitoringService.GetSystemStatus:input_type -> joblet.EmptyRequest
-	38, // 64: joblet.MonitoringService.StreamSystemMetrics:input_type -> joblet.StreamMetricsReq
-	2,  // 65: joblet.RuntimeService.ListRuntimes:input_type -> joblet.EmptyRequest
-	53, // 66: joblet.RuntimeService.GetRuntimeInfo:input_type -> joblet.RuntimeInfoReq
-	55, // 67: joblet.RuntimeService.TestRuntime:input_type -> joblet.RuntimeTestReq
-	60, // 68: joblet.RuntimeService.RemoveRuntime:input_type -> joblet.RuntimeRemoveReq
-	16, // 69: joblet.RuntimeService.BuildRuntime:input_type -> joblet.BuildRuntimeRequest
-	21, // 70: joblet.RuntimeService.ValidateRuntimeYAML:input_type -> joblet.ValidateRuntimeYAMLRequest
-	58, // 71: joblet.JobService.RunJob:output_type -> joblet.RunJobResponse
-	5,  // 72: joblet.JobService.GetJobStatus:output_type -> joblet.GetJobStatusRes
-	7,  // 73: joblet.JobService.StopJob:output_type -> joblet.StopJobRes
-	9,  // 74: joblet.JobService.CancelJob:output_type -> joblet.CancelJobRes
-	11, // 75: joblet.JobService.DeleteJob:output_type -> joblet.DeleteJobRes
-	13, // 76: joblet.JobService.DeleteAllJobs:output_type -> joblet.DeleteAllJobsRes
-	15, // 77: joblet.JobService.GetJobLogs:output_type -> joblet.DataChunk
-	0,  // 78: joblet.JobService.ListJobs:output_type -> joblet.Jobs
-	64, // 79: joblet.JobService.StreamJobMetrics:output_type -> joblet.JobMetricsEvent
-	64, // 80: joblet.JobService.GetJobMetrics:output_type -> joblet.JobMetricsEvent
-	67, // 81: joblet.JobService.StreamJobTelematics:output_type -> joblet.TelematicsEvent
-	67, // 82: joblet.JobService.GetJobTelematics:output_type -> joblet.TelematicsEvent
-	25, // 83: joblet.NetworkService.CreateNetwork:output_type -> joblet.CreateNetworkRes
-	29, // 84: joblet.NetworkService.ListNetworks:output_type -> joblet.Networks
-	27, // 85: joblet.NetworkService.RemoveNetwork:output_type -> joblet.RemoveNetworkRes
-	31, // 86: joblet.VolumeService.CreateVolume:output_type -> joblet.CreateVolumeRes
-	35, // 87: joblet.VolumeService.ListVolumes:output_type -> joblet.Volumes
-	33, // 88: joblet.VolumeService.RemoveVolume:output_type -> joblet.RemoveVolumeRes
-	36, // 89: joblet.MonitoringService.GetSystemStatus:output_type -> joblet.SystemStatusRes
-	37, // 90: joblet.MonitoringService.StreamSystemMetrics:output_type -> joblet.SystemMetricsRes
-	50, // 91: joblet.RuntimeService.ListRuntimes:output_type -> joblet.RuntimesRes
-	54, // 92: joblet.RuntimeService.GetRuntimeInfo:output_type -> joblet.RuntimeInfoRes
-	56, // 93: joblet.RuntimeService.TestRuntime:output_type -> joblet.RuntimeTestRes
-	61, // 94: joblet.RuntimeService.RemoveRuntime:output_type -> joblet.RuntimeRemoveRes
-	17, // 95: joblet.RuntimeService.BuildRuntime:output_type -> joblet.BuildRuntimeProgress
-	22, // 96: joblet.RuntimeService.ValidateRuntimeYAML:output_type -> joblet.ValidateRuntimeYAMLResponse
-	71, // [71:97] is the sub-list for method output_type
-	45, // [45:71] is the sub-list for method input_type
-	45, // [45:45] is the sub-list for extension type_name
-	45, // [45:45] is the sub-list for extension extendee
-	0,  // [0:45] is the sub-list for field type_name
+	53, // 33: joblet.RuntimeInfo.requirements:type_name -> joblet.RuntimeRequirements
+	81, // 34: joblet.RuntimeInfo.environment:type_name -> joblet.RuntimeInfo.EnvironmentEntry
+	52, // 35: joblet.RuntimeInfo.build_info:type_name -> joblet.RuntimeBuildInfo
+	51, // 36: joblet.RuntimeInfoRes.runtime:type_name -> joblet.RuntimeInfo
+	3,  // 37: joblet.RunJobRequest.uploads:type_name -> joblet.FileUpload
+	82, // 38: joblet.RunJobRequest.environment:type_name -> joblet.RunJobRequest.EnvironmentEntry
+	83, // 39: joblet.RunJobRequest.secret_environment:type_name -> joblet.RunJobRequest.SecretEnvironmentEntry
+	69, // 40: joblet.TelematicsEvent.exec:type_name -> joblet.TelematicsExecData
+	70, // 41: joblet.TelematicsEvent.connect:type_name -> joblet.TelematicsConnectData
+	71, // 42: joblet.TelematicsEvent.accept:type_name -> joblet.TelematicsAcceptData
+	72, // 43: joblet.TelematicsEvent.file:type_name -> joblet.TelematicsFileData
+	73, // 44: joblet.TelematicsEvent.mmap:type_name -> joblet.TelematicsMmapData
+	74, // 45: joblet.TelematicsEvent.mprotect:type_name -> joblet.TelematicsMprotectData
+	75, // 46: joblet.TelematicsEvent.socket_data:type_name -> joblet.TelematicsSocketDataData
+	58, // 47: joblet.JobService.RunJob:input_type -> joblet.RunJobRequest
+	4,  // 48: joblet.JobService.GetJobStatus:input_type -> joblet.GetJobStatusReq
+	6,  // 49: joblet.JobService.StopJob:input_type -> joblet.StopJobReq
+	8,  // 50: joblet.JobService.CancelJob:input_type -> joblet.CancelJobReq
+	10, // 51: joblet.JobService.DeleteJob:input_type -> joblet.DeleteJobReq
+	12, // 52: joblet.JobService.DeleteAllJobs:input_type -> joblet.DeleteAllJobsReq
+	14, // 53: joblet.JobService.GetJobLogs:input_type -> joblet.GetJobLogsReq
+	2,  // 54: joblet.JobService.ListJobs:input_type -> joblet.EmptyRequest
+	63, // 55: joblet.JobService.StreamJobMetrics:input_type -> joblet.StreamJobMetricsRequest
+	64, // 56: joblet.JobService.GetJobMetrics:input_type -> joblet.GetJobMetricsRequest
+	66, // 57: joblet.JobService.StreamJobTelematics:input_type -> joblet.StreamJobTelematicsRequest
+	67, // 58: joblet.JobService.GetJobTelematics:input_type -> joblet.GetJobTelematicsRequest
+	24, // 59: joblet.NetworkService.CreateNetwork:input_type -> joblet.CreateNetworkReq
+	2,  // 60: joblet.NetworkService.ListNetworks:input_type -> joblet.EmptyRequest
+	26, // 61: joblet.NetworkService.RemoveNetwork:input_type -> joblet.RemoveNetworkReq
+	30, // 62: joblet.VolumeService.CreateVolume:input_type -> joblet.CreateVolumeReq
+	2,  // 63: joblet.VolumeService.ListVolumes:input_type -> joblet.EmptyRequest
+	32, // 64: joblet.VolumeService.RemoveVolume:input_type -> joblet.RemoveVolumeReq
+	2,  // 65: joblet.MonitoringService.GetSystemStatus:input_type -> joblet.EmptyRequest
+	38, // 66: joblet.MonitoringService.StreamSystemMetrics:input_type -> joblet.StreamMetricsReq
+	2,  // 67: joblet.RuntimeService.ListRuntimes:input_type -> joblet.EmptyRequest
+	54, // 68: joblet.RuntimeService.GetRuntimeInfo:input_type -> joblet.RuntimeInfoReq
+	56, // 69: joblet.RuntimeService.TestRuntime:input_type -> joblet.RuntimeTestReq
+	61, // 70: joblet.RuntimeService.RemoveRuntime:input_type -> joblet.RuntimeRemoveReq
+	16, // 71: joblet.RuntimeService.BuildRuntime:input_type -> joblet.BuildRuntimeRequest
+	21, // 72: joblet.RuntimeService.ValidateRuntimeYAML:input_type -> joblet.ValidateRuntimeYAMLRequest
+	59, // 73: joblet.JobService.RunJob:output_type -> joblet.RunJobResponse
+	5,  // 74: joblet.JobService.GetJobStatus:output_type -> joblet.GetJobStatusRes
+	7,  // 75: joblet.JobService.StopJob:output_type -> joblet.StopJobRes
+	9,  // 76: joblet.JobService.CancelJob:output_type -> joblet.CancelJobRes
+	11, // 77: joblet.JobService.DeleteJob:output_type -> joblet.DeleteJobRes
+	13, // 78: joblet.JobService.DeleteAllJobs:output_type -> joblet.DeleteAllJobsRes
+	15, // 79: joblet.JobService.GetJobLogs:output_type -> joblet.DataChunk
+	0,  // 80: joblet.JobService.ListJobs:output_type -> joblet.Jobs
+	65, // 81: joblet.JobService.StreamJobMetrics:output_type -> joblet.JobMetricsEvent
+	65, // 82: joblet.JobService.GetJobMetrics:output_type -> joblet.JobMetricsEvent
+	68, // 83: joblet.JobService.StreamJobTelematics:output_type -> joblet.TelematicsEvent
+	68, // 84: joblet.JobService.GetJobTelematics:output_type -> joblet.TelematicsEvent
+	25, // 85: joblet.NetworkService.CreateNetwork:output_type -> joblet.CreateNetworkRes
+	29, // 86: joblet.NetworkService.ListNetworks:output_type -> joblet.Networks
+	27, // 87: joblet.NetworkService.RemoveNetwork:output_type -> joblet.RemoveNetworkRes
+	31, // 88: joblet.VolumeService.CreateVolume:output_type -> joblet.CreateVolumeRes
+	35, // 89: joblet.VolumeService.ListVolumes:output_type -> joblet.Volumes
+	33, // 90: joblet.VolumeService.RemoveVolume:output_type -> joblet.RemoveVolumeRes
+	36, // 91: joblet.MonitoringService.GetSystemStatus:output_type -> joblet.SystemStatusRes
+	37, // 92: joblet.MonitoringService.StreamSystemMetrics:output_type -> joblet.SystemMetricsRes
+	50, // 93: joblet.RuntimeService.ListRuntimes:output_type -> joblet.RuntimesRes
+	55, // 94: joblet.RuntimeService.GetRuntimeInfo:output_type -> joblet.RuntimeInfoRes
+	57, // 95: joblet.RuntimeService.TestRuntime:output_type -> joblet.RuntimeTestRes
+	62, // 96: joblet.RuntimeService.RemoveRuntime:output_type -> joblet.RuntimeRemoveRes
+	17, // 97: joblet.RuntimeService.BuildRuntime:output_type -> joblet.BuildRuntimeProgress
+	22, // 98: joblet.RuntimeService.ValidateRuntimeYAML:output_type -> joblet.ValidateRuntimeYAMLResponse
+	73, // [73:99] is the sub-list for method output_type
+	47, // [47:73] is the sub-list for method input_type
+	47, // [47:47] is the sub-list for extension type_name
+	47, // [47:47] is the sub-list for extension extendee
+	0,  // [0:47] is the sub-list for field type_name
 }
 
 func init() { file_joblet_proto_init() }
@@ -6780,7 +6899,7 @@ func file_joblet_proto_init() {
 		(*BuildRuntimeProgress_Log)(nil),
 		(*BuildRuntimeProgress_Result)(nil),
 	}
-	file_joblet_proto_msgTypes[67].OneofWrappers = []any{
+	file_joblet_proto_msgTypes[68].OneofWrappers = []any{
 		(*TelematicsEvent_Exec)(nil),
 		(*TelematicsEvent_Connect)(nil),
 		(*TelematicsEvent_Accept)(nil),
@@ -6795,7 +6914,7 @@ func file_joblet_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_joblet_proto_rawDesc), len(file_joblet_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   82,
+			NumMessages:   84,
 			NumExtensions: 0,
 			NumServices:   5,
 		},

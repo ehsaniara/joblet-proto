@@ -508,12 +508,23 @@ message RuntimesRes {
 message RuntimeInfo {
   string name = 1;                  // Runtime name (e.g., "python-3.11-ml")
   string language = 2;              // Language (e.g., "python")
-  string version = 3;               // Version (e.g., "3.11")
+  string version = 3;               // Runtime version (e.g., "1.0.0")
   string description = 4;           // Description
   int64 sizeBytes = 5;              // Size in bytes
-  repeated string packages = 6;     // Installed packages
+  repeated string packages = 6;     // Installed packages (pip, npm, etc.)
   bool available = 7;               // Ready to use
   RuntimeRequirements requirements = 8;
+  string language_version = 9;      // Language version (e.g., "3.11" for Python)
+  repeated string libraries = 10;   // Library patterns copied (e.g., "libopenblas*")
+  map<string, string> environment = 11; // Environment variables
+  RuntimeBuildInfo build_info = 12; // Build metadata
+  string original_yaml = 13;        // Original runtime.yaml content (for display)
+}
+
+message RuntimeBuildInfo {
+  string built_at = 1;              // When built (RFC3339)
+  string built_with = 2;            // Builder version
+  string platform = 3;              // Platform (e.g., "ubuntu-amd64")
 }
 
 message RuntimeRequirements {
