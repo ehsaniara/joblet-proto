@@ -41,12 +41,12 @@ const (
 type JobServiceClient interface {
 	// Job operations
 	RunJob(ctx context.Context, in *RunJobRequest, opts ...grpc.CallOption) (*RunJobResponse, error)
-	GetJobStatus(ctx context.Context, in *GetJobStatusReq, opts ...grpc.CallOption) (*GetJobStatusRes, error)
-	StopJob(ctx context.Context, in *StopJobReq, opts ...grpc.CallOption) (*StopJobRes, error)
-	CancelJob(ctx context.Context, in *CancelJobReq, opts ...grpc.CallOption) (*CancelJobRes, error)
-	DeleteJob(ctx context.Context, in *DeleteJobReq, opts ...grpc.CallOption) (*DeleteJobRes, error)
-	DeleteAllJobs(ctx context.Context, in *DeleteAllJobsReq, opts ...grpc.CallOption) (*DeleteAllJobsRes, error)
-	GetJobLogs(ctx context.Context, in *GetJobLogsReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[DataChunk], error)
+	GetJobStatus(ctx context.Context, in *GetJobStatusRequest, opts ...grpc.CallOption) (*GetJobStatusResponse, error)
+	StopJob(ctx context.Context, in *StopJobRequest, opts ...grpc.CallOption) (*StopJobResponse, error)
+	CancelJob(ctx context.Context, in *CancelJobRequest, opts ...grpc.CallOption) (*CancelJobResponse, error)
+	DeleteJob(ctx context.Context, in *DeleteJobRequest, opts ...grpc.CallOption) (*DeleteJobResponse, error)
+	DeleteAllJobs(ctx context.Context, in *DeleteAllJobsRequest, opts ...grpc.CallOption) (*DeleteAllJobsResponse, error)
+	GetJobLogs(ctx context.Context, in *GetJobLogsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[DataChunk], error)
 	ListJobs(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*Jobs, error)
 	// Job Metrics (resource usage from cgroups - sampled every 5s)
 	// Stream live metrics for a running job
@@ -78,9 +78,9 @@ func (c *jobServiceClient) RunJob(ctx context.Context, in *RunJobRequest, opts .
 	return out, nil
 }
 
-func (c *jobServiceClient) GetJobStatus(ctx context.Context, in *GetJobStatusReq, opts ...grpc.CallOption) (*GetJobStatusRes, error) {
+func (c *jobServiceClient) GetJobStatus(ctx context.Context, in *GetJobStatusRequest, opts ...grpc.CallOption) (*GetJobStatusResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetJobStatusRes)
+	out := new(GetJobStatusResponse)
 	err := c.cc.Invoke(ctx, JobService_GetJobStatus_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -88,9 +88,9 @@ func (c *jobServiceClient) GetJobStatus(ctx context.Context, in *GetJobStatusReq
 	return out, nil
 }
 
-func (c *jobServiceClient) StopJob(ctx context.Context, in *StopJobReq, opts ...grpc.CallOption) (*StopJobRes, error) {
+func (c *jobServiceClient) StopJob(ctx context.Context, in *StopJobRequest, opts ...grpc.CallOption) (*StopJobResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(StopJobRes)
+	out := new(StopJobResponse)
 	err := c.cc.Invoke(ctx, JobService_StopJob_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -98,9 +98,9 @@ func (c *jobServiceClient) StopJob(ctx context.Context, in *StopJobReq, opts ...
 	return out, nil
 }
 
-func (c *jobServiceClient) CancelJob(ctx context.Context, in *CancelJobReq, opts ...grpc.CallOption) (*CancelJobRes, error) {
+func (c *jobServiceClient) CancelJob(ctx context.Context, in *CancelJobRequest, opts ...grpc.CallOption) (*CancelJobResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CancelJobRes)
+	out := new(CancelJobResponse)
 	err := c.cc.Invoke(ctx, JobService_CancelJob_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -108,9 +108,9 @@ func (c *jobServiceClient) CancelJob(ctx context.Context, in *CancelJobReq, opts
 	return out, nil
 }
 
-func (c *jobServiceClient) DeleteJob(ctx context.Context, in *DeleteJobReq, opts ...grpc.CallOption) (*DeleteJobRes, error) {
+func (c *jobServiceClient) DeleteJob(ctx context.Context, in *DeleteJobRequest, opts ...grpc.CallOption) (*DeleteJobResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DeleteJobRes)
+	out := new(DeleteJobResponse)
 	err := c.cc.Invoke(ctx, JobService_DeleteJob_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -118,9 +118,9 @@ func (c *jobServiceClient) DeleteJob(ctx context.Context, in *DeleteJobReq, opts
 	return out, nil
 }
 
-func (c *jobServiceClient) DeleteAllJobs(ctx context.Context, in *DeleteAllJobsReq, opts ...grpc.CallOption) (*DeleteAllJobsRes, error) {
+func (c *jobServiceClient) DeleteAllJobs(ctx context.Context, in *DeleteAllJobsRequest, opts ...grpc.CallOption) (*DeleteAllJobsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DeleteAllJobsRes)
+	out := new(DeleteAllJobsResponse)
 	err := c.cc.Invoke(ctx, JobService_DeleteAllJobs_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -128,13 +128,13 @@ func (c *jobServiceClient) DeleteAllJobs(ctx context.Context, in *DeleteAllJobsR
 	return out, nil
 }
 
-func (c *jobServiceClient) GetJobLogs(ctx context.Context, in *GetJobLogsReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[DataChunk], error) {
+func (c *jobServiceClient) GetJobLogs(ctx context.Context, in *GetJobLogsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[DataChunk], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	stream, err := c.cc.NewStream(ctx, &JobService_ServiceDesc.Streams[0], JobService_GetJobLogs_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &grpc.GenericClientStream[GetJobLogsReq, DataChunk]{ClientStream: stream}
+	x := &grpc.GenericClientStream[GetJobLogsRequest, DataChunk]{ClientStream: stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -241,12 +241,12 @@ type JobService_GetJobTelematicsClient = grpc.ServerStreamingClient[TelematicsEv
 type JobServiceServer interface {
 	// Job operations
 	RunJob(context.Context, *RunJobRequest) (*RunJobResponse, error)
-	GetJobStatus(context.Context, *GetJobStatusReq) (*GetJobStatusRes, error)
-	StopJob(context.Context, *StopJobReq) (*StopJobRes, error)
-	CancelJob(context.Context, *CancelJobReq) (*CancelJobRes, error)
-	DeleteJob(context.Context, *DeleteJobReq) (*DeleteJobRes, error)
-	DeleteAllJobs(context.Context, *DeleteAllJobsReq) (*DeleteAllJobsRes, error)
-	GetJobLogs(*GetJobLogsReq, grpc.ServerStreamingServer[DataChunk]) error
+	GetJobStatus(context.Context, *GetJobStatusRequest) (*GetJobStatusResponse, error)
+	StopJob(context.Context, *StopJobRequest) (*StopJobResponse, error)
+	CancelJob(context.Context, *CancelJobRequest) (*CancelJobResponse, error)
+	DeleteJob(context.Context, *DeleteJobRequest) (*DeleteJobResponse, error)
+	DeleteAllJobs(context.Context, *DeleteAllJobsRequest) (*DeleteAllJobsResponse, error)
+	GetJobLogs(*GetJobLogsRequest, grpc.ServerStreamingServer[DataChunk]) error
 	ListJobs(context.Context, *EmptyRequest) (*Jobs, error)
 	// Job Metrics (resource usage from cgroups - sampled every 5s)
 	// Stream live metrics for a running job
@@ -271,22 +271,22 @@ type UnimplementedJobServiceServer struct{}
 func (UnimplementedJobServiceServer) RunJob(context.Context, *RunJobRequest) (*RunJobResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RunJob not implemented")
 }
-func (UnimplementedJobServiceServer) GetJobStatus(context.Context, *GetJobStatusReq) (*GetJobStatusRes, error) {
+func (UnimplementedJobServiceServer) GetJobStatus(context.Context, *GetJobStatusRequest) (*GetJobStatusResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetJobStatus not implemented")
 }
-func (UnimplementedJobServiceServer) StopJob(context.Context, *StopJobReq) (*StopJobRes, error) {
+func (UnimplementedJobServiceServer) StopJob(context.Context, *StopJobRequest) (*StopJobResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method StopJob not implemented")
 }
-func (UnimplementedJobServiceServer) CancelJob(context.Context, *CancelJobReq) (*CancelJobRes, error) {
+func (UnimplementedJobServiceServer) CancelJob(context.Context, *CancelJobRequest) (*CancelJobResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CancelJob not implemented")
 }
-func (UnimplementedJobServiceServer) DeleteJob(context.Context, *DeleteJobReq) (*DeleteJobRes, error) {
+func (UnimplementedJobServiceServer) DeleteJob(context.Context, *DeleteJobRequest) (*DeleteJobResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteJob not implemented")
 }
-func (UnimplementedJobServiceServer) DeleteAllJobs(context.Context, *DeleteAllJobsReq) (*DeleteAllJobsRes, error) {
+func (UnimplementedJobServiceServer) DeleteAllJobs(context.Context, *DeleteAllJobsRequest) (*DeleteAllJobsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteAllJobs not implemented")
 }
-func (UnimplementedJobServiceServer) GetJobLogs(*GetJobLogsReq, grpc.ServerStreamingServer[DataChunk]) error {
+func (UnimplementedJobServiceServer) GetJobLogs(*GetJobLogsRequest, grpc.ServerStreamingServer[DataChunk]) error {
 	return status.Errorf(codes.Unimplemented, "method GetJobLogs not implemented")
 }
 func (UnimplementedJobServiceServer) ListJobs(context.Context, *EmptyRequest) (*Jobs, error) {
@@ -344,7 +344,7 @@ func _JobService_RunJob_Handler(srv interface{}, ctx context.Context, dec func(i
 }
 
 func _JobService_GetJobStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetJobStatusReq)
+	in := new(GetJobStatusRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -356,13 +356,13 @@ func _JobService_GetJobStatus_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: JobService_GetJobStatus_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(JobServiceServer).GetJobStatus(ctx, req.(*GetJobStatusReq))
+		return srv.(JobServiceServer).GetJobStatus(ctx, req.(*GetJobStatusRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _JobService_StopJob_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(StopJobReq)
+	in := new(StopJobRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -374,13 +374,13 @@ func _JobService_StopJob_Handler(srv interface{}, ctx context.Context, dec func(
 		FullMethod: JobService_StopJob_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(JobServiceServer).StopJob(ctx, req.(*StopJobReq))
+		return srv.(JobServiceServer).StopJob(ctx, req.(*StopJobRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _JobService_CancelJob_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CancelJobReq)
+	in := new(CancelJobRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -392,13 +392,13 @@ func _JobService_CancelJob_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: JobService_CancelJob_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(JobServiceServer).CancelJob(ctx, req.(*CancelJobReq))
+		return srv.(JobServiceServer).CancelJob(ctx, req.(*CancelJobRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _JobService_DeleteJob_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteJobReq)
+	in := new(DeleteJobRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -410,13 +410,13 @@ func _JobService_DeleteJob_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: JobService_DeleteJob_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(JobServiceServer).DeleteJob(ctx, req.(*DeleteJobReq))
+		return srv.(JobServiceServer).DeleteJob(ctx, req.(*DeleteJobRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _JobService_DeleteAllJobs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteAllJobsReq)
+	in := new(DeleteAllJobsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -428,17 +428,17 @@ func _JobService_DeleteAllJobs_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: JobService_DeleteAllJobs_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(JobServiceServer).DeleteAllJobs(ctx, req.(*DeleteAllJobsReq))
+		return srv.(JobServiceServer).DeleteAllJobs(ctx, req.(*DeleteAllJobsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _JobService_GetJobLogs_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(GetJobLogsReq)
+	m := new(GetJobLogsRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(JobServiceServer).GetJobLogs(m, &grpc.GenericServerStream[GetJobLogsReq, DataChunk]{ServerStream: stream})
+	return srv.(JobServiceServer).GetJobLogs(m, &grpc.GenericServerStream[GetJobLogsRequest, DataChunk]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
@@ -584,9 +584,9 @@ const (
 //
 // Network service
 type NetworkServiceClient interface {
-	CreateNetwork(ctx context.Context, in *CreateNetworkReq, opts ...grpc.CallOption) (*CreateNetworkRes, error)
+	CreateNetwork(ctx context.Context, in *CreateNetworkRequest, opts ...grpc.CallOption) (*CreateNetworkResponse, error)
 	ListNetworks(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*Networks, error)
-	RemoveNetwork(ctx context.Context, in *RemoveNetworkReq, opts ...grpc.CallOption) (*RemoveNetworkRes, error)
+	RemoveNetwork(ctx context.Context, in *RemoveNetworkRequest, opts ...grpc.CallOption) (*RemoveNetworkResponse, error)
 }
 
 type networkServiceClient struct {
@@ -597,9 +597,9 @@ func NewNetworkServiceClient(cc grpc.ClientConnInterface) NetworkServiceClient {
 	return &networkServiceClient{cc}
 }
 
-func (c *networkServiceClient) CreateNetwork(ctx context.Context, in *CreateNetworkReq, opts ...grpc.CallOption) (*CreateNetworkRes, error) {
+func (c *networkServiceClient) CreateNetwork(ctx context.Context, in *CreateNetworkRequest, opts ...grpc.CallOption) (*CreateNetworkResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateNetworkRes)
+	out := new(CreateNetworkResponse)
 	err := c.cc.Invoke(ctx, NetworkService_CreateNetwork_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -617,9 +617,9 @@ func (c *networkServiceClient) ListNetworks(ctx context.Context, in *EmptyReques
 	return out, nil
 }
 
-func (c *networkServiceClient) RemoveNetwork(ctx context.Context, in *RemoveNetworkReq, opts ...grpc.CallOption) (*RemoveNetworkRes, error) {
+func (c *networkServiceClient) RemoveNetwork(ctx context.Context, in *RemoveNetworkRequest, opts ...grpc.CallOption) (*RemoveNetworkResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RemoveNetworkRes)
+	out := new(RemoveNetworkResponse)
 	err := c.cc.Invoke(ctx, NetworkService_RemoveNetwork_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -633,9 +633,9 @@ func (c *networkServiceClient) RemoveNetwork(ctx context.Context, in *RemoveNetw
 //
 // Network service
 type NetworkServiceServer interface {
-	CreateNetwork(context.Context, *CreateNetworkReq) (*CreateNetworkRes, error)
+	CreateNetwork(context.Context, *CreateNetworkRequest) (*CreateNetworkResponse, error)
 	ListNetworks(context.Context, *EmptyRequest) (*Networks, error)
-	RemoveNetwork(context.Context, *RemoveNetworkReq) (*RemoveNetworkRes, error)
+	RemoveNetwork(context.Context, *RemoveNetworkRequest) (*RemoveNetworkResponse, error)
 	mustEmbedUnimplementedNetworkServiceServer()
 }
 
@@ -646,13 +646,13 @@ type NetworkServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedNetworkServiceServer struct{}
 
-func (UnimplementedNetworkServiceServer) CreateNetwork(context.Context, *CreateNetworkReq) (*CreateNetworkRes, error) {
+func (UnimplementedNetworkServiceServer) CreateNetwork(context.Context, *CreateNetworkRequest) (*CreateNetworkResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateNetwork not implemented")
 }
 func (UnimplementedNetworkServiceServer) ListNetworks(context.Context, *EmptyRequest) (*Networks, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListNetworks not implemented")
 }
-func (UnimplementedNetworkServiceServer) RemoveNetwork(context.Context, *RemoveNetworkReq) (*RemoveNetworkRes, error) {
+func (UnimplementedNetworkServiceServer) RemoveNetwork(context.Context, *RemoveNetworkRequest) (*RemoveNetworkResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveNetwork not implemented")
 }
 func (UnimplementedNetworkServiceServer) mustEmbedUnimplementedNetworkServiceServer() {}
@@ -677,7 +677,7 @@ func RegisterNetworkServiceServer(s grpc.ServiceRegistrar, srv NetworkServiceSer
 }
 
 func _NetworkService_CreateNetwork_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateNetworkReq)
+	in := new(CreateNetworkRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -689,7 +689,7 @@ func _NetworkService_CreateNetwork_Handler(srv interface{}, ctx context.Context,
 		FullMethod: NetworkService_CreateNetwork_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NetworkServiceServer).CreateNetwork(ctx, req.(*CreateNetworkReq))
+		return srv.(NetworkServiceServer).CreateNetwork(ctx, req.(*CreateNetworkRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -713,7 +713,7 @@ func _NetworkService_ListNetworks_Handler(srv interface{}, ctx context.Context, 
 }
 
 func _NetworkService_RemoveNetwork_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RemoveNetworkReq)
+	in := new(RemoveNetworkRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -725,7 +725,7 @@ func _NetworkService_RemoveNetwork_Handler(srv interface{}, ctx context.Context,
 		FullMethod: NetworkService_RemoveNetwork_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NetworkServiceServer).RemoveNetwork(ctx, req.(*RemoveNetworkReq))
+		return srv.(NetworkServiceServer).RemoveNetwork(ctx, req.(*RemoveNetworkRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -766,9 +766,9 @@ const (
 //
 // Volume service
 type VolumeServiceClient interface {
-	CreateVolume(ctx context.Context, in *CreateVolumeReq, opts ...grpc.CallOption) (*CreateVolumeRes, error)
+	CreateVolume(ctx context.Context, in *CreateVolumeRequest, opts ...grpc.CallOption) (*CreateVolumeResponse, error)
 	ListVolumes(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*Volumes, error)
-	RemoveVolume(ctx context.Context, in *RemoveVolumeReq, opts ...grpc.CallOption) (*RemoveVolumeRes, error)
+	RemoveVolume(ctx context.Context, in *RemoveVolumeRequest, opts ...grpc.CallOption) (*RemoveVolumeResponse, error)
 }
 
 type volumeServiceClient struct {
@@ -779,9 +779,9 @@ func NewVolumeServiceClient(cc grpc.ClientConnInterface) VolumeServiceClient {
 	return &volumeServiceClient{cc}
 }
 
-func (c *volumeServiceClient) CreateVolume(ctx context.Context, in *CreateVolumeReq, opts ...grpc.CallOption) (*CreateVolumeRes, error) {
+func (c *volumeServiceClient) CreateVolume(ctx context.Context, in *CreateVolumeRequest, opts ...grpc.CallOption) (*CreateVolumeResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateVolumeRes)
+	out := new(CreateVolumeResponse)
 	err := c.cc.Invoke(ctx, VolumeService_CreateVolume_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -799,9 +799,9 @@ func (c *volumeServiceClient) ListVolumes(ctx context.Context, in *EmptyRequest,
 	return out, nil
 }
 
-func (c *volumeServiceClient) RemoveVolume(ctx context.Context, in *RemoveVolumeReq, opts ...grpc.CallOption) (*RemoveVolumeRes, error) {
+func (c *volumeServiceClient) RemoveVolume(ctx context.Context, in *RemoveVolumeRequest, opts ...grpc.CallOption) (*RemoveVolumeResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RemoveVolumeRes)
+	out := new(RemoveVolumeResponse)
 	err := c.cc.Invoke(ctx, VolumeService_RemoveVolume_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -815,9 +815,9 @@ func (c *volumeServiceClient) RemoveVolume(ctx context.Context, in *RemoveVolume
 //
 // Volume service
 type VolumeServiceServer interface {
-	CreateVolume(context.Context, *CreateVolumeReq) (*CreateVolumeRes, error)
+	CreateVolume(context.Context, *CreateVolumeRequest) (*CreateVolumeResponse, error)
 	ListVolumes(context.Context, *EmptyRequest) (*Volumes, error)
-	RemoveVolume(context.Context, *RemoveVolumeReq) (*RemoveVolumeRes, error)
+	RemoveVolume(context.Context, *RemoveVolumeRequest) (*RemoveVolumeResponse, error)
 	mustEmbedUnimplementedVolumeServiceServer()
 }
 
@@ -828,13 +828,13 @@ type VolumeServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedVolumeServiceServer struct{}
 
-func (UnimplementedVolumeServiceServer) CreateVolume(context.Context, *CreateVolumeReq) (*CreateVolumeRes, error) {
+func (UnimplementedVolumeServiceServer) CreateVolume(context.Context, *CreateVolumeRequest) (*CreateVolumeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateVolume not implemented")
 }
 func (UnimplementedVolumeServiceServer) ListVolumes(context.Context, *EmptyRequest) (*Volumes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListVolumes not implemented")
 }
-func (UnimplementedVolumeServiceServer) RemoveVolume(context.Context, *RemoveVolumeReq) (*RemoveVolumeRes, error) {
+func (UnimplementedVolumeServiceServer) RemoveVolume(context.Context, *RemoveVolumeRequest) (*RemoveVolumeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveVolume not implemented")
 }
 func (UnimplementedVolumeServiceServer) mustEmbedUnimplementedVolumeServiceServer() {}
@@ -859,7 +859,7 @@ func RegisterVolumeServiceServer(s grpc.ServiceRegistrar, srv VolumeServiceServe
 }
 
 func _VolumeService_CreateVolume_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateVolumeReq)
+	in := new(CreateVolumeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -871,7 +871,7 @@ func _VolumeService_CreateVolume_Handler(srv interface{}, ctx context.Context, d
 		FullMethod: VolumeService_CreateVolume_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(VolumeServiceServer).CreateVolume(ctx, req.(*CreateVolumeReq))
+		return srv.(VolumeServiceServer).CreateVolume(ctx, req.(*CreateVolumeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -895,7 +895,7 @@ func _VolumeService_ListVolumes_Handler(srv interface{}, ctx context.Context, de
 }
 
 func _VolumeService_RemoveVolume_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RemoveVolumeReq)
+	in := new(RemoveVolumeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -907,7 +907,7 @@ func _VolumeService_RemoveVolume_Handler(srv interface{}, ctx context.Context, d
 		FullMethod: VolumeService_RemoveVolume_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(VolumeServiceServer).RemoveVolume(ctx, req.(*RemoveVolumeReq))
+		return srv.(VolumeServiceServer).RemoveVolume(ctx, req.(*RemoveVolumeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -947,8 +947,8 @@ const (
 //
 // Monitoring service
 type MonitoringServiceClient interface {
-	GetSystemStatus(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*SystemStatusRes, error)
-	StreamSystemMetrics(ctx context.Context, in *StreamMetricsReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[SystemMetricsRes], error)
+	GetSystemStatus(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*SystemStatusResponse, error)
+	StreamSystemMetrics(ctx context.Context, in *StreamMetricsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[SystemMetricsResponse], error)
 }
 
 type monitoringServiceClient struct {
@@ -959,9 +959,9 @@ func NewMonitoringServiceClient(cc grpc.ClientConnInterface) MonitoringServiceCl
 	return &monitoringServiceClient{cc}
 }
 
-func (c *monitoringServiceClient) GetSystemStatus(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*SystemStatusRes, error) {
+func (c *monitoringServiceClient) GetSystemStatus(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*SystemStatusResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SystemStatusRes)
+	out := new(SystemStatusResponse)
 	err := c.cc.Invoke(ctx, MonitoringService_GetSystemStatus_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -969,13 +969,13 @@ func (c *monitoringServiceClient) GetSystemStatus(ctx context.Context, in *Empty
 	return out, nil
 }
 
-func (c *monitoringServiceClient) StreamSystemMetrics(ctx context.Context, in *StreamMetricsReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[SystemMetricsRes], error) {
+func (c *monitoringServiceClient) StreamSystemMetrics(ctx context.Context, in *StreamMetricsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[SystemMetricsResponse], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	stream, err := c.cc.NewStream(ctx, &MonitoringService_ServiceDesc.Streams[0], MonitoringService_StreamSystemMetrics_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &grpc.GenericClientStream[StreamMetricsReq, SystemMetricsRes]{ClientStream: stream}
+	x := &grpc.GenericClientStream[StreamMetricsRequest, SystemMetricsResponse]{ClientStream: stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -986,7 +986,7 @@ func (c *monitoringServiceClient) StreamSystemMetrics(ctx context.Context, in *S
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type MonitoringService_StreamSystemMetricsClient = grpc.ServerStreamingClient[SystemMetricsRes]
+type MonitoringService_StreamSystemMetricsClient = grpc.ServerStreamingClient[SystemMetricsResponse]
 
 // MonitoringServiceServer is the server API for MonitoringService service.
 // All implementations must embed UnimplementedMonitoringServiceServer
@@ -994,8 +994,8 @@ type MonitoringService_StreamSystemMetricsClient = grpc.ServerStreamingClient[Sy
 //
 // Monitoring service
 type MonitoringServiceServer interface {
-	GetSystemStatus(context.Context, *EmptyRequest) (*SystemStatusRes, error)
-	StreamSystemMetrics(*StreamMetricsReq, grpc.ServerStreamingServer[SystemMetricsRes]) error
+	GetSystemStatus(context.Context, *EmptyRequest) (*SystemStatusResponse, error)
+	StreamSystemMetrics(*StreamMetricsRequest, grpc.ServerStreamingServer[SystemMetricsResponse]) error
 	mustEmbedUnimplementedMonitoringServiceServer()
 }
 
@@ -1006,10 +1006,10 @@ type MonitoringServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedMonitoringServiceServer struct{}
 
-func (UnimplementedMonitoringServiceServer) GetSystemStatus(context.Context, *EmptyRequest) (*SystemStatusRes, error) {
+func (UnimplementedMonitoringServiceServer) GetSystemStatus(context.Context, *EmptyRequest) (*SystemStatusResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSystemStatus not implemented")
 }
-func (UnimplementedMonitoringServiceServer) StreamSystemMetrics(*StreamMetricsReq, grpc.ServerStreamingServer[SystemMetricsRes]) error {
+func (UnimplementedMonitoringServiceServer) StreamSystemMetrics(*StreamMetricsRequest, grpc.ServerStreamingServer[SystemMetricsResponse]) error {
 	return status.Errorf(codes.Unimplemented, "method StreamSystemMetrics not implemented")
 }
 func (UnimplementedMonitoringServiceServer) mustEmbedUnimplementedMonitoringServiceServer() {}
@@ -1052,15 +1052,15 @@ func _MonitoringService_GetSystemStatus_Handler(srv interface{}, ctx context.Con
 }
 
 func _MonitoringService_StreamSystemMetrics_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(StreamMetricsReq)
+	m := new(StreamMetricsRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(MonitoringServiceServer).StreamSystemMetrics(m, &grpc.GenericServerStream[StreamMetricsReq, SystemMetricsRes]{ServerStream: stream})
+	return srv.(MonitoringServiceServer).StreamSystemMetrics(m, &grpc.GenericServerStream[StreamMetricsRequest, SystemMetricsResponse]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type MonitoringService_StreamSystemMetricsServer = grpc.ServerStreamingServer[SystemMetricsRes]
+type MonitoringService_StreamSystemMetricsServer = grpc.ServerStreamingServer[SystemMetricsResponse]
 
 // MonitoringService_ServiceDesc is the grpc.ServiceDesc for MonitoringService service.
 // It's only intended for direct use with grpc.RegisterService,
@@ -1099,10 +1099,10 @@ const (
 //
 // Runtime service for managing execution environments
 type RuntimeServiceClient interface {
-	ListRuntimes(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*RuntimesRes, error)
-	GetRuntimeInfo(ctx context.Context, in *RuntimeInfoReq, opts ...grpc.CallOption) (*RuntimeInfoRes, error)
-	TestRuntime(ctx context.Context, in *RuntimeTestReq, opts ...grpc.CallOption) (*RuntimeTestRes, error)
-	RemoveRuntime(ctx context.Context, in *RuntimeRemoveReq, opts ...grpc.CallOption) (*RuntimeRemoveRes, error)
+	ListRuntimes(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*ListRuntimesResponse, error)
+	GetRuntimeInfo(ctx context.Context, in *GetRuntimeInfoRequest, opts ...grpc.CallOption) (*GetRuntimeInfoResponse, error)
+	TestRuntime(ctx context.Context, in *TestRuntimeRequest, opts ...grpc.CallOption) (*TestRuntimeResponse, error)
+	RemoveRuntime(ctx context.Context, in *RemoveRuntimeRequest, opts ...grpc.CallOption) (*RemoveRuntimeResponse, error)
 	// BuildRuntime builds a runtime from a YAML specification
 	// The build process runs on the server and streams progress back to the client
 	BuildRuntime(ctx context.Context, in *BuildRuntimeRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[BuildRuntimeProgress], error)
@@ -1118,9 +1118,9 @@ func NewRuntimeServiceClient(cc grpc.ClientConnInterface) RuntimeServiceClient {
 	return &runtimeServiceClient{cc}
 }
 
-func (c *runtimeServiceClient) ListRuntimes(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*RuntimesRes, error) {
+func (c *runtimeServiceClient) ListRuntimes(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*ListRuntimesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RuntimesRes)
+	out := new(ListRuntimesResponse)
 	err := c.cc.Invoke(ctx, RuntimeService_ListRuntimes_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -1128,9 +1128,9 @@ func (c *runtimeServiceClient) ListRuntimes(ctx context.Context, in *EmptyReques
 	return out, nil
 }
 
-func (c *runtimeServiceClient) GetRuntimeInfo(ctx context.Context, in *RuntimeInfoReq, opts ...grpc.CallOption) (*RuntimeInfoRes, error) {
+func (c *runtimeServiceClient) GetRuntimeInfo(ctx context.Context, in *GetRuntimeInfoRequest, opts ...grpc.CallOption) (*GetRuntimeInfoResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RuntimeInfoRes)
+	out := new(GetRuntimeInfoResponse)
 	err := c.cc.Invoke(ctx, RuntimeService_GetRuntimeInfo_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -1138,9 +1138,9 @@ func (c *runtimeServiceClient) GetRuntimeInfo(ctx context.Context, in *RuntimeIn
 	return out, nil
 }
 
-func (c *runtimeServiceClient) TestRuntime(ctx context.Context, in *RuntimeTestReq, opts ...grpc.CallOption) (*RuntimeTestRes, error) {
+func (c *runtimeServiceClient) TestRuntime(ctx context.Context, in *TestRuntimeRequest, opts ...grpc.CallOption) (*TestRuntimeResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RuntimeTestRes)
+	out := new(TestRuntimeResponse)
 	err := c.cc.Invoke(ctx, RuntimeService_TestRuntime_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -1148,9 +1148,9 @@ func (c *runtimeServiceClient) TestRuntime(ctx context.Context, in *RuntimeTestR
 	return out, nil
 }
 
-func (c *runtimeServiceClient) RemoveRuntime(ctx context.Context, in *RuntimeRemoveReq, opts ...grpc.CallOption) (*RuntimeRemoveRes, error) {
+func (c *runtimeServiceClient) RemoveRuntime(ctx context.Context, in *RemoveRuntimeRequest, opts ...grpc.CallOption) (*RemoveRuntimeResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RuntimeRemoveRes)
+	out := new(RemoveRuntimeResponse)
 	err := c.cc.Invoke(ctx, RuntimeService_RemoveRuntime_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -1193,10 +1193,10 @@ func (c *runtimeServiceClient) ValidateRuntimeYAML(ctx context.Context, in *Vali
 //
 // Runtime service for managing execution environments
 type RuntimeServiceServer interface {
-	ListRuntimes(context.Context, *EmptyRequest) (*RuntimesRes, error)
-	GetRuntimeInfo(context.Context, *RuntimeInfoReq) (*RuntimeInfoRes, error)
-	TestRuntime(context.Context, *RuntimeTestReq) (*RuntimeTestRes, error)
-	RemoveRuntime(context.Context, *RuntimeRemoveReq) (*RuntimeRemoveRes, error)
+	ListRuntimes(context.Context, *EmptyRequest) (*ListRuntimesResponse, error)
+	GetRuntimeInfo(context.Context, *GetRuntimeInfoRequest) (*GetRuntimeInfoResponse, error)
+	TestRuntime(context.Context, *TestRuntimeRequest) (*TestRuntimeResponse, error)
+	RemoveRuntime(context.Context, *RemoveRuntimeRequest) (*RemoveRuntimeResponse, error)
 	// BuildRuntime builds a runtime from a YAML specification
 	// The build process runs on the server and streams progress back to the client
 	BuildRuntime(*BuildRuntimeRequest, grpc.ServerStreamingServer[BuildRuntimeProgress]) error
@@ -1212,16 +1212,16 @@ type RuntimeServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedRuntimeServiceServer struct{}
 
-func (UnimplementedRuntimeServiceServer) ListRuntimes(context.Context, *EmptyRequest) (*RuntimesRes, error) {
+func (UnimplementedRuntimeServiceServer) ListRuntimes(context.Context, *EmptyRequest) (*ListRuntimesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListRuntimes not implemented")
 }
-func (UnimplementedRuntimeServiceServer) GetRuntimeInfo(context.Context, *RuntimeInfoReq) (*RuntimeInfoRes, error) {
+func (UnimplementedRuntimeServiceServer) GetRuntimeInfo(context.Context, *GetRuntimeInfoRequest) (*GetRuntimeInfoResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRuntimeInfo not implemented")
 }
-func (UnimplementedRuntimeServiceServer) TestRuntime(context.Context, *RuntimeTestReq) (*RuntimeTestRes, error) {
+func (UnimplementedRuntimeServiceServer) TestRuntime(context.Context, *TestRuntimeRequest) (*TestRuntimeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TestRuntime not implemented")
 }
-func (UnimplementedRuntimeServiceServer) RemoveRuntime(context.Context, *RuntimeRemoveReq) (*RuntimeRemoveRes, error) {
+func (UnimplementedRuntimeServiceServer) RemoveRuntime(context.Context, *RemoveRuntimeRequest) (*RemoveRuntimeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveRuntime not implemented")
 }
 func (UnimplementedRuntimeServiceServer) BuildRuntime(*BuildRuntimeRequest, grpc.ServerStreamingServer[BuildRuntimeProgress]) error {
@@ -1270,7 +1270,7 @@ func _RuntimeService_ListRuntimes_Handler(srv interface{}, ctx context.Context, 
 }
 
 func _RuntimeService_GetRuntimeInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RuntimeInfoReq)
+	in := new(GetRuntimeInfoRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1282,13 +1282,13 @@ func _RuntimeService_GetRuntimeInfo_Handler(srv interface{}, ctx context.Context
 		FullMethod: RuntimeService_GetRuntimeInfo_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RuntimeServiceServer).GetRuntimeInfo(ctx, req.(*RuntimeInfoReq))
+		return srv.(RuntimeServiceServer).GetRuntimeInfo(ctx, req.(*GetRuntimeInfoRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _RuntimeService_TestRuntime_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RuntimeTestReq)
+	in := new(TestRuntimeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1300,13 +1300,13 @@ func _RuntimeService_TestRuntime_Handler(srv interface{}, ctx context.Context, d
 		FullMethod: RuntimeService_TestRuntime_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RuntimeServiceServer).TestRuntime(ctx, req.(*RuntimeTestReq))
+		return srv.(RuntimeServiceServer).TestRuntime(ctx, req.(*TestRuntimeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _RuntimeService_RemoveRuntime_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RuntimeRemoveReq)
+	in := new(RemoveRuntimeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1318,7 +1318,7 @@ func _RuntimeService_RemoveRuntime_Handler(srv interface{}, ctx context.Context,
 		FullMethod: RuntimeService_RemoveRuntime_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RuntimeServiceServer).RemoveRuntime(ctx, req.(*RuntimeRemoveReq))
+		return srv.(RuntimeServiceServer).RemoveRuntime(ctx, req.(*RemoveRuntimeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

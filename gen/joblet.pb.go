@@ -68,18 +68,17 @@ func (x *Jobs) GetJobs() []*Job {
 type Job struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
 	Uuid              string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"` // Job UUID
-	Name              string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"` // Job name (optional for individual jobs)
 	Command           string                 `protobuf:"bytes,3,opt,name=command,proto3" json:"command,omitempty"`
 	Args              []string               `protobuf:"bytes,4,rep,name=args,proto3" json:"args,omitempty"`
-	MaxCPU            int32                  `protobuf:"varint,5,opt,name=maxCPU,proto3" json:"maxCPU,omitempty"`
-	CpuCores          string                 `protobuf:"bytes,6,opt,name=cpuCores,proto3" json:"cpuCores,omitempty"`
-	MaxMemory         int32                  `protobuf:"varint,7,opt,name=maxMemory,proto3" json:"maxMemory,omitempty"`
-	MaxIOBPS          int32                  `protobuf:"varint,8,opt,name=maxIOBPS,proto3" json:"maxIOBPS,omitempty"`
+	MaxCpu            int32                  `protobuf:"varint,5,opt,name=max_cpu,json=maxCpu,proto3" json:"max_cpu,omitempty"`
+	CpuCores          string                 `protobuf:"bytes,6,opt,name=cpu_cores,json=cpuCores,proto3" json:"cpu_cores,omitempty"`
+	MaxMemory         int32                  `protobuf:"varint,7,opt,name=max_memory,json=maxMemory,proto3" json:"max_memory,omitempty"`
+	MaxIoBps          int32                  `protobuf:"varint,8,opt,name=max_io_bps,json=maxIoBps,proto3" json:"max_io_bps,omitempty"`
 	Status            string                 `protobuf:"bytes,9,opt,name=status,proto3" json:"status,omitempty"`
-	StartTime         string                 `protobuf:"bytes,10,opt,name=startTime,proto3" json:"startTime,omitempty"`
-	EndTime           string                 `protobuf:"bytes,11,opt,name=endTime,proto3" json:"endTime,omitempty"`
-	ExitCode          int32                  `protobuf:"varint,12,opt,name=exitCode,proto3" json:"exitCode,omitempty"`
-	ScheduledTime     string                 `protobuf:"bytes,13,opt,name=scheduledTime,proto3" json:"scheduledTime,omitempty"`                                                                                                            // Schedule time (RFC3339, empty = immediate)
+	StartTime         string                 `protobuf:"bytes,10,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
+	EndTime           string                 `protobuf:"bytes,11,opt,name=end_time,json=endTime,proto3" json:"end_time,omitempty"`
+	ExitCode          int32                  `protobuf:"varint,12,opt,name=exit_code,json=exitCode,proto3" json:"exit_code,omitempty"`
+	ScheduledTime     string                 `protobuf:"bytes,13,opt,name=scheduled_time,json=scheduledTime,proto3" json:"scheduled_time,omitempty"`                                                                                       // Schedule time (RFC3339, empty = immediate)
 	Runtime           string                 `protobuf:"bytes,14,opt,name=runtime,proto3" json:"runtime,omitempty"`                                                                                                                        // Runtime spec
 	Environment       map[string]string      `protobuf:"bytes,15,rep,name=environment,proto3" json:"environment,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`                                      // Environment variables
 	SecretEnvironment map[string]string      `protobuf:"bytes,16,rep,name=secret_environment,json=secretEnvironment,proto3" json:"secret_environment,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // Secret env vars (masked in logs)
@@ -88,7 +87,7 @@ type Job struct {
 	GpuCount    int32   `protobuf:"varint,18,opt,name=gpu_count,json=gpuCount,proto3" json:"gpu_count,omitempty"`              // Number of GPUs requested/allocated
 	GpuMemoryMb int32   `protobuf:"varint,19,opt,name=gpu_memory_mb,json=gpuMemoryMb,proto3" json:"gpu_memory_mb,omitempty"`   // GPU memory requirement (MB)
 	// Node identification
-	NodeId        string `protobuf:"bytes,20,opt,name=nodeId,proto3" json:"nodeId,omitempty"` // Unique identifier of the Joblet node that executed this job
+	NodeId        string `protobuf:"bytes,20,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"` // Unique identifier of the Joblet node that executed this job
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -130,13 +129,6 @@ func (x *Job) GetUuid() string {
 	return ""
 }
 
-func (x *Job) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
 func (x *Job) GetCommand() string {
 	if x != nil {
 		return x.Command
@@ -151,9 +143,9 @@ func (x *Job) GetArgs() []string {
 	return nil
 }
 
-func (x *Job) GetMaxCPU() int32 {
+func (x *Job) GetMaxCpu() int32 {
 	if x != nil {
-		return x.MaxCPU
+		return x.MaxCpu
 	}
 	return 0
 }
@@ -172,9 +164,9 @@ func (x *Job) GetMaxMemory() int32 {
 	return 0
 }
 
-func (x *Job) GetMaxIOBPS() int32 {
+func (x *Job) GetMaxIoBps() int32 {
 	if x != nil {
-		return x.MaxIOBPS
+		return x.MaxIoBps
 	}
 	return 0
 }
@@ -301,10 +293,10 @@ func (*EmptyRequest) Descriptor() ([]byte, []int) {
 
 type FileUpload struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Path          string                 `protobuf:"bytes,1,opt,name=path,proto3" json:"path,omitempty"`                // Path in workspace
-	Content       []byte                 `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`          // Content
-	Mode          uint32                 `protobuf:"varint,3,opt,name=mode,proto3" json:"mode,omitempty"`               // Unix permissions
-	IsDirectory   bool                   `protobuf:"varint,4,opt,name=isDirectory,proto3" json:"isDirectory,omitempty"` // Is directory
+	Path          string                 `protobuf:"bytes,1,opt,name=path,proto3" json:"path,omitempty"`                                   // Path in workspace
+	Content       []byte                 `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`                             // Content
+	Mode          uint32                 `protobuf:"varint,3,opt,name=mode,proto3" json:"mode,omitempty"`                                  // Unix permissions
+	IsDirectory   bool                   `protobuf:"varint,4,opt,name=is_directory,json=isDirectory,proto3" json:"is_directory,omitempty"` // Is directory
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -368,27 +360,27 @@ func (x *FileUpload) GetIsDirectory() bool {
 }
 
 // GetJobStatus
-type GetJobStatusReq struct {
+type GetJobStatusRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"` // Job UUID identifier
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetJobStatusReq) Reset() {
-	*x = GetJobStatusReq{}
+func (x *GetJobStatusRequest) Reset() {
+	*x = GetJobStatusRequest{}
 	mi := &file_joblet_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetJobStatusReq) String() string {
+func (x *GetJobStatusRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetJobStatusReq) ProtoMessage() {}
+func (*GetJobStatusRequest) ProtoMessage() {}
 
-func (x *GetJobStatusReq) ProtoReflect() protoreflect.Message {
+func (x *GetJobStatusRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -400,64 +392,63 @@ func (x *GetJobStatusReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetJobStatusReq.ProtoReflect.Descriptor instead.
-func (*GetJobStatusReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetJobStatusRequest.ProtoReflect.Descriptor instead.
+func (*GetJobStatusRequest) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *GetJobStatusReq) GetUuid() string {
+func (x *GetJobStatusRequest) GetUuid() string {
 	if x != nil {
 		return x.Uuid
 	}
 	return ""
 }
 
-type GetJobStatusRes struct {
+type GetJobStatusResponse struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
 	Uuid              string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"` // Job UUID identifier
-	Name              string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"` // Human-readable job name (optional)
 	Command           string                 `protobuf:"bytes,3,opt,name=command,proto3" json:"command,omitempty"`
 	Args              []string               `protobuf:"bytes,4,rep,name=args,proto3" json:"args,omitempty"`
-	MaxCPU            int32                  `protobuf:"varint,5,opt,name=maxCPU,proto3" json:"maxCPU,omitempty"`
-	CpuCores          string                 `protobuf:"bytes,6,opt,name=cpuCores,proto3" json:"cpuCores,omitempty"`
-	MaxMemory         int32                  `protobuf:"varint,7,opt,name=maxMemory,proto3" json:"maxMemory,omitempty"`
-	MaxIOBPS          int32                  `protobuf:"varint,8,opt,name=maxIOBPS,proto3" json:"maxIOBPS,omitempty"`
+	MaxCpu            int32                  `protobuf:"varint,5,opt,name=max_cpu,json=maxCpu,proto3" json:"max_cpu,omitempty"`
+	CpuCores          string                 `protobuf:"bytes,6,opt,name=cpu_cores,json=cpuCores,proto3" json:"cpu_cores,omitempty"`
+	MaxMemory         int32                  `protobuf:"varint,7,opt,name=max_memory,json=maxMemory,proto3" json:"max_memory,omitempty"`
+	MaxIoBps          int32                  `protobuf:"varint,8,opt,name=max_io_bps,json=maxIoBps,proto3" json:"max_io_bps,omitempty"`
 	Status            string                 `protobuf:"bytes,9,opt,name=status,proto3" json:"status,omitempty"`
-	StartTime         string                 `protobuf:"bytes,10,opt,name=startTime,proto3" json:"startTime,omitempty"`
-	EndTime           string                 `protobuf:"bytes,11,opt,name=endTime,proto3" json:"endTime,omitempty"`
-	ExitCode          int32                  `protobuf:"varint,12,opt,name=exitCode,proto3" json:"exitCode,omitempty"`
-	ScheduledTime     string                 `protobuf:"bytes,13,opt,name=scheduledTime,proto3" json:"scheduledTime,omitempty"`                                                                                                            // When the job should execute (empty if immediate)
+	StartTime         string                 `protobuf:"bytes,10,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
+	EndTime           string                 `protobuf:"bytes,11,opt,name=end_time,json=endTime,proto3" json:"end_time,omitempty"`
+	ExitCode          int32                  `protobuf:"varint,12,opt,name=exit_code,json=exitCode,proto3" json:"exit_code,omitempty"`
+	ScheduledTime     string                 `protobuf:"bytes,13,opt,name=scheduled_time,json=scheduledTime,proto3" json:"scheduled_time,omitempty"`                                                                                       // When the job should execute (empty if immediate)
 	Environment       map[string]string      `protobuf:"bytes,14,rep,name=environment,proto3" json:"environment,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`                                      // Regular environment variables (visible)
 	SecretEnvironment map[string]string      `protobuf:"bytes,15,rep,name=secret_environment,json=secretEnvironment,proto3" json:"secret_environment,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // Secret environment variables (masked)
 	Network           string                 `protobuf:"bytes,16,opt,name=network,proto3" json:"network,omitempty"`                                                                                                                        // Network configuration
 	Volumes           []string               `protobuf:"bytes,17,rep,name=volumes,proto3" json:"volumes,omitempty"`                                                                                                                        // Mounted volumes
 	Runtime           string                 `protobuf:"bytes,18,opt,name=runtime,proto3" json:"runtime,omitempty"`                                                                                                                        // Runtime environment
-	WorkDir           string                 `protobuf:"bytes,19,opt,name=workDir,proto3" json:"workDir,omitempty"`                                                                                                                        // Working directory
+	WorkDir           string                 `protobuf:"bytes,19,opt,name=work_dir,json=workDir,proto3" json:"work_dir,omitempty"`                                                                                                         // Working directory
 	Uploads           []string               `protobuf:"bytes,20,rep,name=uploads,proto3" json:"uploads,omitempty"`                                                                                                                        // Uploaded files/directories
 	// GPU allocation info
 	GpuIndices  []int32 `protobuf:"varint,23,rep,packed,name=gpu_indices,json=gpuIndices,proto3" json:"gpu_indices,omitempty"` // Which GPUs allocated to this job
 	GpuCount    int32   `protobuf:"varint,24,opt,name=gpu_count,json=gpuCount,proto3" json:"gpu_count,omitempty"`              // Number of GPUs requested/allocated
 	GpuMemoryMb int32   `protobuf:"varint,25,opt,name=gpu_memory_mb,json=gpuMemoryMb,proto3" json:"gpu_memory_mb,omitempty"`   // GPU memory requirement (MB)
 	// Node identification
-	NodeId        string `protobuf:"bytes,26,opt,name=nodeId,proto3" json:"nodeId,omitempty"` // Unique identifier of the Joblet node that executed this job
+	NodeId        string `protobuf:"bytes,26,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"` // Unique identifier of the Joblet node that executed this job
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetJobStatusRes) Reset() {
-	*x = GetJobStatusRes{}
+func (x *GetJobStatusResponse) Reset() {
+	*x = GetJobStatusResponse{}
 	mi := &file_joblet_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetJobStatusRes) String() string {
+func (x *GetJobStatusResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetJobStatusRes) ProtoMessage() {}
+func (*GetJobStatusResponse) ProtoMessage() {}
 
-func (x *GetJobStatusRes) ProtoReflect() protoreflect.Message {
+func (x *GetJobStatusResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -469,173 +460,166 @@ func (x *GetJobStatusRes) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetJobStatusRes.ProtoReflect.Descriptor instead.
-func (*GetJobStatusRes) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetJobStatusResponse.ProtoReflect.Descriptor instead.
+func (*GetJobStatusResponse) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *GetJobStatusRes) GetUuid() string {
+func (x *GetJobStatusResponse) GetUuid() string {
 	if x != nil {
 		return x.Uuid
 	}
 	return ""
 }
 
-func (x *GetJobStatusRes) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *GetJobStatusRes) GetCommand() string {
+func (x *GetJobStatusResponse) GetCommand() string {
 	if x != nil {
 		return x.Command
 	}
 	return ""
 }
 
-func (x *GetJobStatusRes) GetArgs() []string {
+func (x *GetJobStatusResponse) GetArgs() []string {
 	if x != nil {
 		return x.Args
 	}
 	return nil
 }
 
-func (x *GetJobStatusRes) GetMaxCPU() int32 {
+func (x *GetJobStatusResponse) GetMaxCpu() int32 {
 	if x != nil {
-		return x.MaxCPU
+		return x.MaxCpu
 	}
 	return 0
 }
 
-func (x *GetJobStatusRes) GetCpuCores() string {
+func (x *GetJobStatusResponse) GetCpuCores() string {
 	if x != nil {
 		return x.CpuCores
 	}
 	return ""
 }
 
-func (x *GetJobStatusRes) GetMaxMemory() int32 {
+func (x *GetJobStatusResponse) GetMaxMemory() int32 {
 	if x != nil {
 		return x.MaxMemory
 	}
 	return 0
 }
 
-func (x *GetJobStatusRes) GetMaxIOBPS() int32 {
+func (x *GetJobStatusResponse) GetMaxIoBps() int32 {
 	if x != nil {
-		return x.MaxIOBPS
+		return x.MaxIoBps
 	}
 	return 0
 }
 
-func (x *GetJobStatusRes) GetStatus() string {
+func (x *GetJobStatusResponse) GetStatus() string {
 	if x != nil {
 		return x.Status
 	}
 	return ""
 }
 
-func (x *GetJobStatusRes) GetStartTime() string {
+func (x *GetJobStatusResponse) GetStartTime() string {
 	if x != nil {
 		return x.StartTime
 	}
 	return ""
 }
 
-func (x *GetJobStatusRes) GetEndTime() string {
+func (x *GetJobStatusResponse) GetEndTime() string {
 	if x != nil {
 		return x.EndTime
 	}
 	return ""
 }
 
-func (x *GetJobStatusRes) GetExitCode() int32 {
+func (x *GetJobStatusResponse) GetExitCode() int32 {
 	if x != nil {
 		return x.ExitCode
 	}
 	return 0
 }
 
-func (x *GetJobStatusRes) GetScheduledTime() string {
+func (x *GetJobStatusResponse) GetScheduledTime() string {
 	if x != nil {
 		return x.ScheduledTime
 	}
 	return ""
 }
 
-func (x *GetJobStatusRes) GetEnvironment() map[string]string {
+func (x *GetJobStatusResponse) GetEnvironment() map[string]string {
 	if x != nil {
 		return x.Environment
 	}
 	return nil
 }
 
-func (x *GetJobStatusRes) GetSecretEnvironment() map[string]string {
+func (x *GetJobStatusResponse) GetSecretEnvironment() map[string]string {
 	if x != nil {
 		return x.SecretEnvironment
 	}
 	return nil
 }
 
-func (x *GetJobStatusRes) GetNetwork() string {
+func (x *GetJobStatusResponse) GetNetwork() string {
 	if x != nil {
 		return x.Network
 	}
 	return ""
 }
 
-func (x *GetJobStatusRes) GetVolumes() []string {
+func (x *GetJobStatusResponse) GetVolumes() []string {
 	if x != nil {
 		return x.Volumes
 	}
 	return nil
 }
 
-func (x *GetJobStatusRes) GetRuntime() string {
+func (x *GetJobStatusResponse) GetRuntime() string {
 	if x != nil {
 		return x.Runtime
 	}
 	return ""
 }
 
-func (x *GetJobStatusRes) GetWorkDir() string {
+func (x *GetJobStatusResponse) GetWorkDir() string {
 	if x != nil {
 		return x.WorkDir
 	}
 	return ""
 }
 
-func (x *GetJobStatusRes) GetUploads() []string {
+func (x *GetJobStatusResponse) GetUploads() []string {
 	if x != nil {
 		return x.Uploads
 	}
 	return nil
 }
 
-func (x *GetJobStatusRes) GetGpuIndices() []int32 {
+func (x *GetJobStatusResponse) GetGpuIndices() []int32 {
 	if x != nil {
 		return x.GpuIndices
 	}
 	return nil
 }
 
-func (x *GetJobStatusRes) GetGpuCount() int32 {
+func (x *GetJobStatusResponse) GetGpuCount() int32 {
 	if x != nil {
 		return x.GpuCount
 	}
 	return 0
 }
 
-func (x *GetJobStatusRes) GetGpuMemoryMb() int32 {
+func (x *GetJobStatusResponse) GetGpuMemoryMb() int32 {
 	if x != nil {
 		return x.GpuMemoryMb
 	}
 	return 0
 }
 
-func (x *GetJobStatusRes) GetNodeId() string {
+func (x *GetJobStatusResponse) GetNodeId() string {
 	if x != nil {
 		return x.NodeId
 	}
@@ -643,27 +627,27 @@ func (x *GetJobStatusRes) GetNodeId() string {
 }
 
 // StopJob
-type StopJobReq struct {
+type StopJobRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"` // Job UUID identifier
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *StopJobReq) Reset() {
-	*x = StopJobReq{}
+func (x *StopJobRequest) Reset() {
+	*x = StopJobRequest{}
 	mi := &file_joblet_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *StopJobReq) String() string {
+func (x *StopJobRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*StopJobReq) ProtoMessage() {}
+func (*StopJobRequest) ProtoMessage() {}
 
-func (x *StopJobReq) ProtoReflect() protoreflect.Message {
+func (x *StopJobRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -675,42 +659,42 @@ func (x *StopJobReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use StopJobReq.ProtoReflect.Descriptor instead.
-func (*StopJobReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use StopJobRequest.ProtoReflect.Descriptor instead.
+func (*StopJobRequest) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *StopJobReq) GetUuid() string {
+func (x *StopJobRequest) GetUuid() string {
 	if x != nil {
 		return x.Uuid
 	}
 	return ""
 }
 
-type StopJobRes struct {
+type StopJobResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"` // Job UUID identifier
 	Status        string                 `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
-	EndTime       string                 `protobuf:"bytes,3,opt,name=endTime,proto3" json:"endTime,omitempty"`
-	ExitCode      int32                  `protobuf:"varint,4,opt,name=exitCode,proto3" json:"exitCode,omitempty"`
+	EndTime       string                 `protobuf:"bytes,3,opt,name=end_time,json=endTime,proto3" json:"end_time,omitempty"`
+	ExitCode      int32                  `protobuf:"varint,4,opt,name=exit_code,json=exitCode,proto3" json:"exit_code,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *StopJobRes) Reset() {
-	*x = StopJobRes{}
+func (x *StopJobResponse) Reset() {
+	*x = StopJobResponse{}
 	mi := &file_joblet_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *StopJobRes) String() string {
+func (x *StopJobResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*StopJobRes) ProtoMessage() {}
+func (*StopJobResponse) ProtoMessage() {}
 
-func (x *StopJobRes) ProtoReflect() protoreflect.Message {
+func (x *StopJobResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -722,33 +706,33 @@ func (x *StopJobRes) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use StopJobRes.ProtoReflect.Descriptor instead.
-func (*StopJobRes) Descriptor() ([]byte, []int) {
+// Deprecated: Use StopJobResponse.ProtoReflect.Descriptor instead.
+func (*StopJobResponse) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *StopJobRes) GetUuid() string {
+func (x *StopJobResponse) GetUuid() string {
 	if x != nil {
 		return x.Uuid
 	}
 	return ""
 }
 
-func (x *StopJobRes) GetStatus() string {
+func (x *StopJobResponse) GetStatus() string {
 	if x != nil {
 		return x.Status
 	}
 	return ""
 }
 
-func (x *StopJobRes) GetEndTime() string {
+func (x *StopJobResponse) GetEndTime() string {
 	if x != nil {
 		return x.EndTime
 	}
 	return ""
 }
 
-func (x *StopJobRes) GetExitCode() int32 {
+func (x *StopJobResponse) GetExitCode() int32 {
 	if x != nil {
 		return x.ExitCode
 	}
@@ -756,27 +740,27 @@ func (x *StopJobRes) GetExitCode() int32 {
 }
 
 // CancelJob - for canceling scheduled jobs only
-type CancelJobReq struct {
+type CancelJobRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"` // Job UUID identifier
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *CancelJobReq) Reset() {
-	*x = CancelJobReq{}
+func (x *CancelJobRequest) Reset() {
+	*x = CancelJobRequest{}
 	mi := &file_joblet_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CancelJobReq) String() string {
+func (x *CancelJobRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CancelJobReq) ProtoMessage() {}
+func (*CancelJobRequest) ProtoMessage() {}
 
-func (x *CancelJobReq) ProtoReflect() protoreflect.Message {
+func (x *CancelJobRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -788,19 +772,19 @@ func (x *CancelJobReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CancelJobReq.ProtoReflect.Descriptor instead.
-func (*CancelJobReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use CancelJobRequest.ProtoReflect.Descriptor instead.
+func (*CancelJobRequest) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *CancelJobReq) GetUuid() string {
+func (x *CancelJobRequest) GetUuid() string {
 	if x != nil {
 		return x.Uuid
 	}
 	return ""
 }
 
-type CancelJobRes struct {
+type CancelJobResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`     // Job UUID identifier
 	Status        string                 `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"` // Should be "CANCELED"
@@ -808,20 +792,20 @@ type CancelJobRes struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *CancelJobRes) Reset() {
-	*x = CancelJobRes{}
+func (x *CancelJobResponse) Reset() {
+	*x = CancelJobResponse{}
 	mi := &file_joblet_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CancelJobRes) String() string {
+func (x *CancelJobResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CancelJobRes) ProtoMessage() {}
+func (*CancelJobResponse) ProtoMessage() {}
 
-func (x *CancelJobRes) ProtoReflect() protoreflect.Message {
+func (x *CancelJobResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -833,19 +817,19 @@ func (x *CancelJobRes) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CancelJobRes.ProtoReflect.Descriptor instead.
-func (*CancelJobRes) Descriptor() ([]byte, []int) {
+// Deprecated: Use CancelJobResponse.ProtoReflect.Descriptor instead.
+func (*CancelJobResponse) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *CancelJobRes) GetUuid() string {
+func (x *CancelJobResponse) GetUuid() string {
 	if x != nil {
 		return x.Uuid
 	}
 	return ""
 }
 
-func (x *CancelJobRes) GetStatus() string {
+func (x *CancelJobResponse) GetStatus() string {
 	if x != nil {
 		return x.Status
 	}
@@ -853,27 +837,27 @@ func (x *CancelJobRes) GetStatus() string {
 }
 
 // DeleteJob
-type DeleteJobReq struct {
+type DeleteJobRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"` // Job UUID identifier
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *DeleteJobReq) Reset() {
-	*x = DeleteJobReq{}
+func (x *DeleteJobRequest) Reset() {
+	*x = DeleteJobRequest{}
 	mi := &file_joblet_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *DeleteJobReq) String() string {
+func (x *DeleteJobRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DeleteJobReq) ProtoMessage() {}
+func (*DeleteJobRequest) ProtoMessage() {}
 
-func (x *DeleteJobReq) ProtoReflect() protoreflect.Message {
+func (x *DeleteJobRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -885,19 +869,19 @@ func (x *DeleteJobReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DeleteJobReq.ProtoReflect.Descriptor instead.
-func (*DeleteJobReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use DeleteJobRequest.ProtoReflect.Descriptor instead.
+func (*DeleteJobRequest) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{10}
 }
 
-func (x *DeleteJobReq) GetUuid() string {
+func (x *DeleteJobRequest) GetUuid() string {
 	if x != nil {
 		return x.Uuid
 	}
 	return ""
 }
 
-type DeleteJobRes struct {
+type DeleteJobResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"` // Job UUID identifier
 	Success       bool                   `protobuf:"varint,2,opt,name=success,proto3" json:"success,omitempty"`
@@ -906,20 +890,20 @@ type DeleteJobRes struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *DeleteJobRes) Reset() {
-	*x = DeleteJobRes{}
+func (x *DeleteJobResponse) Reset() {
+	*x = DeleteJobResponse{}
 	mi := &file_joblet_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *DeleteJobRes) String() string {
+func (x *DeleteJobResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DeleteJobRes) ProtoMessage() {}
+func (*DeleteJobResponse) ProtoMessage() {}
 
-func (x *DeleteJobRes) ProtoReflect() protoreflect.Message {
+func (x *DeleteJobResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -931,26 +915,26 @@ func (x *DeleteJobRes) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DeleteJobRes.ProtoReflect.Descriptor instead.
-func (*DeleteJobRes) Descriptor() ([]byte, []int) {
+// Deprecated: Use DeleteJobResponse.ProtoReflect.Descriptor instead.
+func (*DeleteJobResponse) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *DeleteJobRes) GetUuid() string {
+func (x *DeleteJobResponse) GetUuid() string {
 	if x != nil {
 		return x.Uuid
 	}
 	return ""
 }
 
-func (x *DeleteJobRes) GetSuccess() bool {
+func (x *DeleteJobResponse) GetSuccess() bool {
 	if x != nil {
 		return x.Success
 	}
 	return false
 }
 
-func (x *DeleteJobRes) GetMessage() string {
+func (x *DeleteJobResponse) GetMessage() string {
 	if x != nil {
 		return x.Message
 	}
@@ -958,26 +942,26 @@ func (x *DeleteJobRes) GetMessage() string {
 }
 
 // DeleteAllJobs
-type DeleteAllJobsReq struct {
+type DeleteAllJobsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *DeleteAllJobsReq) Reset() {
-	*x = DeleteAllJobsReq{}
+func (x *DeleteAllJobsRequest) Reset() {
+	*x = DeleteAllJobsRequest{}
 	mi := &file_joblet_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *DeleteAllJobsReq) String() string {
+func (x *DeleteAllJobsRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DeleteAllJobsReq) ProtoMessage() {}
+func (*DeleteAllJobsRequest) ProtoMessage() {}
 
-func (x *DeleteAllJobsReq) ProtoReflect() protoreflect.Message {
+func (x *DeleteAllJobsRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -989,12 +973,12 @@ func (x *DeleteAllJobsReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DeleteAllJobsReq.ProtoReflect.Descriptor instead.
-func (*DeleteAllJobsReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use DeleteAllJobsRequest.ProtoReflect.Descriptor instead.
+func (*DeleteAllJobsRequest) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{12}
 }
 
-type DeleteAllJobsRes struct {
+type DeleteAllJobsResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
 	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
@@ -1004,20 +988,20 @@ type DeleteAllJobsRes struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *DeleteAllJobsRes) Reset() {
-	*x = DeleteAllJobsRes{}
+func (x *DeleteAllJobsResponse) Reset() {
+	*x = DeleteAllJobsResponse{}
 	mi := &file_joblet_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *DeleteAllJobsRes) String() string {
+func (x *DeleteAllJobsResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DeleteAllJobsRes) ProtoMessage() {}
+func (*DeleteAllJobsResponse) ProtoMessage() {}
 
-func (x *DeleteAllJobsRes) ProtoReflect() protoreflect.Message {
+func (x *DeleteAllJobsResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1029,33 +1013,33 @@ func (x *DeleteAllJobsRes) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DeleteAllJobsRes.ProtoReflect.Descriptor instead.
-func (*DeleteAllJobsRes) Descriptor() ([]byte, []int) {
+// Deprecated: Use DeleteAllJobsResponse.ProtoReflect.Descriptor instead.
+func (*DeleteAllJobsResponse) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{13}
 }
 
-func (x *DeleteAllJobsRes) GetSuccess() bool {
+func (x *DeleteAllJobsResponse) GetSuccess() bool {
 	if x != nil {
 		return x.Success
 	}
 	return false
 }
 
-func (x *DeleteAllJobsRes) GetMessage() string {
+func (x *DeleteAllJobsResponse) GetMessage() string {
 	if x != nil {
 		return x.Message
 	}
 	return ""
 }
 
-func (x *DeleteAllJobsRes) GetDeletedCount() int32 {
+func (x *DeleteAllJobsResponse) GetDeletedCount() int32 {
 	if x != nil {
 		return x.DeletedCount
 	}
 	return 0
 }
 
-func (x *DeleteAllJobsRes) GetSkippedCount() int32 {
+func (x *DeleteAllJobsResponse) GetSkippedCount() int32 {
 	if x != nil {
 		return x.SkippedCount
 	}
@@ -1063,27 +1047,27 @@ func (x *DeleteAllJobsRes) GetSkippedCount() int32 {
 }
 
 // GetJobLogs
-type GetJobLogsReq struct {
+type GetJobLogsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"` // Job UUID identifier
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetJobLogsReq) Reset() {
-	*x = GetJobLogsReq{}
+func (x *GetJobLogsRequest) Reset() {
+	*x = GetJobLogsRequest{}
 	mi := &file_joblet_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetJobLogsReq) String() string {
+func (x *GetJobLogsRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetJobLogsReq) ProtoMessage() {}
+func (*GetJobLogsRequest) ProtoMessage() {}
 
-func (x *GetJobLogsReq) ProtoReflect() protoreflect.Message {
+func (x *GetJobLogsRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1095,12 +1079,12 @@ func (x *GetJobLogsReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetJobLogsReq.ProtoReflect.Descriptor instead.
-func (*GetJobLogsReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetJobLogsRequest.ProtoReflect.Descriptor instead.
+func (*GetJobLogsRequest) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{14}
 }
 
-func (x *GetJobLogsReq) GetUuid() string {
+func (x *GetJobLogsRequest) GetUuid() string {
 	if x != nil {
 		return x.Uuid
 	}
@@ -1765,7 +1749,7 @@ func (x *RuntimeYAMLInfo) GetRequiresGpu() bool {
 	return false
 }
 
-type CreateNetworkReq struct {
+type CreateNetworkRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	Cidr          string                 `protobuf:"bytes,2,opt,name=cidr,proto3" json:"cidr,omitempty"`
@@ -1773,20 +1757,20 @@ type CreateNetworkReq struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *CreateNetworkReq) Reset() {
-	*x = CreateNetworkReq{}
+func (x *CreateNetworkRequest) Reset() {
+	*x = CreateNetworkRequest{}
 	mi := &file_joblet_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CreateNetworkReq) String() string {
+func (x *CreateNetworkRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CreateNetworkReq) ProtoMessage() {}
+func (*CreateNetworkRequest) ProtoMessage() {}
 
-func (x *CreateNetworkReq) ProtoReflect() protoreflect.Message {
+func (x *CreateNetworkRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1798,26 +1782,26 @@ func (x *CreateNetworkReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CreateNetworkReq.ProtoReflect.Descriptor instead.
-func (*CreateNetworkReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use CreateNetworkRequest.ProtoReflect.Descriptor instead.
+func (*CreateNetworkRequest) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{24}
 }
 
-func (x *CreateNetworkReq) GetName() string {
+func (x *CreateNetworkRequest) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *CreateNetworkReq) GetCidr() string {
+func (x *CreateNetworkRequest) GetCidr() string {
 	if x != nil {
 		return x.Cidr
 	}
 	return ""
 }
 
-type CreateNetworkRes struct {
+type CreateNetworkResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	Cidr          string                 `protobuf:"bytes,2,opt,name=cidr,proto3" json:"cidr,omitempty"`
@@ -1826,20 +1810,20 @@ type CreateNetworkRes struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *CreateNetworkRes) Reset() {
-	*x = CreateNetworkRes{}
+func (x *CreateNetworkResponse) Reset() {
+	*x = CreateNetworkResponse{}
 	mi := &file_joblet_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CreateNetworkRes) String() string {
+func (x *CreateNetworkResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CreateNetworkRes) ProtoMessage() {}
+func (*CreateNetworkResponse) ProtoMessage() {}
 
-func (x *CreateNetworkRes) ProtoReflect() protoreflect.Message {
+func (x *CreateNetworkResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1851,53 +1835,53 @@ func (x *CreateNetworkRes) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CreateNetworkRes.ProtoReflect.Descriptor instead.
-func (*CreateNetworkRes) Descriptor() ([]byte, []int) {
+// Deprecated: Use CreateNetworkResponse.ProtoReflect.Descriptor instead.
+func (*CreateNetworkResponse) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{25}
 }
 
-func (x *CreateNetworkRes) GetName() string {
+func (x *CreateNetworkResponse) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *CreateNetworkRes) GetCidr() string {
+func (x *CreateNetworkResponse) GetCidr() string {
 	if x != nil {
 		return x.Cidr
 	}
 	return ""
 }
 
-func (x *CreateNetworkRes) GetBridge() string {
+func (x *CreateNetworkResponse) GetBridge() string {
 	if x != nil {
 		return x.Bridge
 	}
 	return ""
 }
 
-type RemoveNetworkReq struct {
+type RemoveNetworkRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RemoveNetworkReq) Reset() {
-	*x = RemoveNetworkReq{}
+func (x *RemoveNetworkRequest) Reset() {
+	*x = RemoveNetworkRequest{}
 	mi := &file_joblet_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RemoveNetworkReq) String() string {
+func (x *RemoveNetworkRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RemoveNetworkReq) ProtoMessage() {}
+func (*RemoveNetworkRequest) ProtoMessage() {}
 
-func (x *RemoveNetworkReq) ProtoReflect() protoreflect.Message {
+func (x *RemoveNetworkRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1909,19 +1893,19 @@ func (x *RemoveNetworkReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RemoveNetworkReq.ProtoReflect.Descriptor instead.
-func (*RemoveNetworkReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use RemoveNetworkRequest.ProtoReflect.Descriptor instead.
+func (*RemoveNetworkRequest) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{26}
 }
 
-func (x *RemoveNetworkReq) GetName() string {
+func (x *RemoveNetworkRequest) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-type RemoveNetworkRes struct {
+type RemoveNetworkResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
 	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
@@ -1929,20 +1913,20 @@ type RemoveNetworkRes struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RemoveNetworkRes) Reset() {
-	*x = RemoveNetworkRes{}
+func (x *RemoveNetworkResponse) Reset() {
+	*x = RemoveNetworkResponse{}
 	mi := &file_joblet_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RemoveNetworkRes) String() string {
+func (x *RemoveNetworkResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RemoveNetworkRes) ProtoMessage() {}
+func (*RemoveNetworkResponse) ProtoMessage() {}
 
-func (x *RemoveNetworkRes) ProtoReflect() protoreflect.Message {
+func (x *RemoveNetworkResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1954,19 +1938,19 @@ func (x *RemoveNetworkRes) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RemoveNetworkRes.ProtoReflect.Descriptor instead.
-func (*RemoveNetworkRes) Descriptor() ([]byte, []int) {
+// Deprecated: Use RemoveNetworkResponse.ProtoReflect.Descriptor instead.
+func (*RemoveNetworkResponse) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{27}
 }
 
-func (x *RemoveNetworkRes) GetSuccess() bool {
+func (x *RemoveNetworkResponse) GetSuccess() bool {
 	if x != nil {
 		return x.Success
 	}
 	return false
 }
 
-func (x *RemoveNetworkRes) GetMessage() string {
+func (x *RemoveNetworkResponse) GetMessage() string {
 	if x != nil {
 		return x.Message
 	}
@@ -1978,7 +1962,7 @@ type Network struct {
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	Cidr          string                 `protobuf:"bytes,2,opt,name=cidr,proto3" json:"cidr,omitempty"`
 	Bridge        string                 `protobuf:"bytes,3,opt,name=bridge,proto3" json:"bridge,omitempty"`
-	JobCount      int32                  `protobuf:"varint,4,opt,name=jobCount,proto3" json:"jobCount,omitempty"`
+	JobCount      int32                  `protobuf:"varint,4,opt,name=job_count,json=jobCount,proto3" json:"job_count,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2085,7 +2069,7 @@ func (x *Networks) GetNetworks() []*Network {
 	return nil
 }
 
-type CreateVolumeReq struct {
+type CreateVolumeRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	Size          string                 `protobuf:"bytes,2,opt,name=size,proto3" json:"size,omitempty"` // Size (e.g., "1GB", "500MB")
@@ -2094,20 +2078,20 @@ type CreateVolumeReq struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *CreateVolumeReq) Reset() {
-	*x = CreateVolumeReq{}
+func (x *CreateVolumeRequest) Reset() {
+	*x = CreateVolumeRequest{}
 	mi := &file_joblet_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CreateVolumeReq) String() string {
+func (x *CreateVolumeRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CreateVolumeReq) ProtoMessage() {}
+func (*CreateVolumeRequest) ProtoMessage() {}
 
-func (x *CreateVolumeReq) ProtoReflect() protoreflect.Message {
+func (x *CreateVolumeRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2119,33 +2103,33 @@ func (x *CreateVolumeReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CreateVolumeReq.ProtoReflect.Descriptor instead.
-func (*CreateVolumeReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use CreateVolumeRequest.ProtoReflect.Descriptor instead.
+func (*CreateVolumeRequest) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{30}
 }
 
-func (x *CreateVolumeReq) GetName() string {
+func (x *CreateVolumeRequest) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *CreateVolumeReq) GetSize() string {
+func (x *CreateVolumeRequest) GetSize() string {
 	if x != nil {
 		return x.Size
 	}
 	return ""
 }
 
-func (x *CreateVolumeReq) GetType() string {
+func (x *CreateVolumeRequest) GetType() string {
 	if x != nil {
 		return x.Type
 	}
 	return ""
 }
 
-type CreateVolumeRes struct {
+type CreateVolumeResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	Size          string                 `protobuf:"bytes,2,opt,name=size,proto3" json:"size,omitempty"`
@@ -2155,20 +2139,20 @@ type CreateVolumeRes struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *CreateVolumeRes) Reset() {
-	*x = CreateVolumeRes{}
+func (x *CreateVolumeResponse) Reset() {
+	*x = CreateVolumeResponse{}
 	mi := &file_joblet_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CreateVolumeRes) String() string {
+func (x *CreateVolumeResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CreateVolumeRes) ProtoMessage() {}
+func (*CreateVolumeResponse) ProtoMessage() {}
 
-func (x *CreateVolumeRes) ProtoReflect() protoreflect.Message {
+func (x *CreateVolumeResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2180,60 +2164,60 @@ func (x *CreateVolumeRes) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CreateVolumeRes.ProtoReflect.Descriptor instead.
-func (*CreateVolumeRes) Descriptor() ([]byte, []int) {
+// Deprecated: Use CreateVolumeResponse.ProtoReflect.Descriptor instead.
+func (*CreateVolumeResponse) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{31}
 }
 
-func (x *CreateVolumeRes) GetName() string {
+func (x *CreateVolumeResponse) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *CreateVolumeRes) GetSize() string {
+func (x *CreateVolumeResponse) GetSize() string {
 	if x != nil {
 		return x.Size
 	}
 	return ""
 }
 
-func (x *CreateVolumeRes) GetType() string {
+func (x *CreateVolumeResponse) GetType() string {
 	if x != nil {
 		return x.Type
 	}
 	return ""
 }
 
-func (x *CreateVolumeRes) GetPath() string {
+func (x *CreateVolumeResponse) GetPath() string {
 	if x != nil {
 		return x.Path
 	}
 	return ""
 }
 
-type RemoveVolumeReq struct {
+type RemoveVolumeRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RemoveVolumeReq) Reset() {
-	*x = RemoveVolumeReq{}
+func (x *RemoveVolumeRequest) Reset() {
+	*x = RemoveVolumeRequest{}
 	mi := &file_joblet_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RemoveVolumeReq) String() string {
+func (x *RemoveVolumeRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RemoveVolumeReq) ProtoMessage() {}
+func (*RemoveVolumeRequest) ProtoMessage() {}
 
-func (x *RemoveVolumeReq) ProtoReflect() protoreflect.Message {
+func (x *RemoveVolumeRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2245,19 +2229,19 @@ func (x *RemoveVolumeReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RemoveVolumeReq.ProtoReflect.Descriptor instead.
-func (*RemoveVolumeReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use RemoveVolumeRequest.ProtoReflect.Descriptor instead.
+func (*RemoveVolumeRequest) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{32}
 }
 
-func (x *RemoveVolumeReq) GetName() string {
+func (x *RemoveVolumeRequest) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-type RemoveVolumeRes struct {
+type RemoveVolumeResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
 	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
@@ -2265,20 +2249,20 @@ type RemoveVolumeRes struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RemoveVolumeRes) Reset() {
-	*x = RemoveVolumeRes{}
+func (x *RemoveVolumeResponse) Reset() {
+	*x = RemoveVolumeResponse{}
 	mi := &file_joblet_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RemoveVolumeRes) String() string {
+func (x *RemoveVolumeResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RemoveVolumeRes) ProtoMessage() {}
+func (*RemoveVolumeResponse) ProtoMessage() {}
 
-func (x *RemoveVolumeRes) ProtoReflect() protoreflect.Message {
+func (x *RemoveVolumeResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2290,19 +2274,19 @@ func (x *RemoveVolumeRes) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RemoveVolumeRes.ProtoReflect.Descriptor instead.
-func (*RemoveVolumeRes) Descriptor() ([]byte, []int) {
+// Deprecated: Use RemoveVolumeResponse.ProtoReflect.Descriptor instead.
+func (*RemoveVolumeResponse) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{33}
 }
 
-func (x *RemoveVolumeRes) GetSuccess() bool {
+func (x *RemoveVolumeResponse) GetSuccess() bool {
 	if x != nil {
 		return x.Success
 	}
 	return false
 }
 
-func (x *RemoveVolumeRes) GetMessage() string {
+func (x *RemoveVolumeResponse) GetMessage() string {
 	if x != nil {
 		return x.Message
 	}
@@ -2315,8 +2299,8 @@ type Volume struct {
 	Size          string                 `protobuf:"bytes,2,opt,name=size,proto3" json:"size,omitempty"`
 	Type          string                 `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`
 	Path          string                 `protobuf:"bytes,4,opt,name=path,proto3" json:"path,omitempty"`
-	CreatedTime   string                 `protobuf:"bytes,5,opt,name=createdTime,proto3" json:"createdTime,omitempty"`
-	JobCount      int32                  `protobuf:"varint,6,opt,name=jobCount,proto3" json:"jobCount,omitempty"` // Jobs using this volume
+	CreatedTime   string                 `protobuf:"bytes,5,opt,name=created_time,json=createdTime,proto3" json:"created_time,omitempty"`
+	JobCount      int32                  `protobuf:"varint,6,opt,name=job_count,json=jobCount,proto3" json:"job_count,omitempty"` // Jobs using this volume
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2437,7 +2421,7 @@ func (x *Volumes) GetVolumes() []*Volume {
 	return nil
 }
 
-type SystemStatusRes struct {
+type SystemStatusResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Timestamp     string                 `protobuf:"bytes,1,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
 	Available     bool                   `protobuf:"varint,2,opt,name=available,proto3" json:"available,omitempty"`
@@ -2454,20 +2438,20 @@ type SystemStatusRes struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *SystemStatusRes) Reset() {
-	*x = SystemStatusRes{}
+func (x *SystemStatusResponse) Reset() {
+	*x = SystemStatusResponse{}
 	mi := &file_joblet_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *SystemStatusRes) String() string {
+func (x *SystemStatusResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SystemStatusRes) ProtoMessage() {}
+func (*SystemStatusResponse) ProtoMessage() {}
 
-func (x *SystemStatusRes) ProtoReflect() protoreflect.Message {
+func (x *SystemStatusResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2479,89 +2463,89 @@ func (x *SystemStatusRes) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use SystemStatusRes.ProtoReflect.Descriptor instead.
-func (*SystemStatusRes) Descriptor() ([]byte, []int) {
+// Deprecated: Use SystemStatusResponse.ProtoReflect.Descriptor instead.
+func (*SystemStatusResponse) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{36}
 }
 
-func (x *SystemStatusRes) GetTimestamp() string {
+func (x *SystemStatusResponse) GetTimestamp() string {
 	if x != nil {
 		return x.Timestamp
 	}
 	return ""
 }
 
-func (x *SystemStatusRes) GetAvailable() bool {
+func (x *SystemStatusResponse) GetAvailable() bool {
 	if x != nil {
 		return x.Available
 	}
 	return false
 }
 
-func (x *SystemStatusRes) GetHost() *HostInfo {
+func (x *SystemStatusResponse) GetHost() *HostInfo {
 	if x != nil {
 		return x.Host
 	}
 	return nil
 }
 
-func (x *SystemStatusRes) GetCpu() *CPUMetrics {
+func (x *SystemStatusResponse) GetCpu() *CPUMetrics {
 	if x != nil {
 		return x.Cpu
 	}
 	return nil
 }
 
-func (x *SystemStatusRes) GetMemory() *MemoryMetrics {
+func (x *SystemStatusResponse) GetMemory() *MemoryMetrics {
 	if x != nil {
 		return x.Memory
 	}
 	return nil
 }
 
-func (x *SystemStatusRes) GetDisks() []*DiskMetrics {
+func (x *SystemStatusResponse) GetDisks() []*DiskMetrics {
 	if x != nil {
 		return x.Disks
 	}
 	return nil
 }
 
-func (x *SystemStatusRes) GetNetworks() []*NetworkMetrics {
+func (x *SystemStatusResponse) GetNetworks() []*NetworkMetrics {
 	if x != nil {
 		return x.Networks
 	}
 	return nil
 }
 
-func (x *SystemStatusRes) GetIo() *IOMetrics {
+func (x *SystemStatusResponse) GetIo() *IOMetrics {
 	if x != nil {
 		return x.Io
 	}
 	return nil
 }
 
-func (x *SystemStatusRes) GetProcesses() *ProcessMetrics {
+func (x *SystemStatusResponse) GetProcesses() *ProcessMetrics {
 	if x != nil {
 		return x.Processes
 	}
 	return nil
 }
 
-func (x *SystemStatusRes) GetCloud() *CloudInfo {
+func (x *SystemStatusResponse) GetCloud() *CloudInfo {
 	if x != nil {
 		return x.Cloud
 	}
 	return nil
 }
 
-func (x *SystemStatusRes) GetServerVersion() *ServerVersionInfo {
+func (x *SystemStatusResponse) GetServerVersion() *ServerVersionInfo {
 	if x != nil {
 		return x.ServerVersion
 	}
 	return nil
 }
 
-type SystemMetricsRes struct {
+type SystemMetricsResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Timestamp     string                 `protobuf:"bytes,1,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
 	Host          *HostInfo              `protobuf:"bytes,2,opt,name=host,proto3" json:"host,omitempty"`
@@ -2576,20 +2560,20 @@ type SystemMetricsRes struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *SystemMetricsRes) Reset() {
-	*x = SystemMetricsRes{}
+func (x *SystemMetricsResponse) Reset() {
+	*x = SystemMetricsResponse{}
 	mi := &file_joblet_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *SystemMetricsRes) String() string {
+func (x *SystemMetricsResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SystemMetricsRes) ProtoMessage() {}
+func (*SystemMetricsResponse) ProtoMessage() {}
 
-func (x *SystemMetricsRes) ProtoReflect() protoreflect.Message {
+func (x *SystemMetricsResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2601,96 +2585,96 @@ func (x *SystemMetricsRes) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use SystemMetricsRes.ProtoReflect.Descriptor instead.
-func (*SystemMetricsRes) Descriptor() ([]byte, []int) {
+// Deprecated: Use SystemMetricsResponse.ProtoReflect.Descriptor instead.
+func (*SystemMetricsResponse) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{37}
 }
 
-func (x *SystemMetricsRes) GetTimestamp() string {
+func (x *SystemMetricsResponse) GetTimestamp() string {
 	if x != nil {
 		return x.Timestamp
 	}
 	return ""
 }
 
-func (x *SystemMetricsRes) GetHost() *HostInfo {
+func (x *SystemMetricsResponse) GetHost() *HostInfo {
 	if x != nil {
 		return x.Host
 	}
 	return nil
 }
 
-func (x *SystemMetricsRes) GetCpu() *CPUMetrics {
+func (x *SystemMetricsResponse) GetCpu() *CPUMetrics {
 	if x != nil {
 		return x.Cpu
 	}
 	return nil
 }
 
-func (x *SystemMetricsRes) GetMemory() *MemoryMetrics {
+func (x *SystemMetricsResponse) GetMemory() *MemoryMetrics {
 	if x != nil {
 		return x.Memory
 	}
 	return nil
 }
 
-func (x *SystemMetricsRes) GetDisks() []*DiskMetrics {
+func (x *SystemMetricsResponse) GetDisks() []*DiskMetrics {
 	if x != nil {
 		return x.Disks
 	}
 	return nil
 }
 
-func (x *SystemMetricsRes) GetNetworks() []*NetworkMetrics {
+func (x *SystemMetricsResponse) GetNetworks() []*NetworkMetrics {
 	if x != nil {
 		return x.Networks
 	}
 	return nil
 }
 
-func (x *SystemMetricsRes) GetIo() *IOMetrics {
+func (x *SystemMetricsResponse) GetIo() *IOMetrics {
 	if x != nil {
 		return x.Io
 	}
 	return nil
 }
 
-func (x *SystemMetricsRes) GetProcesses() *ProcessMetrics {
+func (x *SystemMetricsResponse) GetProcesses() *ProcessMetrics {
 	if x != nil {
 		return x.Processes
 	}
 	return nil
 }
 
-func (x *SystemMetricsRes) GetCloud() *CloudInfo {
+func (x *SystemMetricsResponse) GetCloud() *CloudInfo {
 	if x != nil {
 		return x.Cloud
 	}
 	return nil
 }
 
-type StreamMetricsReq struct {
+type StreamMetricsRequest struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
-	IntervalSeconds int32                  `protobuf:"varint,1,opt,name=intervalSeconds,proto3" json:"intervalSeconds,omitempty"` // How often to send updates (default: 5)
-	MetricTypes     []string               `protobuf:"bytes,2,rep,name=metricTypes,proto3" json:"metricTypes,omitempty"`          // Optional: filter by types
+	IntervalSeconds int32                  `protobuf:"varint,1,opt,name=interval_seconds,json=intervalSeconds,proto3" json:"interval_seconds,omitempty"` // How often to send updates (default: 5)
+	MetricTypes     []string               `protobuf:"bytes,2,rep,name=metric_types,json=metricTypes,proto3" json:"metric_types,omitempty"`              // Optional: filter by types
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
 
-func (x *StreamMetricsReq) Reset() {
-	*x = StreamMetricsReq{}
+func (x *StreamMetricsRequest) Reset() {
+	*x = StreamMetricsRequest{}
 	mi := &file_joblet_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *StreamMetricsReq) String() string {
+func (x *StreamMetricsRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*StreamMetricsReq) ProtoMessage() {}
+func (*StreamMetricsRequest) ProtoMessage() {}
 
-func (x *StreamMetricsReq) ProtoReflect() protoreflect.Message {
+func (x *StreamMetricsRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2702,19 +2686,19 @@ func (x *StreamMetricsReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use StreamMetricsReq.ProtoReflect.Descriptor instead.
-func (*StreamMetricsReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use StreamMetricsRequest.ProtoReflect.Descriptor instead.
+func (*StreamMetricsRequest) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{38}
 }
 
-func (x *StreamMetricsReq) GetIntervalSeconds() int32 {
+func (x *StreamMetricsRequest) GetIntervalSeconds() int32 {
 	if x != nil {
 		return x.IntervalSeconds
 	}
 	return 0
 }
 
-func (x *StreamMetricsReq) GetMetricTypes() []string {
+func (x *StreamMetricsRequest) GetMetricTypes() []string {
 	if x != nil {
 		return x.MetricTypes
 	}
@@ -2726,18 +2710,18 @@ type HostInfo struct {
 	Hostname        string                 `protobuf:"bytes,1,opt,name=hostname,proto3" json:"hostname,omitempty"`
 	Os              string                 `protobuf:"bytes,2,opt,name=os,proto3" json:"os,omitempty"`
 	Platform        string                 `protobuf:"bytes,3,opt,name=platform,proto3" json:"platform,omitempty"`
-	PlatformFamily  string                 `protobuf:"bytes,4,opt,name=platformFamily,proto3" json:"platformFamily,omitempty"`
-	PlatformVersion string                 `protobuf:"bytes,5,opt,name=platformVersion,proto3" json:"platformVersion,omitempty"`
-	KernelVersion   string                 `protobuf:"bytes,6,opt,name=kernelVersion,proto3" json:"kernelVersion,omitempty"`
-	KernelArch      string                 `protobuf:"bytes,7,opt,name=kernelArch,proto3" json:"kernelArch,omitempty"`
+	PlatformFamily  string                 `protobuf:"bytes,4,opt,name=platform_family,json=platformFamily,proto3" json:"platform_family,omitempty"`
+	PlatformVersion string                 `protobuf:"bytes,5,opt,name=platform_version,json=platformVersion,proto3" json:"platform_version,omitempty"`
+	KernelVersion   string                 `protobuf:"bytes,6,opt,name=kernel_version,json=kernelVersion,proto3" json:"kernel_version,omitempty"`
+	KernelArch      string                 `protobuf:"bytes,7,opt,name=kernel_arch,json=kernelArch,proto3" json:"kernel_arch,omitempty"`
 	Architecture    string                 `protobuf:"bytes,8,opt,name=architecture,proto3" json:"architecture,omitempty"`
-	CpuCount        int32                  `protobuf:"varint,9,opt,name=cpuCount,proto3" json:"cpuCount,omitempty"`
-	TotalMemory     int64                  `protobuf:"varint,10,opt,name=totalMemory,proto3" json:"totalMemory,omitempty"`
-	BootTime        string                 `protobuf:"bytes,11,opt,name=bootTime,proto3" json:"bootTime,omitempty"`
+	CpuCount        int32                  `protobuf:"varint,9,opt,name=cpu_count,json=cpuCount,proto3" json:"cpu_count,omitempty"`
+	TotalMemory     int64                  `protobuf:"varint,10,opt,name=total_memory,json=totalMemory,proto3" json:"total_memory,omitempty"`
+	BootTime        string                 `protobuf:"bytes,11,opt,name=boot_time,json=bootTime,proto3" json:"boot_time,omitempty"`
 	Uptime          int64                  `protobuf:"varint,12,opt,name=uptime,proto3" json:"uptime,omitempty"`
-	NodeId          string                 `protobuf:"bytes,13,opt,name=nodeId,proto3" json:"nodeId,omitempty"`             // Unique node identifier (UUID)
-	ServerIPs       []string               `protobuf:"bytes,14,rep,name=serverIPs,proto3" json:"serverIPs,omitempty"`       // Server IP addresses (can have multiple interfaces)
-	MacAddresses    []string               `protobuf:"bytes,15,rep,name=macAddresses,proto3" json:"macAddresses,omitempty"` // MAC addresses for network interfaces
+	NodeId          string                 `protobuf:"bytes,13,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"`                   // Unique node identifier (UUID)
+	ServerIps       []string               `protobuf:"bytes,14,rep,name=server_ips,json=serverIps,proto3" json:"server_ips,omitempty"`          // Server IP addresses (can have multiple interfaces)
+	MacAddresses    []string               `protobuf:"bytes,15,rep,name=mac_addresses,json=macAddresses,proto3" json:"mac_addresses,omitempty"` // MAC addresses for network interfaces
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -2863,9 +2847,9 @@ func (x *HostInfo) GetNodeId() string {
 	return ""
 }
 
-func (x *HostInfo) GetServerIPs() []string {
+func (x *HostInfo) GetServerIps() []string {
 	if x != nil {
-		return x.ServerIPs
+		return x.ServerIps
 	}
 	return nil
 }
@@ -2880,14 +2864,14 @@ func (x *HostInfo) GetMacAddresses() []string {
 type CPUMetrics struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Cores         int32                  `protobuf:"varint,1,opt,name=cores,proto3" json:"cores,omitempty"`
-	UsagePercent  float64                `protobuf:"fixed64,2,opt,name=usagePercent,proto3" json:"usagePercent,omitempty"`
-	UserTime      float64                `protobuf:"fixed64,3,opt,name=userTime,proto3" json:"userTime,omitempty"`
-	SystemTime    float64                `protobuf:"fixed64,4,opt,name=systemTime,proto3" json:"systemTime,omitempty"`
-	IdleTime      float64                `protobuf:"fixed64,5,opt,name=idleTime,proto3" json:"idleTime,omitempty"`
-	IoWaitTime    float64                `protobuf:"fixed64,6,opt,name=ioWaitTime,proto3" json:"ioWaitTime,omitempty"`
-	StealTime     float64                `protobuf:"fixed64,7,opt,name=stealTime,proto3" json:"stealTime,omitempty"`
-	LoadAverage   []float64              `protobuf:"fixed64,8,rep,packed,name=loadAverage,proto3" json:"loadAverage,omitempty"` // 1, 5, 15 min load
-	PerCoreUsage  []float64              `protobuf:"fixed64,9,rep,packed,name=perCoreUsage,proto3" json:"perCoreUsage,omitempty"`
+	UsagePercent  float64                `protobuf:"fixed64,2,opt,name=usage_percent,json=usagePercent,proto3" json:"usage_percent,omitempty"`
+	UserTime      float64                `protobuf:"fixed64,3,opt,name=user_time,json=userTime,proto3" json:"user_time,omitempty"`
+	SystemTime    float64                `protobuf:"fixed64,4,opt,name=system_time,json=systemTime,proto3" json:"system_time,omitempty"`
+	IdleTime      float64                `protobuf:"fixed64,5,opt,name=idle_time,json=idleTime,proto3" json:"idle_time,omitempty"`
+	IoWaitTime    float64                `protobuf:"fixed64,6,opt,name=io_wait_time,json=ioWaitTime,proto3" json:"io_wait_time,omitempty"`
+	StealTime     float64                `protobuf:"fixed64,7,opt,name=steal_time,json=stealTime,proto3" json:"steal_time,omitempty"`
+	LoadAverage   []float64              `protobuf:"fixed64,8,rep,packed,name=load_average,json=loadAverage,proto3" json:"load_average,omitempty"` // 1, 5, 15 min load
+	PerCoreUsage  []float64              `protobuf:"fixed64,9,rep,packed,name=per_core_usage,json=perCoreUsage,proto3" json:"per_core_usage,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2987,16 +2971,16 @@ func (x *CPUMetrics) GetPerCoreUsage() []float64 {
 
 type MemoryMetrics struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	TotalBytes     int64                  `protobuf:"varint,1,opt,name=totalBytes,proto3" json:"totalBytes,omitempty"`
-	UsedBytes      int64                  `protobuf:"varint,2,opt,name=usedBytes,proto3" json:"usedBytes,omitempty"`
-	FreeBytes      int64                  `protobuf:"varint,3,opt,name=freeBytes,proto3" json:"freeBytes,omitempty"`
-	AvailableBytes int64                  `protobuf:"varint,4,opt,name=availableBytes,proto3" json:"availableBytes,omitempty"`
-	UsagePercent   float64                `protobuf:"fixed64,5,opt,name=usagePercent,proto3" json:"usagePercent,omitempty"`
-	CachedBytes    int64                  `protobuf:"varint,6,opt,name=cachedBytes,proto3" json:"cachedBytes,omitempty"`
-	BufferedBytes  int64                  `protobuf:"varint,7,opt,name=bufferedBytes,proto3" json:"bufferedBytes,omitempty"`
-	SwapTotal      int64                  `protobuf:"varint,8,opt,name=swapTotal,proto3" json:"swapTotal,omitempty"`
-	SwapUsed       int64                  `protobuf:"varint,9,opt,name=swapUsed,proto3" json:"swapUsed,omitempty"`
-	SwapFree       int64                  `protobuf:"varint,10,opt,name=swapFree,proto3" json:"swapFree,omitempty"`
+	TotalBytes     int64                  `protobuf:"varint,1,opt,name=total_bytes,json=totalBytes,proto3" json:"total_bytes,omitempty"`
+	UsedBytes      int64                  `protobuf:"varint,2,opt,name=used_bytes,json=usedBytes,proto3" json:"used_bytes,omitempty"`
+	FreeBytes      int64                  `protobuf:"varint,3,opt,name=free_bytes,json=freeBytes,proto3" json:"free_bytes,omitempty"`
+	AvailableBytes int64                  `protobuf:"varint,4,opt,name=available_bytes,json=availableBytes,proto3" json:"available_bytes,omitempty"`
+	UsagePercent   float64                `protobuf:"fixed64,5,opt,name=usage_percent,json=usagePercent,proto3" json:"usage_percent,omitempty"`
+	CachedBytes    int64                  `protobuf:"varint,6,opt,name=cached_bytes,json=cachedBytes,proto3" json:"cached_bytes,omitempty"`
+	BufferedBytes  int64                  `protobuf:"varint,7,opt,name=buffered_bytes,json=bufferedBytes,proto3" json:"buffered_bytes,omitempty"`
+	SwapTotal      int64                  `protobuf:"varint,8,opt,name=swap_total,json=swapTotal,proto3" json:"swap_total,omitempty"`
+	SwapUsed       int64                  `protobuf:"varint,9,opt,name=swap_used,json=swapUsed,proto3" json:"swap_used,omitempty"`
+	SwapFree       int64                  `protobuf:"varint,10,opt,name=swap_free,json=swapFree,proto3" json:"swap_free,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -3104,16 +3088,16 @@ func (x *MemoryMetrics) GetSwapFree() int64 {
 type DiskMetrics struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
 	Device             string                 `protobuf:"bytes,1,opt,name=device,proto3" json:"device,omitempty"`
-	MountPoint         string                 `protobuf:"bytes,2,opt,name=mountPoint,proto3" json:"mountPoint,omitempty"`
+	MountPoint         string                 `protobuf:"bytes,2,opt,name=mount_point,json=mountPoint,proto3" json:"mount_point,omitempty"`
 	Filesystem         string                 `protobuf:"bytes,3,opt,name=filesystem,proto3" json:"filesystem,omitempty"`
-	TotalBytes         int64                  `protobuf:"varint,4,opt,name=totalBytes,proto3" json:"totalBytes,omitempty"`
-	UsedBytes          int64                  `protobuf:"varint,5,opt,name=usedBytes,proto3" json:"usedBytes,omitempty"`
-	FreeBytes          int64                  `protobuf:"varint,6,opt,name=freeBytes,proto3" json:"freeBytes,omitempty"`
-	UsagePercent       float64                `protobuf:"fixed64,7,opt,name=usagePercent,proto3" json:"usagePercent,omitempty"`
-	InodesTotal        int64                  `protobuf:"varint,8,opt,name=inodesTotal,proto3" json:"inodesTotal,omitempty"`
-	InodesUsed         int64                  `protobuf:"varint,9,opt,name=inodesUsed,proto3" json:"inodesUsed,omitempty"`
-	InodesFree         int64                  `protobuf:"varint,10,opt,name=inodesFree,proto3" json:"inodesFree,omitempty"`
-	InodesUsagePercent float64                `protobuf:"fixed64,11,opt,name=inodesUsagePercent,proto3" json:"inodesUsagePercent,omitempty"`
+	TotalBytes         int64                  `protobuf:"varint,4,opt,name=total_bytes,json=totalBytes,proto3" json:"total_bytes,omitempty"`
+	UsedBytes          int64                  `protobuf:"varint,5,opt,name=used_bytes,json=usedBytes,proto3" json:"used_bytes,omitempty"`
+	FreeBytes          int64                  `protobuf:"varint,6,opt,name=free_bytes,json=freeBytes,proto3" json:"free_bytes,omitempty"`
+	UsagePercent       float64                `protobuf:"fixed64,7,opt,name=usage_percent,json=usagePercent,proto3" json:"usage_percent,omitempty"`
+	InodesTotal        int64                  `protobuf:"varint,8,opt,name=inodes_total,json=inodesTotal,proto3" json:"inodes_total,omitempty"`
+	InodesUsed         int64                  `protobuf:"varint,9,opt,name=inodes_used,json=inodesUsed,proto3" json:"inodes_used,omitempty"`
+	InodesFree         int64                  `protobuf:"varint,10,opt,name=inodes_free,json=inodesFree,proto3" json:"inodes_free,omitempty"`
+	InodesUsagePercent float64                `protobuf:"fixed64,11,opt,name=inodes_usage_percent,json=inodesUsagePercent,proto3" json:"inodes_usage_percent,omitempty"`
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
@@ -3228,18 +3212,18 @@ func (x *DiskMetrics) GetInodesUsagePercent() float64 {
 type NetworkMetrics struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	Interface       string                 `protobuf:"bytes,1,opt,name=interface,proto3" json:"interface,omitempty"`
-	BytesReceived   int64                  `protobuf:"varint,2,opt,name=bytesReceived,proto3" json:"bytesReceived,omitempty"`
-	BytesSent       int64                  `protobuf:"varint,3,opt,name=bytesSent,proto3" json:"bytesSent,omitempty"`
-	PacketsReceived int64                  `protobuf:"varint,4,opt,name=packetsReceived,proto3" json:"packetsReceived,omitempty"`
-	PacketsSent     int64                  `protobuf:"varint,5,opt,name=packetsSent,proto3" json:"packetsSent,omitempty"`
-	ErrorsIn        int64                  `protobuf:"varint,6,opt,name=errorsIn,proto3" json:"errorsIn,omitempty"`
-	ErrorsOut       int64                  `protobuf:"varint,7,opt,name=errorsOut,proto3" json:"errorsOut,omitempty"`
-	DropsIn         int64                  `protobuf:"varint,8,opt,name=dropsIn,proto3" json:"dropsIn,omitempty"`
-	DropsOut        int64                  `protobuf:"varint,9,opt,name=dropsOut,proto3" json:"dropsOut,omitempty"`
-	ReceiveRate     float64                `protobuf:"fixed64,10,opt,name=receiveRate,proto3" json:"receiveRate,omitempty"`   // bytes/sec
-	TransmitRate    float64                `protobuf:"fixed64,11,opt,name=transmitRate,proto3" json:"transmitRate,omitempty"` // bytes/sec
-	IpAddresses     []string               `protobuf:"bytes,12,rep,name=ipAddresses,proto3" json:"ipAddresses,omitempty"`     // IP addresses assigned to this interface (e.g., ["192.168.1.10", "fe80::1"])
-	MacAddress      string                 `protobuf:"bytes,13,opt,name=macAddress,proto3" json:"macAddress,omitempty"`       // Hardware MAC address (e.g., "00:1a:2b:3c:4d:5e")
+	BytesReceived   int64                  `protobuf:"varint,2,opt,name=bytes_received,json=bytesReceived,proto3" json:"bytes_received,omitempty"`
+	BytesSent       int64                  `protobuf:"varint,3,opt,name=bytes_sent,json=bytesSent,proto3" json:"bytes_sent,omitempty"`
+	PacketsReceived int64                  `protobuf:"varint,4,opt,name=packets_received,json=packetsReceived,proto3" json:"packets_received,omitempty"`
+	PacketsSent     int64                  `protobuf:"varint,5,opt,name=packets_sent,json=packetsSent,proto3" json:"packets_sent,omitempty"`
+	ErrorsIn        int64                  `protobuf:"varint,6,opt,name=errors_in,json=errorsIn,proto3" json:"errors_in,omitempty"`
+	ErrorsOut       int64                  `protobuf:"varint,7,opt,name=errors_out,json=errorsOut,proto3" json:"errors_out,omitempty"`
+	DropsIn         int64                  `protobuf:"varint,8,opt,name=drops_in,json=dropsIn,proto3" json:"drops_in,omitempty"`
+	DropsOut        int64                  `protobuf:"varint,9,opt,name=drops_out,json=dropsOut,proto3" json:"drops_out,omitempty"`
+	ReceiveRate     float64                `protobuf:"fixed64,10,opt,name=receive_rate,json=receiveRate,proto3" json:"receive_rate,omitempty"`    // bytes/sec
+	TransmitRate    float64                `protobuf:"fixed64,11,opt,name=transmit_rate,json=transmitRate,proto3" json:"transmit_rate,omitempty"` // bytes/sec
+	IpAddresses     []string               `protobuf:"bytes,12,rep,name=ip_addresses,json=ipAddresses,proto3" json:"ip_addresses,omitempty"`      // IP addresses assigned to this interface (e.g., ["192.168.1.10", "fe80::1"])
+	MacAddress      string                 `protobuf:"bytes,13,opt,name=mac_address,json=macAddress,proto3" json:"mac_address,omitempty"`         // Hardware MAC address (e.g., "00:1a:2b:3c:4d:5e")
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -3367,13 +3351,13 @@ func (x *NetworkMetrics) GetMacAddress() string {
 
 type IOMetrics struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TotalReads    int64                  `protobuf:"varint,1,opt,name=totalReads,proto3" json:"totalReads,omitempty"`
-	TotalWrites   int64                  `protobuf:"varint,2,opt,name=totalWrites,proto3" json:"totalWrites,omitempty"`
-	ReadBytes     int64                  `protobuf:"varint,3,opt,name=readBytes,proto3" json:"readBytes,omitempty"`
-	WriteBytes    int64                  `protobuf:"varint,4,opt,name=writeBytes,proto3" json:"writeBytes,omitempty"`
-	ReadRate      float64                `protobuf:"fixed64,5,opt,name=readRate,proto3" json:"readRate,omitempty"`   // bytes/sec
-	WriteRate     float64                `protobuf:"fixed64,6,opt,name=writeRate,proto3" json:"writeRate,omitempty"` // bytes/sec
-	DiskIO        []*DiskIOMetrics       `protobuf:"bytes,7,rep,name=diskIO,proto3" json:"diskIO,omitempty"`
+	TotalReads    int64                  `protobuf:"varint,1,opt,name=total_reads,json=totalReads,proto3" json:"total_reads,omitempty"`
+	TotalWrites   int64                  `protobuf:"varint,2,opt,name=total_writes,json=totalWrites,proto3" json:"total_writes,omitempty"`
+	ReadBytes     int64                  `protobuf:"varint,3,opt,name=read_bytes,json=readBytes,proto3" json:"read_bytes,omitempty"`
+	WriteBytes    int64                  `protobuf:"varint,4,opt,name=write_bytes,json=writeBytes,proto3" json:"write_bytes,omitempty"`
+	ReadRate      float64                `protobuf:"fixed64,5,opt,name=read_rate,json=readRate,proto3" json:"read_rate,omitempty"`    // bytes/sec
+	WriteRate     float64                `protobuf:"fixed64,6,opt,name=write_rate,json=writeRate,proto3" json:"write_rate,omitempty"` // bytes/sec
+	DiskIo        []*DiskIOMetrics       `protobuf:"bytes,7,rep,name=disk_io,json=diskIo,proto3" json:"disk_io,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3450,9 +3434,9 @@ func (x *IOMetrics) GetWriteRate() float64 {
 	return 0
 }
 
-func (x *IOMetrics) GetDiskIO() []*DiskIOMetrics {
+func (x *IOMetrics) GetDiskIo() []*DiskIOMetrics {
 	if x != nil {
-		return x.DiskIO
+		return x.DiskIo
 	}
 	return nil
 }
@@ -3460,14 +3444,14 @@ func (x *IOMetrics) GetDiskIO() []*DiskIOMetrics {
 type DiskIOMetrics struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	Device          string                 `protobuf:"bytes,1,opt,name=device,proto3" json:"device,omitempty"`
-	ReadsCompleted  int64                  `protobuf:"varint,2,opt,name=readsCompleted,proto3" json:"readsCompleted,omitempty"`
-	WritesCompleted int64                  `protobuf:"varint,3,opt,name=writesCompleted,proto3" json:"writesCompleted,omitempty"`
-	ReadBytes       int64                  `protobuf:"varint,4,opt,name=readBytes,proto3" json:"readBytes,omitempty"`
-	WriteBytes      int64                  `protobuf:"varint,5,opt,name=writeBytes,proto3" json:"writeBytes,omitempty"`
-	ReadTime        int64                  `protobuf:"varint,6,opt,name=readTime,proto3" json:"readTime,omitempty"`        // ms
-	WriteTime       int64                  `protobuf:"varint,7,opt,name=writeTime,proto3" json:"writeTime,omitempty"`      // ms
-	IoTime          int64                  `protobuf:"varint,8,opt,name=ioTime,proto3" json:"ioTime,omitempty"`            // ms
-	Utilization     float64                `protobuf:"fixed64,9,opt,name=utilization,proto3" json:"utilization,omitempty"` // percent
+	ReadsCompleted  int64                  `protobuf:"varint,2,opt,name=reads_completed,json=readsCompleted,proto3" json:"reads_completed,omitempty"`
+	WritesCompleted int64                  `protobuf:"varint,3,opt,name=writes_completed,json=writesCompleted,proto3" json:"writes_completed,omitempty"`
+	ReadBytes       int64                  `protobuf:"varint,4,opt,name=read_bytes,json=readBytes,proto3" json:"read_bytes,omitempty"`
+	WriteBytes      int64                  `protobuf:"varint,5,opt,name=write_bytes,json=writeBytes,proto3" json:"write_bytes,omitempty"`
+	ReadTime        int64                  `protobuf:"varint,6,opt,name=read_time,json=readTime,proto3" json:"read_time,omitempty"`    // ms
+	WriteTime       int64                  `protobuf:"varint,7,opt,name=write_time,json=writeTime,proto3" json:"write_time,omitempty"` // ms
+	IoTime          int64                  `protobuf:"varint,8,opt,name=io_time,json=ioTime,proto3" json:"io_time,omitempty"`          // ms
+	Utilization     float64                `protobuf:"fixed64,9,opt,name=utilization,proto3" json:"utilization,omitempty"`             // percent
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -3567,14 +3551,14 @@ func (x *DiskIOMetrics) GetUtilization() float64 {
 
 type ProcessMetrics struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
-	TotalProcesses    int32                  `protobuf:"varint,1,opt,name=totalProcesses,proto3" json:"totalProcesses,omitempty"`
-	RunningProcesses  int32                  `protobuf:"varint,2,opt,name=runningProcesses,proto3" json:"runningProcesses,omitempty"`
-	SleepingProcesses int32                  `protobuf:"varint,3,opt,name=sleepingProcesses,proto3" json:"sleepingProcesses,omitempty"`
-	StoppedProcesses  int32                  `protobuf:"varint,4,opt,name=stoppedProcesses,proto3" json:"stoppedProcesses,omitempty"`
-	ZombieProcesses   int32                  `protobuf:"varint,5,opt,name=zombieProcesses,proto3" json:"zombieProcesses,omitempty"`
-	TotalThreads      int32                  `protobuf:"varint,6,opt,name=totalThreads,proto3" json:"totalThreads,omitempty"`
-	TopByCPU          []*ProcessInfo         `protobuf:"bytes,7,rep,name=topByCPU,proto3" json:"topByCPU,omitempty"`
-	TopByMemory       []*ProcessInfo         `protobuf:"bytes,8,rep,name=topByMemory,proto3" json:"topByMemory,omitempty"`
+	TotalProcesses    int32                  `protobuf:"varint,1,opt,name=total_processes,json=totalProcesses,proto3" json:"total_processes,omitempty"`
+	RunningProcesses  int32                  `protobuf:"varint,2,opt,name=running_processes,json=runningProcesses,proto3" json:"running_processes,omitempty"`
+	SleepingProcesses int32                  `protobuf:"varint,3,opt,name=sleeping_processes,json=sleepingProcesses,proto3" json:"sleeping_processes,omitempty"`
+	StoppedProcesses  int32                  `protobuf:"varint,4,opt,name=stopped_processes,json=stoppedProcesses,proto3" json:"stopped_processes,omitempty"`
+	ZombieProcesses   int32                  `protobuf:"varint,5,opt,name=zombie_processes,json=zombieProcesses,proto3" json:"zombie_processes,omitempty"`
+	TotalThreads      int32                  `protobuf:"varint,6,opt,name=total_threads,json=totalThreads,proto3" json:"total_threads,omitempty"`
+	TopByCpu          []*ProcessInfo         `protobuf:"bytes,7,rep,name=top_by_cpu,json=topByCpu,proto3" json:"top_by_cpu,omitempty"`
+	TopByMemory       []*ProcessInfo         `protobuf:"bytes,8,rep,name=top_by_memory,json=topByMemory,proto3" json:"top_by_memory,omitempty"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -3651,9 +3635,9 @@ func (x *ProcessMetrics) GetTotalThreads() int32 {
 	return 0
 }
 
-func (x *ProcessMetrics) GetTopByCPU() []*ProcessInfo {
+func (x *ProcessMetrics) GetTopByCpu() []*ProcessInfo {
 	if x != nil {
-		return x.TopByCPU
+		return x.TopByCpu
 	}
 	return nil
 }
@@ -3671,11 +3655,11 @@ type ProcessInfo struct {
 	Ppid          int32                  `protobuf:"varint,2,opt,name=ppid,proto3" json:"ppid,omitempty"`
 	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
 	Command       string                 `protobuf:"bytes,4,opt,name=command,proto3" json:"command,omitempty"`
-	CpuPercent    float64                `protobuf:"fixed64,5,opt,name=cpuPercent,proto3" json:"cpuPercent,omitempty"`
-	MemoryPercent float64                `protobuf:"fixed64,6,opt,name=memoryPercent,proto3" json:"memoryPercent,omitempty"`
-	MemoryBytes   int64                  `protobuf:"varint,7,opt,name=memoryBytes,proto3" json:"memoryBytes,omitempty"`
+	CpuPercent    float64                `protobuf:"fixed64,5,opt,name=cpu_percent,json=cpuPercent,proto3" json:"cpu_percent,omitempty"`
+	MemoryPercent float64                `protobuf:"fixed64,6,opt,name=memory_percent,json=memoryPercent,proto3" json:"memory_percent,omitempty"`
+	MemoryBytes   int64                  `protobuf:"varint,7,opt,name=memory_bytes,json=memoryBytes,proto3" json:"memory_bytes,omitempty"`
 	Status        string                 `protobuf:"bytes,8,opt,name=status,proto3" json:"status,omitempty"`
-	StartTime     string                 `protobuf:"bytes,9,opt,name=startTime,proto3" json:"startTime,omitempty"`
+	StartTime     string                 `protobuf:"bytes,9,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
 	User          string                 `protobuf:"bytes,10,opt,name=user,proto3" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -3786,9 +3770,9 @@ type CloudInfo struct {
 	Provider       string                 `protobuf:"bytes,1,opt,name=provider,proto3" json:"provider,omitempty"`
 	Region         string                 `protobuf:"bytes,2,opt,name=region,proto3" json:"region,omitempty"`
 	Zone           string                 `protobuf:"bytes,3,opt,name=zone,proto3" json:"zone,omitempty"`
-	InstanceID     string                 `protobuf:"bytes,4,opt,name=instanceID,proto3" json:"instanceID,omitempty"`
-	InstanceType   string                 `protobuf:"bytes,5,opt,name=instanceType,proto3" json:"instanceType,omitempty"`
-	HypervisorType string                 `protobuf:"bytes,6,opt,name=hypervisorType,proto3" json:"hypervisorType,omitempty"`
+	InstanceId     string                 `protobuf:"bytes,4,opt,name=instance_id,json=instanceId,proto3" json:"instance_id,omitempty"`
+	InstanceType   string                 `protobuf:"bytes,5,opt,name=instance_type,json=instanceType,proto3" json:"instance_type,omitempty"`
+	HypervisorType string                 `protobuf:"bytes,6,opt,name=hypervisor_type,json=hypervisorType,proto3" json:"hypervisor_type,omitempty"`
 	Metadata       map[string]string      `protobuf:"bytes,7,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
@@ -3845,9 +3829,9 @@ func (x *CloudInfo) GetZone() string {
 	return ""
 }
 
-func (x *CloudInfo) GetInstanceID() string {
+func (x *CloudInfo) GetInstanceId() string {
 	if x != nil {
-		return x.InstanceID
+		return x.InstanceId
 	}
 	return ""
 }
@@ -3982,27 +3966,27 @@ func (x *ServerVersionInfo) GetProtoTag() string {
 }
 
 // Runtime management messages
-type RuntimesRes struct {
+type ListRuntimesResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Runtimes      []*RuntimeInfo         `protobuf:"bytes,1,rep,name=runtimes,proto3" json:"runtimes,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RuntimesRes) Reset() {
-	*x = RuntimesRes{}
+func (x *ListRuntimesResponse) Reset() {
+	*x = ListRuntimesResponse{}
 	mi := &file_joblet_proto_msgTypes[50]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RuntimesRes) String() string {
+func (x *ListRuntimesResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RuntimesRes) ProtoMessage() {}
+func (*ListRuntimesResponse) ProtoMessage() {}
 
-func (x *RuntimesRes) ProtoReflect() protoreflect.Message {
+func (x *ListRuntimesResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[50]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -4014,12 +3998,12 @@ func (x *RuntimesRes) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RuntimesRes.ProtoReflect.Descriptor instead.
-func (*RuntimesRes) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListRuntimesResponse.ProtoReflect.Descriptor instead.
+func (*ListRuntimesResponse) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{50}
 }
 
-func (x *RuntimesRes) GetRuntimes() []*RuntimeInfo {
+func (x *ListRuntimesResponse) GetRuntimes() []*RuntimeInfo {
 	if x != nil {
 		return x.Runtimes
 	}
@@ -4028,13 +4012,13 @@ func (x *RuntimesRes) GetRuntimes() []*RuntimeInfo {
 
 type RuntimeInfo struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
-	Name            string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`               // Runtime name (e.g., "python-3.11-ml")
-	Language        string                 `protobuf:"bytes,2,opt,name=language,proto3" json:"language,omitempty"`       // Language (e.g., "python")
-	Version         string                 `protobuf:"bytes,3,opt,name=version,proto3" json:"version,omitempty"`         // Runtime version (e.g., "1.0.0")
-	Description     string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"` // Description
-	SizeBytes       int64                  `protobuf:"varint,5,opt,name=sizeBytes,proto3" json:"sizeBytes,omitempty"`    // Size in bytes
-	Packages        []string               `protobuf:"bytes,6,rep,name=packages,proto3" json:"packages,omitempty"`       // Installed packages (pip, npm, etc.)
-	Available       bool                   `protobuf:"varint,7,opt,name=available,proto3" json:"available,omitempty"`    // Ready to use
+	Name            string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`                             // Runtime name (e.g., "python-3.11-ml")
+	Language        string                 `protobuf:"bytes,2,opt,name=language,proto3" json:"language,omitempty"`                     // Language (e.g., "python")
+	Version         string                 `protobuf:"bytes,3,opt,name=version,proto3" json:"version,omitempty"`                       // Runtime version (e.g., "1.0.0")
+	Description     string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`               // Description
+	SizeBytes       int64                  `protobuf:"varint,5,opt,name=size_bytes,json=sizeBytes,proto3" json:"size_bytes,omitempty"` // Size in bytes
+	Packages        []string               `protobuf:"bytes,6,rep,name=packages,proto3" json:"packages,omitempty"`                     // Installed packages (pip, npm, etc.)
+	Available       bool                   `protobuf:"varint,7,opt,name=available,proto3" json:"available,omitempty"`                  // Ready to use
 	Requirements    *RuntimeRequirements   `protobuf:"bytes,8,opt,name=requirements,proto3" json:"requirements,omitempty"`
 	LanguageVersion string                 `protobuf:"bytes,9,opt,name=language_version,json=languageVersion,proto3" json:"language_version,omitempty"`                                             // Language version (e.g., "3.11" for Python)
 	Libraries       []string               `protobuf:"bytes,10,rep,name=libraries,proto3" json:"libraries,omitempty"`                                                                               // Library patterns copied (e.g., "libopenblas*")
@@ -4278,27 +4262,27 @@ func (x *RuntimeRequirements) GetGpu() bool {
 	return false
 }
 
-type RuntimeInfoReq struct {
+type GetRuntimeInfoRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Runtime       string                 `protobuf:"bytes,1,opt,name=runtime,proto3" json:"runtime,omitempty"` // e.g., "python-3.11-ml"
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RuntimeInfoReq) Reset() {
-	*x = RuntimeInfoReq{}
+func (x *GetRuntimeInfoRequest) Reset() {
+	*x = GetRuntimeInfoRequest{}
 	mi := &file_joblet_proto_msgTypes[54]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RuntimeInfoReq) String() string {
+func (x *GetRuntimeInfoRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RuntimeInfoReq) ProtoMessage() {}
+func (*GetRuntimeInfoRequest) ProtoMessage() {}
 
-func (x *RuntimeInfoReq) ProtoReflect() protoreflect.Message {
+func (x *GetRuntimeInfoRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[54]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -4310,19 +4294,19 @@ func (x *RuntimeInfoReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RuntimeInfoReq.ProtoReflect.Descriptor instead.
-func (*RuntimeInfoReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetRuntimeInfoRequest.ProtoReflect.Descriptor instead.
+func (*GetRuntimeInfoRequest) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{54}
 }
 
-func (x *RuntimeInfoReq) GetRuntime() string {
+func (x *GetRuntimeInfoRequest) GetRuntime() string {
 	if x != nil {
 		return x.Runtime
 	}
 	return ""
 }
 
-type RuntimeInfoRes struct {
+type GetRuntimeInfoResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Runtime       *RuntimeInfo           `protobuf:"bytes,1,opt,name=runtime,proto3" json:"runtime,omitempty"`
 	Found         bool                   `protobuf:"varint,2,opt,name=found,proto3" json:"found,omitempty"`
@@ -4330,20 +4314,20 @@ type RuntimeInfoRes struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RuntimeInfoRes) Reset() {
-	*x = RuntimeInfoRes{}
+func (x *GetRuntimeInfoResponse) Reset() {
+	*x = GetRuntimeInfoResponse{}
 	mi := &file_joblet_proto_msgTypes[55]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RuntimeInfoRes) String() string {
+func (x *GetRuntimeInfoResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RuntimeInfoRes) ProtoMessage() {}
+func (*GetRuntimeInfoResponse) ProtoMessage() {}
 
-func (x *RuntimeInfoRes) ProtoReflect() protoreflect.Message {
+func (x *GetRuntimeInfoResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[55]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -4355,46 +4339,46 @@ func (x *RuntimeInfoRes) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RuntimeInfoRes.ProtoReflect.Descriptor instead.
-func (*RuntimeInfoRes) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetRuntimeInfoResponse.ProtoReflect.Descriptor instead.
+func (*GetRuntimeInfoResponse) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{55}
 }
 
-func (x *RuntimeInfoRes) GetRuntime() *RuntimeInfo {
+func (x *GetRuntimeInfoResponse) GetRuntime() *RuntimeInfo {
 	if x != nil {
 		return x.Runtime
 	}
 	return nil
 }
 
-func (x *RuntimeInfoRes) GetFound() bool {
+func (x *GetRuntimeInfoResponse) GetFound() bool {
 	if x != nil {
 		return x.Found
 	}
 	return false
 }
 
-type RuntimeTestReq struct {
+type TestRuntimeRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Runtime       string                 `protobuf:"bytes,1,opt,name=runtime,proto3" json:"runtime,omitempty"` // e.g., "python-3.11-ml"
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RuntimeTestReq) Reset() {
-	*x = RuntimeTestReq{}
+func (x *TestRuntimeRequest) Reset() {
+	*x = TestRuntimeRequest{}
 	mi := &file_joblet_proto_msgTypes[56]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RuntimeTestReq) String() string {
+func (x *TestRuntimeRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RuntimeTestReq) ProtoMessage() {}
+func (*TestRuntimeRequest) ProtoMessage() {}
 
-func (x *RuntimeTestReq) ProtoReflect() protoreflect.Message {
+func (x *TestRuntimeRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[56]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -4406,42 +4390,42 @@ func (x *RuntimeTestReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RuntimeTestReq.ProtoReflect.Descriptor instead.
-func (*RuntimeTestReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use TestRuntimeRequest.ProtoReflect.Descriptor instead.
+func (*TestRuntimeRequest) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{56}
 }
 
-func (x *RuntimeTestReq) GetRuntime() string {
+func (x *TestRuntimeRequest) GetRuntime() string {
 	if x != nil {
 		return x.Runtime
 	}
 	return ""
 }
 
-type RuntimeTestRes struct {
+type TestRuntimeResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Success       bool                   `protobuf:"varint,2,opt,name=success,proto3" json:"success,omitempty"`
 	Output        string                 `protobuf:"bytes,3,opt,name=output,proto3" json:"output,omitempty"`
 	Error         string                 `protobuf:"bytes,4,opt,name=error,proto3" json:"error,omitempty"`
-	ExitCode      int32                  `protobuf:"varint,5,opt,name=exitCode,proto3" json:"exitCode,omitempty"`
+	ExitCode      int32                  `protobuf:"varint,5,opt,name=exit_code,json=exitCode,proto3" json:"exit_code,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RuntimeTestRes) Reset() {
-	*x = RuntimeTestRes{}
+func (x *TestRuntimeResponse) Reset() {
+	*x = TestRuntimeResponse{}
 	mi := &file_joblet_proto_msgTypes[57]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RuntimeTestRes) String() string {
+func (x *TestRuntimeResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RuntimeTestRes) ProtoMessage() {}
+func (*TestRuntimeResponse) ProtoMessage() {}
 
-func (x *RuntimeTestRes) ProtoReflect() protoreflect.Message {
+func (x *TestRuntimeResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[57]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -4453,33 +4437,33 @@ func (x *RuntimeTestRes) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RuntimeTestRes.ProtoReflect.Descriptor instead.
-func (*RuntimeTestRes) Descriptor() ([]byte, []int) {
+// Deprecated: Use TestRuntimeResponse.ProtoReflect.Descriptor instead.
+func (*TestRuntimeResponse) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{57}
 }
 
-func (x *RuntimeTestRes) GetSuccess() bool {
+func (x *TestRuntimeResponse) GetSuccess() bool {
 	if x != nil {
 		return x.Success
 	}
 	return false
 }
 
-func (x *RuntimeTestRes) GetOutput() string {
+func (x *TestRuntimeResponse) GetOutput() string {
 	if x != nil {
 		return x.Output
 	}
 	return ""
 }
 
-func (x *RuntimeTestRes) GetError() string {
+func (x *TestRuntimeResponse) GetError() string {
 	if x != nil {
 		return x.Error
 	}
 	return ""
 }
 
-func (x *RuntimeTestRes) GetExitCode() int32 {
+func (x *TestRuntimeResponse) GetExitCode() int32 {
 	if x != nil {
 		return x.ExitCode
 	}
@@ -4488,19 +4472,18 @@ func (x *RuntimeTestRes) GetExitCode() int32 {
 
 type RunJobRequest struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
-	Name              string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"` // Job name
 	Command           string                 `protobuf:"bytes,2,opt,name=command,proto3" json:"command,omitempty"`
 	Args              []string               `protobuf:"bytes,3,rep,name=args,proto3" json:"args,omitempty"`
-	MaxCpu            int32                  `protobuf:"varint,4,opt,name=maxCpu,proto3" json:"maxCpu,omitempty"`
-	CpuCores          string                 `protobuf:"bytes,5,opt,name=cpuCores,proto3" json:"cpuCores,omitempty"`
-	MaxMemory         int32                  `protobuf:"varint,6,opt,name=maxMemory,proto3" json:"maxMemory,omitempty"`
-	MaxIobps          int32                  `protobuf:"varint,7,opt,name=maxIobps,proto3" json:"maxIobps,omitempty"`
+	MaxCpu            int32                  `protobuf:"varint,4,opt,name=max_cpu,json=maxCpu,proto3" json:"max_cpu,omitempty"`
+	CpuCores          string                 `protobuf:"bytes,5,opt,name=cpu_cores,json=cpuCores,proto3" json:"cpu_cores,omitempty"`
+	MaxMemory         int32                  `protobuf:"varint,6,opt,name=max_memory,json=maxMemory,proto3" json:"max_memory,omitempty"`
+	MaxIoBps          int32                  `protobuf:"varint,7,opt,name=max_io_bps,json=maxIoBps,proto3" json:"max_io_bps,omitempty"`
 	Uploads           []*FileUpload          `protobuf:"bytes,8,rep,name=uploads,proto3" json:"uploads,omitempty"`
 	Schedule          string                 `protobuf:"bytes,9,opt,name=schedule,proto3" json:"schedule,omitempty"`
 	Network           string                 `protobuf:"bytes,10,opt,name=network,proto3" json:"network,omitempty"`
 	Volumes           []string               `protobuf:"bytes,11,rep,name=volumes,proto3" json:"volumes,omitempty"`
 	Runtime           string                 `protobuf:"bytes,12,opt,name=runtime,proto3" json:"runtime,omitempty"`
-	WorkDir           string                 `protobuf:"bytes,13,opt,name=workDir,proto3" json:"workDir,omitempty"`
+	WorkDir           string                 `protobuf:"bytes,13,opt,name=work_dir,json=workDir,proto3" json:"work_dir,omitempty"`
 	Environment       map[string]string      `protobuf:"bytes,14,rep,name=environment,proto3" json:"environment,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	SecretEnvironment map[string]string      `protobuf:"bytes,18,rep,name=secret_environment,json=secretEnvironment,proto3" json:"secret_environment,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // Secret env vars
 	// GPU fields
@@ -4540,13 +4523,6 @@ func (*RunJobRequest) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{58}
 }
 
-func (x *RunJobRequest) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
 func (x *RunJobRequest) GetCommand() string {
 	if x != nil {
 		return x.Command
@@ -4582,9 +4558,9 @@ func (x *RunJobRequest) GetMaxMemory() int32 {
 	return 0
 }
 
-func (x *RunJobRequest) GetMaxIobps() int32 {
+func (x *RunJobRequest) GetMaxIoBps() int32 {
 	if x != nil {
-		return x.MaxIobps
+		return x.MaxIoBps
 	}
 	return 0
 }
@@ -4661,18 +4637,18 @@ func (x *RunJobRequest) GetGpuMemoryMb() int32 {
 
 type RunJobResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	JobUuid       string                 `protobuf:"bytes,1,opt,name=jobUuid,proto3" json:"jobUuid,omitempty"` // Job UUID identifier
+	JobUuid       string                 `protobuf:"bytes,1,opt,name=job_uuid,json=jobUuid,proto3" json:"job_uuid,omitempty"` // Job UUID identifier
 	Status        string                 `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
 	Command       string                 `protobuf:"bytes,3,opt,name=command,proto3" json:"command,omitempty"`
 	Args          []string               `protobuf:"bytes,4,rep,name=args,proto3" json:"args,omitempty"`
-	MaxCpu        int32                  `protobuf:"varint,5,opt,name=maxCpu,proto3" json:"maxCpu,omitempty"`
-	CpuCores      string                 `protobuf:"bytes,6,opt,name=cpuCores,proto3" json:"cpuCores,omitempty"`
-	MaxMemory     int32                  `protobuf:"varint,7,opt,name=maxMemory,proto3" json:"maxMemory,omitempty"`
-	MaxIobps      int32                  `protobuf:"varint,8,opt,name=maxIobps,proto3" json:"maxIobps,omitempty"`
-	StartTime     string                 `protobuf:"bytes,9,opt,name=startTime,proto3" json:"startTime,omitempty"`
-	EndTime       string                 `protobuf:"bytes,10,opt,name=endTime,proto3" json:"endTime,omitempty"`
-	ExitCode      int32                  `protobuf:"varint,11,opt,name=exitCode,proto3" json:"exitCode,omitempty"`
-	ScheduledTime string                 `protobuf:"bytes,12,opt,name=scheduledTime,proto3" json:"scheduledTime,omitempty"` // Schedule time
+	MaxCpu        int32                  `protobuf:"varint,5,opt,name=max_cpu,json=maxCpu,proto3" json:"max_cpu,omitempty"`
+	CpuCores      string                 `protobuf:"bytes,6,opt,name=cpu_cores,json=cpuCores,proto3" json:"cpu_cores,omitempty"`
+	MaxMemory     int32                  `protobuf:"varint,7,opt,name=max_memory,json=maxMemory,proto3" json:"max_memory,omitempty"`
+	MaxIoBps      int32                  `protobuf:"varint,8,opt,name=max_io_bps,json=maxIoBps,proto3" json:"max_io_bps,omitempty"`
+	StartTime     string                 `protobuf:"bytes,9,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
+	EndTime       string                 `protobuf:"bytes,10,opt,name=end_time,json=endTime,proto3" json:"end_time,omitempty"`
+	ExitCode      int32                  `protobuf:"varint,11,opt,name=exit_code,json=exitCode,proto3" json:"exit_code,omitempty"`
+	ScheduledTime string                 `protobuf:"bytes,12,opt,name=scheduled_time,json=scheduledTime,proto3" json:"scheduled_time,omitempty"` // Schedule time
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4756,9 +4732,9 @@ func (x *RunJobResponse) GetMaxMemory() int32 {
 	return 0
 }
 
-func (x *RunJobResponse) GetMaxIobps() int32 {
+func (x *RunJobResponse) GetMaxIoBps() int32 {
 	if x != nil {
-		return x.MaxIobps
+		return x.MaxIoBps
 	}
 	return 0
 }
@@ -4843,27 +4819,27 @@ func (x *Timestamp) GetNanos() int32 {
 	return 0
 }
 
-type RuntimeRemoveReq struct {
+type RemoveRuntimeRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Runtime       string                 `protobuf:"bytes,1,opt,name=runtime,proto3" json:"runtime,omitempty"` // Runtime to remove
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RuntimeRemoveReq) Reset() {
-	*x = RuntimeRemoveReq{}
+func (x *RemoveRuntimeRequest) Reset() {
+	*x = RemoveRuntimeRequest{}
 	mi := &file_joblet_proto_msgTypes[61]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RuntimeRemoveReq) String() string {
+func (x *RemoveRuntimeRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RuntimeRemoveReq) ProtoMessage() {}
+func (*RemoveRuntimeRequest) ProtoMessage() {}
 
-func (x *RuntimeRemoveReq) ProtoReflect() protoreflect.Message {
+func (x *RemoveRuntimeRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[61]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -4875,41 +4851,41 @@ func (x *RuntimeRemoveReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RuntimeRemoveReq.ProtoReflect.Descriptor instead.
-func (*RuntimeRemoveReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use RemoveRuntimeRequest.ProtoReflect.Descriptor instead.
+func (*RemoveRuntimeRequest) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{61}
 }
 
-func (x *RuntimeRemoveReq) GetRuntime() string {
+func (x *RemoveRuntimeRequest) GetRuntime() string {
 	if x != nil {
 		return x.Runtime
 	}
 	return ""
 }
 
-type RuntimeRemoveRes struct {
+type RemoveRuntimeResponse struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
-	Success         bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`                 // Success
-	Message         string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`                  // Message
-	FreedSpaceBytes int64                  `protobuf:"varint,3,opt,name=freedSpaceBytes,proto3" json:"freedSpaceBytes,omitempty"` // Space freed
+	Success         bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`                                          // Success
+	Message         string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`                                           // Message
+	FreedSpaceBytes int64                  `protobuf:"varint,3,opt,name=freed_space_bytes,json=freedSpaceBytes,proto3" json:"freed_space_bytes,omitempty"` // Space freed
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
 
-func (x *RuntimeRemoveRes) Reset() {
-	*x = RuntimeRemoveRes{}
+func (x *RemoveRuntimeResponse) Reset() {
+	*x = RemoveRuntimeResponse{}
 	mi := &file_joblet_proto_msgTypes[62]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RuntimeRemoveRes) String() string {
+func (x *RemoveRuntimeResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RuntimeRemoveRes) ProtoMessage() {}
+func (*RemoveRuntimeResponse) ProtoMessage() {}
 
-func (x *RuntimeRemoveRes) ProtoReflect() protoreflect.Message {
+func (x *RemoveRuntimeResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_joblet_proto_msgTypes[62]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -4921,26 +4897,26 @@ func (x *RuntimeRemoveRes) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RuntimeRemoveRes.ProtoReflect.Descriptor instead.
-func (*RuntimeRemoveRes) Descriptor() ([]byte, []int) {
+// Deprecated: Use RemoveRuntimeResponse.ProtoReflect.Descriptor instead.
+func (*RemoveRuntimeResponse) Descriptor() ([]byte, []int) {
 	return file_joblet_proto_rawDescGZIP(), []int{62}
 }
 
-func (x *RuntimeRemoveRes) GetSuccess() bool {
+func (x *RemoveRuntimeResponse) GetSuccess() bool {
 	if x != nil {
 		return x.Success
 	}
 	return false
 }
 
-func (x *RuntimeRemoveRes) GetMessage() string {
+func (x *RemoveRuntimeResponse) GetMessage() string {
 	if x != nil {
 		return x.Message
 	}
 	return ""
 }
 
-func (x *RuntimeRemoveRes) GetFreedSpaceBytes() int64 {
+func (x *RemoveRuntimeResponse) GetFreedSpaceBytes() int64 {
 	if x != nil {
 		return x.FreedSpaceBytes
 	}
@@ -6088,105 +6064,107 @@ const file_joblet_proto_rawDesc = "" +
 	"\n" +
 	"\fjoblet.proto\x12\x06joblet\"'\n" +
 	"\x04Jobs\x12\x1f\n" +
-	"\x04jobs\x18\x01 \x03(\v2\v.joblet.JobR\x04jobs\"\x88\x06\n" +
+	"\x04jobs\x18\x01 \x03(\v2\v.joblet.JobR\x04jobs\"\xfe\x05\n" +
 	"\x03Job\x12\x12\n" +
-	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12\x18\n" +
+	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x18\n" +
 	"\acommand\x18\x03 \x01(\tR\acommand\x12\x12\n" +
-	"\x04args\x18\x04 \x03(\tR\x04args\x12\x16\n" +
-	"\x06maxCPU\x18\x05 \x01(\x05R\x06maxCPU\x12\x1a\n" +
-	"\bcpuCores\x18\x06 \x01(\tR\bcpuCores\x12\x1c\n" +
-	"\tmaxMemory\x18\a \x01(\x05R\tmaxMemory\x12\x1a\n" +
-	"\bmaxIOBPS\x18\b \x01(\x05R\bmaxIOBPS\x12\x16\n" +
-	"\x06status\x18\t \x01(\tR\x06status\x12\x1c\n" +
-	"\tstartTime\x18\n" +
-	" \x01(\tR\tstartTime\x12\x18\n" +
-	"\aendTime\x18\v \x01(\tR\aendTime\x12\x1a\n" +
-	"\bexitCode\x18\f \x01(\x05R\bexitCode\x12$\n" +
-	"\rscheduledTime\x18\r \x01(\tR\rscheduledTime\x12\x18\n" +
+	"\x04args\x18\x04 \x03(\tR\x04args\x12\x17\n" +
+	"\amax_cpu\x18\x05 \x01(\x05R\x06maxCpu\x12\x1b\n" +
+	"\tcpu_cores\x18\x06 \x01(\tR\bcpuCores\x12\x1d\n" +
+	"\n" +
+	"max_memory\x18\a \x01(\x05R\tmaxMemory\x12\x1c\n" +
+	"\n" +
+	"max_io_bps\x18\b \x01(\x05R\bmaxIoBps\x12\x16\n" +
+	"\x06status\x18\t \x01(\tR\x06status\x12\x1d\n" +
+	"\n" +
+	"start_time\x18\n" +
+	" \x01(\tR\tstartTime\x12\x19\n" +
+	"\bend_time\x18\v \x01(\tR\aendTime\x12\x1b\n" +
+	"\texit_code\x18\f \x01(\x05R\bexitCode\x12%\n" +
+	"\x0escheduled_time\x18\r \x01(\tR\rscheduledTime\x12\x18\n" +
 	"\aruntime\x18\x0e \x01(\tR\aruntime\x12>\n" +
 	"\venvironment\x18\x0f \x03(\v2\x1c.joblet.Job.EnvironmentEntryR\venvironment\x12Q\n" +
 	"\x12secret_environment\x18\x10 \x03(\v2\".joblet.Job.SecretEnvironmentEntryR\x11secretEnvironment\x12\x1f\n" +
 	"\vgpu_indices\x18\x11 \x03(\x05R\n" +
 	"gpuIndices\x12\x1b\n" +
 	"\tgpu_count\x18\x12 \x01(\x05R\bgpuCount\x12\"\n" +
-	"\rgpu_memory_mb\x18\x13 \x01(\x05R\vgpuMemoryMb\x12\x16\n" +
-	"\x06nodeId\x18\x14 \x01(\tR\x06nodeId\x1a>\n" +
+	"\rgpu_memory_mb\x18\x13 \x01(\x05R\vgpuMemoryMb\x12\x17\n" +
+	"\anode_id\x18\x14 \x01(\tR\x06nodeId\x1a>\n" +
 	"\x10EnvironmentEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\x1aD\n" +
 	"\x16SecretEnvironmentEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\x0e\n" +
-	"\fEmptyRequest\"p\n" +
+	"\fEmptyRequest\"q\n" +
 	"\n" +
 	"FileUpload\x12\x12\n" +
 	"\x04path\x18\x01 \x01(\tR\x04path\x12\x18\n" +
 	"\acontent\x18\x02 \x01(\fR\acontent\x12\x12\n" +
-	"\x04mode\x18\x03 \x01(\rR\x04mode\x12 \n" +
-	"\visDirectory\x18\x04 \x01(\bR\visDirectory\"%\n" +
-	"\x0fGetJobStatusReq\x12\x12\n" +
-	"\x04uuid\x18\x01 \x01(\tR\x04uuid\"\x94\a\n" +
-	"\x0fGetJobStatusRes\x12\x12\n" +
-	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12\x18\n" +
+	"\x04mode\x18\x03 \x01(\rR\x04mode\x12!\n" +
+	"\fis_directory\x18\x04 \x01(\bR\visDirectory\")\n" +
+	"\x13GetJobStatusRequest\x12\x12\n" +
+	"\x04uuid\x18\x01 \x01(\tR\x04uuid\"\x9a\a\n" +
+	"\x14GetJobStatusResponse\x12\x12\n" +
+	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x18\n" +
 	"\acommand\x18\x03 \x01(\tR\acommand\x12\x12\n" +
-	"\x04args\x18\x04 \x03(\tR\x04args\x12\x16\n" +
-	"\x06maxCPU\x18\x05 \x01(\x05R\x06maxCPU\x12\x1a\n" +
-	"\bcpuCores\x18\x06 \x01(\tR\bcpuCores\x12\x1c\n" +
-	"\tmaxMemory\x18\a \x01(\x05R\tmaxMemory\x12\x1a\n" +
-	"\bmaxIOBPS\x18\b \x01(\x05R\bmaxIOBPS\x12\x16\n" +
-	"\x06status\x18\t \x01(\tR\x06status\x12\x1c\n" +
-	"\tstartTime\x18\n" +
-	" \x01(\tR\tstartTime\x12\x18\n" +
-	"\aendTime\x18\v \x01(\tR\aendTime\x12\x1a\n" +
-	"\bexitCode\x18\f \x01(\x05R\bexitCode\x12$\n" +
-	"\rscheduledTime\x18\r \x01(\tR\rscheduledTime\x12J\n" +
-	"\venvironment\x18\x0e \x03(\v2(.joblet.GetJobStatusRes.EnvironmentEntryR\venvironment\x12]\n" +
-	"\x12secret_environment\x18\x0f \x03(\v2..joblet.GetJobStatusRes.SecretEnvironmentEntryR\x11secretEnvironment\x12\x18\n" +
+	"\x04args\x18\x04 \x03(\tR\x04args\x12\x17\n" +
+	"\amax_cpu\x18\x05 \x01(\x05R\x06maxCpu\x12\x1b\n" +
+	"\tcpu_cores\x18\x06 \x01(\tR\bcpuCores\x12\x1d\n" +
+	"\n" +
+	"max_memory\x18\a \x01(\x05R\tmaxMemory\x12\x1c\n" +
+	"\n" +
+	"max_io_bps\x18\b \x01(\x05R\bmaxIoBps\x12\x16\n" +
+	"\x06status\x18\t \x01(\tR\x06status\x12\x1d\n" +
+	"\n" +
+	"start_time\x18\n" +
+	" \x01(\tR\tstartTime\x12\x19\n" +
+	"\bend_time\x18\v \x01(\tR\aendTime\x12\x1b\n" +
+	"\texit_code\x18\f \x01(\x05R\bexitCode\x12%\n" +
+	"\x0escheduled_time\x18\r \x01(\tR\rscheduledTime\x12O\n" +
+	"\venvironment\x18\x0e \x03(\v2-.joblet.GetJobStatusResponse.EnvironmentEntryR\venvironment\x12b\n" +
+	"\x12secret_environment\x18\x0f \x03(\v23.joblet.GetJobStatusResponse.SecretEnvironmentEntryR\x11secretEnvironment\x12\x18\n" +
 	"\anetwork\x18\x10 \x01(\tR\anetwork\x12\x18\n" +
 	"\avolumes\x18\x11 \x03(\tR\avolumes\x12\x18\n" +
-	"\aruntime\x18\x12 \x01(\tR\aruntime\x12\x18\n" +
-	"\aworkDir\x18\x13 \x01(\tR\aworkDir\x12\x18\n" +
+	"\aruntime\x18\x12 \x01(\tR\aruntime\x12\x19\n" +
+	"\bwork_dir\x18\x13 \x01(\tR\aworkDir\x12\x18\n" +
 	"\auploads\x18\x14 \x03(\tR\auploads\x12\x1f\n" +
 	"\vgpu_indices\x18\x17 \x03(\x05R\n" +
 	"gpuIndices\x12\x1b\n" +
 	"\tgpu_count\x18\x18 \x01(\x05R\bgpuCount\x12\"\n" +
-	"\rgpu_memory_mb\x18\x19 \x01(\x05R\vgpuMemoryMb\x12\x16\n" +
-	"\x06nodeId\x18\x1a \x01(\tR\x06nodeId\x1a>\n" +
+	"\rgpu_memory_mb\x18\x19 \x01(\x05R\vgpuMemoryMb\x12\x17\n" +
+	"\anode_id\x18\x1a \x01(\tR\x06nodeId\x1a>\n" +
 	"\x10EnvironmentEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\x1aD\n" +
 	"\x16SecretEnvironmentEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\" \n" +
-	"\n" +
-	"StopJobReq\x12\x12\n" +
-	"\x04uuid\x18\x01 \x01(\tR\x04uuid\"n\n" +
-	"\n" +
-	"StopJobRes\x12\x12\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"$\n" +
+	"\x0eStopJobRequest\x12\x12\n" +
+	"\x04uuid\x18\x01 \x01(\tR\x04uuid\"u\n" +
+	"\x0fStopJobResponse\x12\x12\n" +
 	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x16\n" +
-	"\x06status\x18\x02 \x01(\tR\x06status\x12\x18\n" +
-	"\aendTime\x18\x03 \x01(\tR\aendTime\x12\x1a\n" +
-	"\bexitCode\x18\x04 \x01(\x05R\bexitCode\"\"\n" +
-	"\fCancelJobReq\x12\x12\n" +
-	"\x04uuid\x18\x01 \x01(\tR\x04uuid\":\n" +
-	"\fCancelJobRes\x12\x12\n" +
+	"\x06status\x18\x02 \x01(\tR\x06status\x12\x19\n" +
+	"\bend_time\x18\x03 \x01(\tR\aendTime\x12\x1b\n" +
+	"\texit_code\x18\x04 \x01(\x05R\bexitCode\"&\n" +
+	"\x10CancelJobRequest\x12\x12\n" +
+	"\x04uuid\x18\x01 \x01(\tR\x04uuid\"?\n" +
+	"\x11CancelJobResponse\x12\x12\n" +
 	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x16\n" +
-	"\x06status\x18\x02 \x01(\tR\x06status\"\"\n" +
-	"\fDeleteJobReq\x12\x12\n" +
-	"\x04uuid\x18\x01 \x01(\tR\x04uuid\"V\n" +
-	"\fDeleteJobRes\x12\x12\n" +
+	"\x06status\x18\x02 \x01(\tR\x06status\"&\n" +
+	"\x10DeleteJobRequest\x12\x12\n" +
+	"\x04uuid\x18\x01 \x01(\tR\x04uuid\"[\n" +
+	"\x11DeleteJobResponse\x12\x12\n" +
 	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x18\n" +
 	"\asuccess\x18\x02 \x01(\bR\asuccess\x12\x18\n" +
-	"\amessage\x18\x03 \x01(\tR\amessage\"\x12\n" +
-	"\x10DeleteAllJobsReq\"\x90\x01\n" +
-	"\x10DeleteAllJobsRes\x12\x18\n" +
+	"\amessage\x18\x03 \x01(\tR\amessage\"\x16\n" +
+	"\x14DeleteAllJobsRequest\"\x95\x01\n" +
+	"\x15DeleteAllJobsResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\x12#\n" +
 	"\rdeleted_count\x18\x03 \x01(\x05R\fdeletedCount\x12#\n" +
-	"\rskipped_count\x18\x04 \x01(\x05R\fskippedCount\"#\n" +
-	"\rGetJobLogsReq\x12\x12\n" +
+	"\rskipped_count\x18\x04 \x01(\x05R\fskippedCount\"'\n" +
+	"\x11GetJobLogsRequest\x12\x12\n" +
 	"\x04uuid\x18\x01 \x01(\tR\x04uuid\"%\n" +
 	"\tDataChunk\x12\x18\n" +
 	"\apayload\x18\x01 \x01(\fR\apayload\"\x90\x01\n" +
@@ -6236,50 +6214,50 @@ const file_joblet_proto_rawDesc = "" +
 	"\fpip_packages\x18\x06 \x03(\tR\vpipPackages\x12!\n" +
 	"\fnpm_packages\x18\a \x03(\tR\vnpmPackages\x12\x1b\n" +
 	"\thas_hooks\x18\b \x01(\bR\bhasHooks\x12!\n" +
-	"\frequires_gpu\x18\t \x01(\bR\vrequiresGpu\":\n" +
-	"\x10CreateNetworkReq\x12\x12\n" +
+	"\frequires_gpu\x18\t \x01(\bR\vrequiresGpu\">\n" +
+	"\x14CreateNetworkRequest\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x12\n" +
-	"\x04cidr\x18\x02 \x01(\tR\x04cidr\"R\n" +
-	"\x10CreateNetworkRes\x12\x12\n" +
+	"\x04cidr\x18\x02 \x01(\tR\x04cidr\"W\n" +
+	"\x15CreateNetworkResponse\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x12\n" +
 	"\x04cidr\x18\x02 \x01(\tR\x04cidr\x12\x16\n" +
-	"\x06bridge\x18\x03 \x01(\tR\x06bridge\"&\n" +
-	"\x10RemoveNetworkReq\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\"F\n" +
-	"\x10RemoveNetworkRes\x12\x18\n" +
+	"\x06bridge\x18\x03 \x01(\tR\x06bridge\"*\n" +
+	"\x14RemoveNetworkRequest\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\"K\n" +
+	"\x15RemoveNetworkResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage\"e\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\"f\n" +
 	"\aNetwork\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x12\n" +
 	"\x04cidr\x18\x02 \x01(\tR\x04cidr\x12\x16\n" +
-	"\x06bridge\x18\x03 \x01(\tR\x06bridge\x12\x1a\n" +
-	"\bjobCount\x18\x04 \x01(\x05R\bjobCount\"7\n" +
+	"\x06bridge\x18\x03 \x01(\tR\x06bridge\x12\x1b\n" +
+	"\tjob_count\x18\x04 \x01(\x05R\bjobCount\"7\n" +
 	"\bNetworks\x12+\n" +
-	"\bnetworks\x18\x01 \x03(\v2\x0f.joblet.NetworkR\bnetworks\"M\n" +
-	"\x0fCreateVolumeReq\x12\x12\n" +
+	"\bnetworks\x18\x01 \x03(\v2\x0f.joblet.NetworkR\bnetworks\"Q\n" +
+	"\x13CreateVolumeRequest\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x12\n" +
 	"\x04size\x18\x02 \x01(\tR\x04size\x12\x12\n" +
-	"\x04type\x18\x03 \x01(\tR\x04type\"a\n" +
-	"\x0fCreateVolumeRes\x12\x12\n" +
+	"\x04type\x18\x03 \x01(\tR\x04type\"f\n" +
+	"\x14CreateVolumeResponse\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x12\n" +
 	"\x04size\x18\x02 \x01(\tR\x04size\x12\x12\n" +
 	"\x04type\x18\x03 \x01(\tR\x04type\x12\x12\n" +
-	"\x04path\x18\x04 \x01(\tR\x04path\"%\n" +
-	"\x0fRemoveVolumeReq\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\"E\n" +
-	"\x0fRemoveVolumeRes\x12\x18\n" +
+	"\x04path\x18\x04 \x01(\tR\x04path\")\n" +
+	"\x13RemoveVolumeRequest\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\"J\n" +
+	"\x14RemoveVolumeResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage\"\x96\x01\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\"\x98\x01\n" +
 	"\x06Volume\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x12\n" +
 	"\x04size\x18\x02 \x01(\tR\x04size\x12\x12\n" +
 	"\x04type\x18\x03 \x01(\tR\x04type\x12\x12\n" +
-	"\x04path\x18\x04 \x01(\tR\x04path\x12 \n" +
-	"\vcreatedTime\x18\x05 \x01(\tR\vcreatedTime\x12\x1a\n" +
-	"\bjobCount\x18\x06 \x01(\x05R\bjobCount\"3\n" +
+	"\x04path\x18\x04 \x01(\tR\x04path\x12!\n" +
+	"\fcreated_time\x18\x05 \x01(\tR\vcreatedTime\x12\x1b\n" +
+	"\tjob_count\x18\x06 \x01(\x05R\bjobCount\"3\n" +
 	"\aVolumes\x12(\n" +
-	"\avolumes\x18\x01 \x03(\v2\x0e.joblet.VolumeR\avolumes\"\xeb\x03\n" +
-	"\x0fSystemStatusRes\x12\x1c\n" +
+	"\avolumes\x18\x01 \x03(\v2\x0e.joblet.VolumeR\avolumes\"\xf0\x03\n" +
+	"\x14SystemStatusResponse\x12\x1c\n" +
 	"\ttimestamp\x18\x01 \x01(\tR\ttimestamp\x12\x1c\n" +
 	"\tavailable\x18\x02 \x01(\bR\tavailable\x12$\n" +
 	"\x04host\x18\x03 \x01(\v2\x10.joblet.HostInfoR\x04host\x12$\n" +
@@ -6291,8 +6269,8 @@ const file_joblet_proto_rawDesc = "" +
 	"\tprocesses\x18\t \x01(\v2\x16.joblet.ProcessMetricsR\tprocesses\x12'\n" +
 	"\x05cloud\x18\n" +
 	" \x01(\v2\x11.joblet.CloudInfoR\x05cloud\x12@\n" +
-	"\x0eserver_version\x18\v \x01(\v2\x19.joblet.ServerVersionInfoR\rserverVersion\"\x8c\x03\n" +
-	"\x10SystemMetricsRes\x12\x1c\n" +
+	"\x0eserver_version\x18\v \x01(\v2\x19.joblet.ServerVersionInfoR\rserverVersion\"\x91\x03\n" +
+	"\x15SystemMetricsResponse\x12\x1c\n" +
 	"\ttimestamp\x18\x01 \x01(\tR\ttimestamp\x12$\n" +
 	"\x04host\x18\x02 \x01(\v2\x10.joblet.HostInfoR\x04host\x12$\n" +
 	"\x03cpu\x18\x03 \x01(\v2\x12.joblet.CPUMetricsR\x03cpu\x12-\n" +
@@ -6301,154 +6279,155 @@ const file_joblet_proto_rawDesc = "" +
 	"\bnetworks\x18\x06 \x03(\v2\x16.joblet.NetworkMetricsR\bnetworks\x12!\n" +
 	"\x02io\x18\a \x01(\v2\x11.joblet.IOMetricsR\x02io\x124\n" +
 	"\tprocesses\x18\b \x01(\v2\x16.joblet.ProcessMetricsR\tprocesses\x12'\n" +
-	"\x05cloud\x18\t \x01(\v2\x11.joblet.CloudInfoR\x05cloud\"^\n" +
-	"\x10StreamMetricsReq\x12(\n" +
-	"\x0fintervalSeconds\x18\x01 \x01(\x05R\x0fintervalSeconds\x12 \n" +
-	"\vmetricTypes\x18\x02 \x03(\tR\vmetricTypes\"\xda\x03\n" +
+	"\x05cloud\x18\t \x01(\v2\x11.joblet.CloudInfoR\x05cloud\"d\n" +
+	"\x14StreamMetricsRequest\x12)\n" +
+	"\x10interval_seconds\x18\x01 \x01(\x05R\x0fintervalSeconds\x12!\n" +
+	"\fmetric_types\x18\x02 \x03(\tR\vmetricTypes\"\xe4\x03\n" +
 	"\bHostInfo\x12\x1a\n" +
 	"\bhostname\x18\x01 \x01(\tR\bhostname\x12\x0e\n" +
 	"\x02os\x18\x02 \x01(\tR\x02os\x12\x1a\n" +
-	"\bplatform\x18\x03 \x01(\tR\bplatform\x12&\n" +
-	"\x0eplatformFamily\x18\x04 \x01(\tR\x0eplatformFamily\x12(\n" +
-	"\x0fplatformVersion\x18\x05 \x01(\tR\x0fplatformVersion\x12$\n" +
-	"\rkernelVersion\x18\x06 \x01(\tR\rkernelVersion\x12\x1e\n" +
-	"\n" +
-	"kernelArch\x18\a \x01(\tR\n" +
+	"\bplatform\x18\x03 \x01(\tR\bplatform\x12'\n" +
+	"\x0fplatform_family\x18\x04 \x01(\tR\x0eplatformFamily\x12)\n" +
+	"\x10platform_version\x18\x05 \x01(\tR\x0fplatformVersion\x12%\n" +
+	"\x0ekernel_version\x18\x06 \x01(\tR\rkernelVersion\x12\x1f\n" +
+	"\vkernel_arch\x18\a \x01(\tR\n" +
 	"kernelArch\x12\"\n" +
-	"\farchitecture\x18\b \x01(\tR\farchitecture\x12\x1a\n" +
-	"\bcpuCount\x18\t \x01(\x05R\bcpuCount\x12 \n" +
-	"\vtotalMemory\x18\n" +
-	" \x01(\x03R\vtotalMemory\x12\x1a\n" +
-	"\bbootTime\x18\v \x01(\tR\bbootTime\x12\x16\n" +
-	"\x06uptime\x18\f \x01(\x03R\x06uptime\x12\x16\n" +
-	"\x06nodeId\x18\r \x01(\tR\x06nodeId\x12\x1c\n" +
-	"\tserverIPs\x18\x0e \x03(\tR\tserverIPs\x12\"\n" +
-	"\fmacAddresses\x18\x0f \x03(\tR\fmacAddresses\"\xa2\x02\n" +
+	"\farchitecture\x18\b \x01(\tR\farchitecture\x12\x1b\n" +
+	"\tcpu_count\x18\t \x01(\x05R\bcpuCount\x12!\n" +
+	"\ftotal_memory\x18\n" +
+	" \x01(\x03R\vtotalMemory\x12\x1b\n" +
+	"\tboot_time\x18\v \x01(\tR\bbootTime\x12\x16\n" +
+	"\x06uptime\x18\f \x01(\x03R\x06uptime\x12\x17\n" +
+	"\anode_id\x18\r \x01(\tR\x06nodeId\x12\x1d\n" +
+	"\n" +
+	"server_ips\x18\x0e \x03(\tR\tserverIps\x12#\n" +
+	"\rmac_addresses\x18\x0f \x03(\tR\fmacAddresses\"\xac\x02\n" +
 	"\n" +
 	"CPUMetrics\x12\x14\n" +
-	"\x05cores\x18\x01 \x01(\x05R\x05cores\x12\"\n" +
-	"\fusagePercent\x18\x02 \x01(\x01R\fusagePercent\x12\x1a\n" +
-	"\buserTime\x18\x03 \x01(\x01R\buserTime\x12\x1e\n" +
+	"\x05cores\x18\x01 \x01(\x05R\x05cores\x12#\n" +
+	"\rusage_percent\x18\x02 \x01(\x01R\fusagePercent\x12\x1b\n" +
+	"\tuser_time\x18\x03 \x01(\x01R\buserTime\x12\x1f\n" +
+	"\vsystem_time\x18\x04 \x01(\x01R\n" +
+	"systemTime\x12\x1b\n" +
+	"\tidle_time\x18\x05 \x01(\x01R\bidleTime\x12 \n" +
+	"\fio_wait_time\x18\x06 \x01(\x01R\n" +
+	"ioWaitTime\x12\x1d\n" +
 	"\n" +
-	"systemTime\x18\x04 \x01(\x01R\n" +
-	"systemTime\x12\x1a\n" +
-	"\bidleTime\x18\x05 \x01(\x01R\bidleTime\x12\x1e\n" +
+	"steal_time\x18\a \x01(\x01R\tstealTime\x12!\n" +
+	"\fload_average\x18\b \x03(\x01R\vloadAverage\x12$\n" +
+	"\x0eper_core_usage\x18\t \x03(\x01R\fperCoreUsage\"\xdf\x02\n" +
+	"\rMemoryMetrics\x12\x1f\n" +
+	"\vtotal_bytes\x18\x01 \x01(\x03R\n" +
+	"totalBytes\x12\x1d\n" +
 	"\n" +
-	"ioWaitTime\x18\x06 \x01(\x01R\n" +
-	"ioWaitTime\x12\x1c\n" +
-	"\tstealTime\x18\a \x01(\x01R\tstealTime\x12 \n" +
-	"\vloadAverage\x18\b \x03(\x01R\vloadAverage\x12\"\n" +
-	"\fperCoreUsage\x18\t \x03(\x01R\fperCoreUsage\"\xd5\x02\n" +
-	"\rMemoryMetrics\x12\x1e\n" +
+	"used_bytes\x18\x02 \x01(\x03R\tusedBytes\x12\x1d\n" +
 	"\n" +
-	"totalBytes\x18\x01 \x01(\x03R\n" +
-	"totalBytes\x12\x1c\n" +
-	"\tusedBytes\x18\x02 \x01(\x03R\tusedBytes\x12\x1c\n" +
-	"\tfreeBytes\x18\x03 \x01(\x03R\tfreeBytes\x12&\n" +
-	"\x0eavailableBytes\x18\x04 \x01(\x03R\x0eavailableBytes\x12\"\n" +
-	"\fusagePercent\x18\x05 \x01(\x01R\fusagePercent\x12 \n" +
-	"\vcachedBytes\x18\x06 \x01(\x03R\vcachedBytes\x12$\n" +
-	"\rbufferedBytes\x18\a \x01(\x03R\rbufferedBytes\x12\x1c\n" +
-	"\tswapTotal\x18\b \x01(\x03R\tswapTotal\x12\x1a\n" +
-	"\bswapUsed\x18\t \x01(\x03R\bswapUsed\x12\x1a\n" +
-	"\bswapFree\x18\n" +
-	" \x01(\x03R\bswapFree\"\xf7\x02\n" +
+	"free_bytes\x18\x03 \x01(\x03R\tfreeBytes\x12'\n" +
+	"\x0favailable_bytes\x18\x04 \x01(\x03R\x0eavailableBytes\x12#\n" +
+	"\rusage_percent\x18\x05 \x01(\x01R\fusagePercent\x12!\n" +
+	"\fcached_bytes\x18\x06 \x01(\x03R\vcachedBytes\x12%\n" +
+	"\x0ebuffered_bytes\x18\a \x01(\x03R\rbufferedBytes\x12\x1d\n" +
+	"\n" +
+	"swap_total\x18\b \x01(\x03R\tswapTotal\x12\x1b\n" +
+	"\tswap_used\x18\t \x01(\x03R\bswapUsed\x12\x1b\n" +
+	"\tswap_free\x18\n" +
+	" \x01(\x03R\bswapFree\"\x81\x03\n" +
 	"\vDiskMetrics\x12\x16\n" +
-	"\x06device\x18\x01 \x01(\tR\x06device\x12\x1e\n" +
-	"\n" +
-	"mountPoint\x18\x02 \x01(\tR\n" +
+	"\x06device\x18\x01 \x01(\tR\x06device\x12\x1f\n" +
+	"\vmount_point\x18\x02 \x01(\tR\n" +
 	"mountPoint\x12\x1e\n" +
 	"\n" +
 	"filesystem\x18\x03 \x01(\tR\n" +
-	"filesystem\x12\x1e\n" +
+	"filesystem\x12\x1f\n" +
+	"\vtotal_bytes\x18\x04 \x01(\x03R\n" +
+	"totalBytes\x12\x1d\n" +
 	"\n" +
-	"totalBytes\x18\x04 \x01(\x03R\n" +
-	"totalBytes\x12\x1c\n" +
-	"\tusedBytes\x18\x05 \x01(\x03R\tusedBytes\x12\x1c\n" +
-	"\tfreeBytes\x18\x06 \x01(\x03R\tfreeBytes\x12\"\n" +
-	"\fusagePercent\x18\a \x01(\x01R\fusagePercent\x12 \n" +
-	"\vinodesTotal\x18\b \x01(\x03R\vinodesTotal\x12\x1e\n" +
+	"used_bytes\x18\x05 \x01(\x03R\tusedBytes\x12\x1d\n" +
 	"\n" +
-	"inodesUsed\x18\t \x01(\x03R\n" +
-	"inodesUsed\x12\x1e\n" +
-	"\n" +
-	"inodesFree\x18\n" +
+	"free_bytes\x18\x06 \x01(\x03R\tfreeBytes\x12#\n" +
+	"\rusage_percent\x18\a \x01(\x01R\fusagePercent\x12!\n" +
+	"\finodes_total\x18\b \x01(\x03R\vinodesTotal\x12\x1f\n" +
+	"\vinodes_used\x18\t \x01(\x03R\n" +
+	"inodesUsed\x12\x1f\n" +
+	"\vinodes_free\x18\n" +
 	" \x01(\x03R\n" +
-	"inodesFree\x12.\n" +
-	"\x12inodesUsagePercent\x18\v \x01(\x01R\x12inodesUsagePercent\"\xb6\x03\n" +
+	"inodesFree\x120\n" +
+	"\x14inodes_usage_percent\x18\v \x01(\x01R\x12inodesUsagePercent\"\xc2\x03\n" +
 	"\x0eNetworkMetrics\x12\x1c\n" +
-	"\tinterface\x18\x01 \x01(\tR\tinterface\x12$\n" +
-	"\rbytesReceived\x18\x02 \x01(\x03R\rbytesReceived\x12\x1c\n" +
-	"\tbytesSent\x18\x03 \x01(\x03R\tbytesSent\x12(\n" +
-	"\x0fpacketsReceived\x18\x04 \x01(\x03R\x0fpacketsReceived\x12 \n" +
-	"\vpacketsSent\x18\x05 \x01(\x03R\vpacketsSent\x12\x1a\n" +
-	"\berrorsIn\x18\x06 \x01(\x03R\berrorsIn\x12\x1c\n" +
-	"\terrorsOut\x18\a \x01(\x03R\terrorsOut\x12\x18\n" +
-	"\adropsIn\x18\b \x01(\x03R\adropsIn\x12\x1a\n" +
-	"\bdropsOut\x18\t \x01(\x03R\bdropsOut\x12 \n" +
-	"\vreceiveRate\x18\n" +
-	" \x01(\x01R\vreceiveRate\x12\"\n" +
-	"\ftransmitRate\x18\v \x01(\x01R\ftransmitRate\x12 \n" +
-	"\vipAddresses\x18\f \x03(\tR\vipAddresses\x12\x1e\n" +
+	"\tinterface\x18\x01 \x01(\tR\tinterface\x12%\n" +
+	"\x0ebytes_received\x18\x02 \x01(\x03R\rbytesReceived\x12\x1d\n" +
 	"\n" +
-	"macAddress\x18\r \x01(\tR\n" +
-	"macAddress\"\xf4\x01\n" +
-	"\tIOMetrics\x12\x1e\n" +
+	"bytes_sent\x18\x03 \x01(\x03R\tbytesSent\x12)\n" +
+	"\x10packets_received\x18\x04 \x01(\x03R\x0fpacketsReceived\x12!\n" +
+	"\fpackets_sent\x18\x05 \x01(\x03R\vpacketsSent\x12\x1b\n" +
+	"\terrors_in\x18\x06 \x01(\x03R\berrorsIn\x12\x1d\n" +
 	"\n" +
-	"totalReads\x18\x01 \x01(\x03R\n" +
-	"totalReads\x12 \n" +
-	"\vtotalWrites\x18\x02 \x01(\x03R\vtotalWrites\x12\x1c\n" +
-	"\treadBytes\x18\x03 \x01(\x03R\treadBytes\x12\x1e\n" +
+	"errors_out\x18\a \x01(\x03R\terrorsOut\x12\x19\n" +
+	"\bdrops_in\x18\b \x01(\x03R\adropsIn\x12\x1b\n" +
+	"\tdrops_out\x18\t \x01(\x03R\bdropsOut\x12!\n" +
+	"\freceive_rate\x18\n" +
+	" \x01(\x01R\vreceiveRate\x12#\n" +
+	"\rtransmit_rate\x18\v \x01(\x01R\ftransmitRate\x12!\n" +
+	"\fip_addresses\x18\f \x03(\tR\vipAddresses\x12\x1f\n" +
+	"\vmac_address\x18\r \x01(\tR\n" +
+	"macAddress\"\xfb\x01\n" +
+	"\tIOMetrics\x12\x1f\n" +
+	"\vtotal_reads\x18\x01 \x01(\x03R\n" +
+	"totalReads\x12!\n" +
+	"\ftotal_writes\x18\x02 \x01(\x03R\vtotalWrites\x12\x1d\n" +
 	"\n" +
-	"writeBytes\x18\x04 \x01(\x03R\n" +
-	"writeBytes\x12\x1a\n" +
-	"\breadRate\x18\x05 \x01(\x01R\breadRate\x12\x1c\n" +
-	"\twriteRate\x18\x06 \x01(\x01R\twriteRate\x12-\n" +
-	"\x06diskIO\x18\a \x03(\v2\x15.joblet.DiskIOMetricsR\x06diskIO\"\xab\x02\n" +
+	"read_bytes\x18\x03 \x01(\x03R\treadBytes\x12\x1f\n" +
+	"\vwrite_bytes\x18\x04 \x01(\x03R\n" +
+	"writeBytes\x12\x1b\n" +
+	"\tread_rate\x18\x05 \x01(\x01R\breadRate\x12\x1d\n" +
+	"\n" +
+	"write_rate\x18\x06 \x01(\x01R\twriteRate\x12.\n" +
+	"\adisk_io\x18\a \x03(\v2\x15.joblet.DiskIOMetricsR\x06diskIo\"\xb2\x02\n" +
 	"\rDiskIOMetrics\x12\x16\n" +
-	"\x06device\x18\x01 \x01(\tR\x06device\x12&\n" +
-	"\x0ereadsCompleted\x18\x02 \x01(\x03R\x0ereadsCompleted\x12(\n" +
-	"\x0fwritesCompleted\x18\x03 \x01(\x03R\x0fwritesCompleted\x12\x1c\n" +
-	"\treadBytes\x18\x04 \x01(\x03R\treadBytes\x12\x1e\n" +
+	"\x06device\x18\x01 \x01(\tR\x06device\x12'\n" +
+	"\x0freads_completed\x18\x02 \x01(\x03R\x0ereadsCompleted\x12)\n" +
+	"\x10writes_completed\x18\x03 \x01(\x03R\x0fwritesCompleted\x12\x1d\n" +
 	"\n" +
-	"writeBytes\x18\x05 \x01(\x03R\n" +
-	"writeBytes\x12\x1a\n" +
-	"\breadTime\x18\x06 \x01(\x03R\breadTime\x12\x1c\n" +
-	"\twriteTime\x18\a \x01(\x03R\twriteTime\x12\x16\n" +
-	"\x06ioTime\x18\b \x01(\x03R\x06ioTime\x12 \n" +
-	"\vutilization\x18\t \x01(\x01R\vutilization\"\xf4\x02\n" +
-	"\x0eProcessMetrics\x12&\n" +
-	"\x0etotalProcesses\x18\x01 \x01(\x05R\x0etotalProcesses\x12*\n" +
-	"\x10runningProcesses\x18\x02 \x01(\x05R\x10runningProcesses\x12,\n" +
-	"\x11sleepingProcesses\x18\x03 \x01(\x05R\x11sleepingProcesses\x12*\n" +
-	"\x10stoppedProcesses\x18\x04 \x01(\x05R\x10stoppedProcesses\x12(\n" +
-	"\x0fzombieProcesses\x18\x05 \x01(\x05R\x0fzombieProcesses\x12\"\n" +
-	"\ftotalThreads\x18\x06 \x01(\x05R\ftotalThreads\x12/\n" +
-	"\btopByCPU\x18\a \x03(\v2\x13.joblet.ProcessInfoR\btopByCPU\x125\n" +
-	"\vtopByMemory\x18\b \x03(\v2\x13.joblet.ProcessInfoR\vtopByMemory\"\x93\x02\n" +
+	"read_bytes\x18\x04 \x01(\x03R\treadBytes\x12\x1f\n" +
+	"\vwrite_bytes\x18\x05 \x01(\x03R\n" +
+	"writeBytes\x12\x1b\n" +
+	"\tread_time\x18\x06 \x01(\x03R\breadTime\x12\x1d\n" +
+	"\n" +
+	"write_time\x18\a \x01(\x03R\twriteTime\x12\x17\n" +
+	"\aio_time\x18\b \x01(\x03R\x06ioTime\x12 \n" +
+	"\vutilization\x18\t \x01(\x01R\vutilization\"\xfe\x02\n" +
+	"\x0eProcessMetrics\x12'\n" +
+	"\x0ftotal_processes\x18\x01 \x01(\x05R\x0etotalProcesses\x12+\n" +
+	"\x11running_processes\x18\x02 \x01(\x05R\x10runningProcesses\x12-\n" +
+	"\x12sleeping_processes\x18\x03 \x01(\x05R\x11sleepingProcesses\x12+\n" +
+	"\x11stopped_processes\x18\x04 \x01(\x05R\x10stoppedProcesses\x12)\n" +
+	"\x10zombie_processes\x18\x05 \x01(\x05R\x0fzombieProcesses\x12#\n" +
+	"\rtotal_threads\x18\x06 \x01(\x05R\ftotalThreads\x121\n" +
+	"\n" +
+	"top_by_cpu\x18\a \x03(\v2\x13.joblet.ProcessInfoR\btopByCpu\x127\n" +
+	"\rtop_by_memory\x18\b \x03(\v2\x13.joblet.ProcessInfoR\vtopByMemory\"\x97\x02\n" +
 	"\vProcessInfo\x12\x10\n" +
 	"\x03pid\x18\x01 \x01(\x05R\x03pid\x12\x12\n" +
 	"\x04ppid\x18\x02 \x01(\x05R\x04ppid\x12\x12\n" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12\x18\n" +
-	"\acommand\x18\x04 \x01(\tR\acommand\x12\x1e\n" +
+	"\acommand\x18\x04 \x01(\tR\acommand\x12\x1f\n" +
+	"\vcpu_percent\x18\x05 \x01(\x01R\n" +
+	"cpuPercent\x12%\n" +
+	"\x0ememory_percent\x18\x06 \x01(\x01R\rmemoryPercent\x12!\n" +
+	"\fmemory_bytes\x18\a \x01(\x03R\vmemoryBytes\x12\x16\n" +
+	"\x06status\x18\b \x01(\tR\x06status\x12\x1d\n" +
 	"\n" +
-	"cpuPercent\x18\x05 \x01(\x01R\n" +
-	"cpuPercent\x12$\n" +
-	"\rmemoryPercent\x18\x06 \x01(\x01R\rmemoryPercent\x12 \n" +
-	"\vmemoryBytes\x18\a \x01(\x03R\vmemoryBytes\x12\x16\n" +
-	"\x06status\x18\b \x01(\tR\x06status\x12\x1c\n" +
-	"\tstartTime\x18\t \x01(\tR\tstartTime\x12\x12\n" +
+	"start_time\x18\t \x01(\tR\tstartTime\x12\x12\n" +
 	"\x04user\x18\n" +
-	" \x01(\tR\x04user\"\xb9\x02\n" +
+	" \x01(\tR\x04user\"\xbc\x02\n" +
 	"\tCloudInfo\x12\x1a\n" +
 	"\bprovider\x18\x01 \x01(\tR\bprovider\x12\x16\n" +
 	"\x06region\x18\x02 \x01(\tR\x06region\x12\x12\n" +
-	"\x04zone\x18\x03 \x01(\tR\x04zone\x12\x1e\n" +
-	"\n" +
-	"instanceID\x18\x04 \x01(\tR\n" +
-	"instanceID\x12\"\n" +
-	"\finstanceType\x18\x05 \x01(\tR\finstanceType\x12&\n" +
-	"\x0ehypervisorType\x18\x06 \x01(\tR\x0ehypervisorType\x12;\n" +
+	"\x04zone\x18\x03 \x01(\tR\x04zone\x12\x1f\n" +
+	"\vinstance_id\x18\x04 \x01(\tR\n" +
+	"instanceId\x12#\n" +
+	"\rinstance_type\x18\x05 \x01(\tR\finstanceType\x12'\n" +
+	"\x0fhypervisor_type\x18\x06 \x01(\tR\x0ehypervisorType\x12;\n" +
 	"\bmetadata\x18\a \x03(\v2\x1f.joblet.CloudInfo.MetadataEntryR\bmetadata\x1a;\n" +
 	"\rMetadataEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
@@ -6465,15 +6444,16 @@ const file_joblet_proto_rawDesc = "" +
 	"go_version\x18\x06 \x01(\tR\tgoVersion\x12\x1a\n" +
 	"\bplatform\x18\a \x01(\tR\bplatform\x12!\n" +
 	"\fproto_commit\x18\b \x01(\tR\vprotoCommit\x12\x1b\n" +
-	"\tproto_tag\x18\t \x01(\tR\bprotoTag\">\n" +
-	"\vRuntimesRes\x12/\n" +
-	"\bruntimes\x18\x01 \x03(\v2\x13.joblet.RuntimeInfoR\bruntimes\"\xc1\x04\n" +
+	"\tproto_tag\x18\t \x01(\tR\bprotoTag\"G\n" +
+	"\x14ListRuntimesResponse\x12/\n" +
+	"\bruntimes\x18\x01 \x03(\v2\x13.joblet.RuntimeInfoR\bruntimes\"\xc2\x04\n" +
 	"\vRuntimeInfo\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1a\n" +
 	"\blanguage\x18\x02 \x01(\tR\blanguage\x12\x18\n" +
 	"\aversion\x18\x03 \x01(\tR\aversion\x12 \n" +
-	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x1c\n" +
-	"\tsizeBytes\x18\x05 \x01(\x03R\tsizeBytes\x12\x1a\n" +
+	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x1d\n" +
+	"\n" +
+	"size_bytes\x18\x05 \x01(\x03R\tsizeBytes\x12\x1a\n" +
 	"\bpackages\x18\x06 \x03(\tR\bpackages\x12\x1c\n" +
 	"\tavailable\x18\a \x01(\bR\tavailable\x12?\n" +
 	"\frequirements\x18\b \x01(\v2\x1b.joblet.RuntimeRequirementsR\frequirements\x12)\n" +
@@ -6494,34 +6474,35 @@ const file_joblet_proto_rawDesc = "" +
 	"\bplatform\x18\x03 \x01(\tR\bplatform\"M\n" +
 	"\x13RuntimeRequirements\x12$\n" +
 	"\rarchitectures\x18\x01 \x03(\tR\rarchitectures\x12\x10\n" +
-	"\x03gpu\x18\x02 \x01(\bR\x03gpu\"*\n" +
-	"\x0eRuntimeInfoReq\x12\x18\n" +
-	"\aruntime\x18\x01 \x01(\tR\aruntime\"U\n" +
-	"\x0eRuntimeInfoRes\x12-\n" +
+	"\x03gpu\x18\x02 \x01(\bR\x03gpu\"1\n" +
+	"\x15GetRuntimeInfoRequest\x12\x18\n" +
+	"\aruntime\x18\x01 \x01(\tR\aruntime\"]\n" +
+	"\x16GetRuntimeInfoResponse\x12-\n" +
 	"\aruntime\x18\x01 \x01(\v2\x13.joblet.RuntimeInfoR\aruntime\x12\x14\n" +
-	"\x05found\x18\x02 \x01(\bR\x05found\"*\n" +
-	"\x0eRuntimeTestReq\x12\x18\n" +
-	"\aruntime\x18\x01 \x01(\tR\aruntime\"t\n" +
-	"\x0eRuntimeTestRes\x12\x18\n" +
+	"\x05found\x18\x02 \x01(\bR\x05found\".\n" +
+	"\x12TestRuntimeRequest\x12\x18\n" +
+	"\aruntime\x18\x01 \x01(\tR\aruntime\"z\n" +
+	"\x13TestRuntimeResponse\x12\x18\n" +
 	"\asuccess\x18\x02 \x01(\bR\asuccess\x12\x16\n" +
 	"\x06output\x18\x03 \x01(\tR\x06output\x12\x14\n" +
-	"\x05error\x18\x04 \x01(\tR\x05error\x12\x1a\n" +
-	"\bexitCode\x18\x05 \x01(\x05R\bexitCode\"\xdf\x05\n" +
-	"\rRunJobRequest\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12\x18\n" +
+	"\x05error\x18\x04 \x01(\tR\x05error\x12\x1b\n" +
+	"\texit_code\x18\x05 \x01(\x05R\bexitCode\"\xd1\x05\n" +
+	"\rRunJobRequest\x12\x18\n" +
 	"\acommand\x18\x02 \x01(\tR\acommand\x12\x12\n" +
-	"\x04args\x18\x03 \x03(\tR\x04args\x12\x16\n" +
-	"\x06maxCpu\x18\x04 \x01(\x05R\x06maxCpu\x12\x1a\n" +
-	"\bcpuCores\x18\x05 \x01(\tR\bcpuCores\x12\x1c\n" +
-	"\tmaxMemory\x18\x06 \x01(\x05R\tmaxMemory\x12\x1a\n" +
-	"\bmaxIobps\x18\a \x01(\x05R\bmaxIobps\x12,\n" +
+	"\x04args\x18\x03 \x03(\tR\x04args\x12\x17\n" +
+	"\amax_cpu\x18\x04 \x01(\x05R\x06maxCpu\x12\x1b\n" +
+	"\tcpu_cores\x18\x05 \x01(\tR\bcpuCores\x12\x1d\n" +
+	"\n" +
+	"max_memory\x18\x06 \x01(\x05R\tmaxMemory\x12\x1c\n" +
+	"\n" +
+	"max_io_bps\x18\a \x01(\x05R\bmaxIoBps\x12,\n" +
 	"\auploads\x18\b \x03(\v2\x12.joblet.FileUploadR\auploads\x12\x1a\n" +
 	"\bschedule\x18\t \x01(\tR\bschedule\x12\x18\n" +
 	"\anetwork\x18\n" +
 	" \x01(\tR\anetwork\x12\x18\n" +
 	"\avolumes\x18\v \x03(\tR\avolumes\x12\x18\n" +
-	"\aruntime\x18\f \x01(\tR\aruntime\x12\x18\n" +
-	"\aworkDir\x18\r \x01(\tR\aworkDir\x12H\n" +
+	"\aruntime\x18\f \x01(\tR\aruntime\x12\x19\n" +
+	"\bwork_dir\x18\r \x01(\tR\aworkDir\x12H\n" +
 	"\venvironment\x18\x0e \x03(\v2&.joblet.RunJobRequest.EnvironmentEntryR\venvironment\x12[\n" +
 	"\x12secret_environment\x18\x12 \x03(\v2,.joblet.RunJobRequest.SecretEnvironmentEntryR\x11secretEnvironment\x12\x1b\n" +
 	"\tgpu_count\x18\x13 \x01(\x05R\bgpuCount\x12\"\n" +
@@ -6531,30 +6512,33 @@ const file_joblet_proto_rawDesc = "" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\x1aD\n" +
 	"\x16SecretEnvironmentEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xd8\x02\n" +
-	"\x0eRunJobResponse\x12\x18\n" +
-	"\ajobUuid\x18\x01 \x01(\tR\ajobUuid\x12\x16\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xe2\x02\n" +
+	"\x0eRunJobResponse\x12\x19\n" +
+	"\bjob_uuid\x18\x01 \x01(\tR\ajobUuid\x12\x16\n" +
 	"\x06status\x18\x02 \x01(\tR\x06status\x12\x18\n" +
 	"\acommand\x18\x03 \x01(\tR\acommand\x12\x12\n" +
-	"\x04args\x18\x04 \x03(\tR\x04args\x12\x16\n" +
-	"\x06maxCpu\x18\x05 \x01(\x05R\x06maxCpu\x12\x1a\n" +
-	"\bcpuCores\x18\x06 \x01(\tR\bcpuCores\x12\x1c\n" +
-	"\tmaxMemory\x18\a \x01(\x05R\tmaxMemory\x12\x1a\n" +
-	"\bmaxIobps\x18\b \x01(\x05R\bmaxIobps\x12\x1c\n" +
-	"\tstartTime\x18\t \x01(\tR\tstartTime\x12\x18\n" +
-	"\aendTime\x18\n" +
-	" \x01(\tR\aendTime\x12\x1a\n" +
-	"\bexitCode\x18\v \x01(\x05R\bexitCode\x12$\n" +
-	"\rscheduledTime\x18\f \x01(\tR\rscheduledTime\";\n" +
+	"\x04args\x18\x04 \x03(\tR\x04args\x12\x17\n" +
+	"\amax_cpu\x18\x05 \x01(\x05R\x06maxCpu\x12\x1b\n" +
+	"\tcpu_cores\x18\x06 \x01(\tR\bcpuCores\x12\x1d\n" +
+	"\n" +
+	"max_memory\x18\a \x01(\x05R\tmaxMemory\x12\x1c\n" +
+	"\n" +
+	"max_io_bps\x18\b \x01(\x05R\bmaxIoBps\x12\x1d\n" +
+	"\n" +
+	"start_time\x18\t \x01(\tR\tstartTime\x12\x19\n" +
+	"\bend_time\x18\n" +
+	" \x01(\tR\aendTime\x12\x1b\n" +
+	"\texit_code\x18\v \x01(\x05R\bexitCode\x12%\n" +
+	"\x0escheduled_time\x18\f \x01(\tR\rscheduledTime\";\n" +
 	"\tTimestamp\x12\x18\n" +
 	"\aseconds\x18\x01 \x01(\x03R\aseconds\x12\x14\n" +
-	"\x05nanos\x18\x02 \x01(\x05R\x05nanos\",\n" +
-	"\x10RuntimeRemoveReq\x12\x18\n" +
-	"\aruntime\x18\x01 \x01(\tR\aruntime\"p\n" +
-	"\x10RuntimeRemoveRes\x12\x18\n" +
+	"\x05nanos\x18\x02 \x01(\x05R\x05nanos\"0\n" +
+	"\x14RemoveRuntimeRequest\x12\x18\n" +
+	"\aruntime\x18\x01 \x01(\tR\aruntime\"w\n" +
+	"\x15RemoveRuntimeResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage\x12(\n" +
-	"\x0ffreedSpaceBytes\x18\x03 \x01(\x03R\x0ffreedSpaceBytes\"4\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\x12*\n" +
+	"\x11freed_space_bytes\x18\x03 \x01(\x03R\x0ffreedSpaceBytes\"4\n" +
 	"\x17StreamJobMetricsRequest\x12\x19\n" +
 	"\bjob_uuid\x18\x01 \x01(\tR\ajobUuid\"\x81\x01\n" +
 	"\x14GetJobMetricsRequest\x12\x19\n" +
@@ -6648,38 +6632,38 @@ const file_joblet_proto_rawDesc = "" +
 	"\bsrc_addr\x18\x05 \x01(\tR\asrcAddr\x12\x19\n" +
 	"\bsrc_port\x18\x06 \x01(\rR\asrcPort\x12\x1a\n" +
 	"\bprotocol\x18\a \x01(\tR\bprotocol\x12\x14\n" +
-	"\x05bytes\x18\b \x01(\x03R\x05bytes2\xb1\x06\n" +
+	"\x05bytes\x18\b \x01(\x03R\x05bytes2\xe2\x06\n" +
 	"\n" +
 	"JobService\x129\n" +
-	"\x06RunJob\x12\x15.joblet.RunJobRequest\x1a\x16.joblet.RunJobResponse\"\x00\x12B\n" +
-	"\fGetJobStatus\x12\x17.joblet.GetJobStatusReq\x1a\x17.joblet.GetJobStatusRes\"\x00\x123\n" +
-	"\aStopJob\x12\x12.joblet.StopJobReq\x1a\x12.joblet.StopJobRes\"\x00\x129\n" +
-	"\tCancelJob\x12\x14.joblet.CancelJobReq\x1a\x14.joblet.CancelJobRes\"\x00\x129\n" +
-	"\tDeleteJob\x12\x14.joblet.DeleteJobReq\x1a\x14.joblet.DeleteJobRes\"\x00\x12E\n" +
-	"\rDeleteAllJobs\x12\x18.joblet.DeleteAllJobsReq\x1a\x18.joblet.DeleteAllJobsRes\"\x00\x128\n" +
+	"\x06RunJob\x12\x15.joblet.RunJobRequest\x1a\x16.joblet.RunJobResponse\"\x00\x12K\n" +
+	"\fGetJobStatus\x12\x1b.joblet.GetJobStatusRequest\x1a\x1c.joblet.GetJobStatusResponse\"\x00\x12<\n" +
+	"\aStopJob\x12\x16.joblet.StopJobRequest\x1a\x17.joblet.StopJobResponse\"\x00\x12B\n" +
+	"\tCancelJob\x12\x18.joblet.CancelJobRequest\x1a\x19.joblet.CancelJobResponse\"\x00\x12B\n" +
+	"\tDeleteJob\x12\x18.joblet.DeleteJobRequest\x1a\x19.joblet.DeleteJobResponse\"\x00\x12N\n" +
+	"\rDeleteAllJobs\x12\x1c.joblet.DeleteAllJobsRequest\x1a\x1d.joblet.DeleteAllJobsResponse\"\x00\x12<\n" +
 	"\n" +
-	"GetJobLogs\x12\x15.joblet.GetJobLogsReq\x1a\x11.joblet.DataChunk0\x01\x120\n" +
+	"GetJobLogs\x12\x19.joblet.GetJobLogsRequest\x1a\x11.joblet.DataChunk0\x01\x120\n" +
 	"\bListJobs\x12\x14.joblet.EmptyRequest\x1a\f.joblet.Jobs\"\x00\x12P\n" +
 	"\x10StreamJobMetrics\x12\x1f.joblet.StreamJobMetricsRequest\x1a\x17.joblet.JobMetricsEvent\"\x000\x01\x12J\n" +
 	"\rGetJobMetrics\x12\x1c.joblet.GetJobMetricsRequest\x1a\x17.joblet.JobMetricsEvent\"\x000\x01\x12V\n" +
 	"\x13StreamJobTelematics\x12\".joblet.StreamJobTelematicsRequest\x1a\x17.joblet.TelematicsEvent\"\x000\x01\x12P\n" +
-	"\x10GetJobTelematics\x12\x1f.joblet.GetJobTelematicsRequest\x1a\x17.joblet.TelematicsEvent\"\x000\x012\xd8\x01\n" +
-	"\x0eNetworkService\x12E\n" +
-	"\rCreateNetwork\x12\x18.joblet.CreateNetworkReq\x1a\x18.joblet.CreateNetworkRes\"\x00\x128\n" +
-	"\fListNetworks\x12\x14.joblet.EmptyRequest\x1a\x10.joblet.Networks\"\x00\x12E\n" +
-	"\rRemoveNetwork\x12\x18.joblet.RemoveNetworkReq\x1a\x18.joblet.RemoveNetworkRes\"\x002\xcf\x01\n" +
-	"\rVolumeService\x12B\n" +
-	"\fCreateVolume\x12\x17.joblet.CreateVolumeReq\x1a\x17.joblet.CreateVolumeRes\"\x00\x126\n" +
-	"\vListVolumes\x12\x14.joblet.EmptyRequest\x1a\x0f.joblet.Volumes\"\x00\x12B\n" +
-	"\fRemoveVolume\x12\x17.joblet.RemoveVolumeReq\x1a\x17.joblet.RemoveVolumeRes\"\x002\xa6\x01\n" +
-	"\x11MonitoringService\x12B\n" +
-	"\x0fGetSystemStatus\x12\x14.joblet.EmptyRequest\x1a\x17.joblet.SystemStatusRes\"\x00\x12M\n" +
-	"\x13StreamSystemMetrics\x12\x18.joblet.StreamMetricsReq\x1a\x18.joblet.SystemMetricsRes\"\x000\x012\xca\x03\n" +
-	"\x0eRuntimeService\x12;\n" +
-	"\fListRuntimes\x12\x14.joblet.EmptyRequest\x1a\x13.joblet.RuntimesRes\"\x00\x12B\n" +
-	"\x0eGetRuntimeInfo\x12\x16.joblet.RuntimeInfoReq\x1a\x16.joblet.RuntimeInfoRes\"\x00\x12?\n" +
-	"\vTestRuntime\x12\x16.joblet.RuntimeTestReq\x1a\x16.joblet.RuntimeTestRes\"\x00\x12E\n" +
-	"\rRemoveRuntime\x12\x18.joblet.RuntimeRemoveReq\x1a\x18.joblet.RuntimeRemoveRes\"\x00\x12M\n" +
+	"\x10GetJobTelematics\x12\x1f.joblet.GetJobTelematicsRequest\x1a\x17.joblet.TelematicsEvent\"\x000\x012\xea\x01\n" +
+	"\x0eNetworkService\x12N\n" +
+	"\rCreateNetwork\x12\x1c.joblet.CreateNetworkRequest\x1a\x1d.joblet.CreateNetworkResponse\"\x00\x128\n" +
+	"\fListNetworks\x12\x14.joblet.EmptyRequest\x1a\x10.joblet.Networks\"\x00\x12N\n" +
+	"\rRemoveNetwork\x12\x1c.joblet.RemoveNetworkRequest\x1a\x1d.joblet.RemoveNetworkResponse\"\x002\xe1\x01\n" +
+	"\rVolumeService\x12K\n" +
+	"\fCreateVolume\x12\x1b.joblet.CreateVolumeRequest\x1a\x1c.joblet.CreateVolumeResponse\"\x00\x126\n" +
+	"\vListVolumes\x12\x14.joblet.EmptyRequest\x1a\x0f.joblet.Volumes\"\x00\x12K\n" +
+	"\fRemoveVolume\x12\x1b.joblet.RemoveVolumeRequest\x1a\x1c.joblet.RemoveVolumeResponse\"\x002\xb4\x01\n" +
+	"\x11MonitoringService\x12G\n" +
+	"\x0fGetSystemStatus\x12\x14.joblet.EmptyRequest\x1a\x1c.joblet.SystemStatusResponse\"\x00\x12V\n" +
+	"\x13StreamSystemMetrics\x12\x1c.joblet.StreamMetricsRequest\x1a\x1d.joblet.SystemMetricsResponse\"\x000\x012\xf4\x03\n" +
+	"\x0eRuntimeService\x12D\n" +
+	"\fListRuntimes\x12\x14.joblet.EmptyRequest\x1a\x1c.joblet.ListRuntimesResponse\"\x00\x12Q\n" +
+	"\x0eGetRuntimeInfo\x12\x1d.joblet.GetRuntimeInfoRequest\x1a\x1e.joblet.GetRuntimeInfoResponse\"\x00\x12H\n" +
+	"\vTestRuntime\x12\x1a.joblet.TestRuntimeRequest\x1a\x1b.joblet.TestRuntimeResponse\"\x00\x12N\n" +
+	"\rRemoveRuntime\x12\x1c.joblet.RemoveRuntimeRequest\x1a\x1d.joblet.RemoveRuntimeResponse\"\x00\x12M\n" +
 	"\fBuildRuntime\x12\x1b.joblet.BuildRuntimeRequest\x1a\x1c.joblet.BuildRuntimeProgress\"\x000\x01\x12`\n" +
 	"\x13ValidateRuntimeYAML\x12\".joblet.ValidateRuntimeYAMLRequest\x1a#.joblet.ValidateRuntimeYAMLResponse\"\x00B*Z(github.com/ehsaniara/joblet-proto/v2/genb\x06proto3"
 
@@ -6701,17 +6685,17 @@ var file_joblet_proto_goTypes = []any{
 	(*Job)(nil),                         // 1: joblet.Job
 	(*EmptyRequest)(nil),                // 2: joblet.EmptyRequest
 	(*FileUpload)(nil),                  // 3: joblet.FileUpload
-	(*GetJobStatusReq)(nil),             // 4: joblet.GetJobStatusReq
-	(*GetJobStatusRes)(nil),             // 5: joblet.GetJobStatusRes
-	(*StopJobReq)(nil),                  // 6: joblet.StopJobReq
-	(*StopJobRes)(nil),                  // 7: joblet.StopJobRes
-	(*CancelJobReq)(nil),                // 8: joblet.CancelJobReq
-	(*CancelJobRes)(nil),                // 9: joblet.CancelJobRes
-	(*DeleteJobReq)(nil),                // 10: joblet.DeleteJobReq
-	(*DeleteJobRes)(nil),                // 11: joblet.DeleteJobRes
-	(*DeleteAllJobsReq)(nil),            // 12: joblet.DeleteAllJobsReq
-	(*DeleteAllJobsRes)(nil),            // 13: joblet.DeleteAllJobsRes
-	(*GetJobLogsReq)(nil),               // 14: joblet.GetJobLogsReq
+	(*GetJobStatusRequest)(nil),         // 4: joblet.GetJobStatusRequest
+	(*GetJobStatusResponse)(nil),        // 5: joblet.GetJobStatusResponse
+	(*StopJobRequest)(nil),              // 6: joblet.StopJobRequest
+	(*StopJobResponse)(nil),             // 7: joblet.StopJobResponse
+	(*CancelJobRequest)(nil),            // 8: joblet.CancelJobRequest
+	(*CancelJobResponse)(nil),           // 9: joblet.CancelJobResponse
+	(*DeleteJobRequest)(nil),            // 10: joblet.DeleteJobRequest
+	(*DeleteJobResponse)(nil),           // 11: joblet.DeleteJobResponse
+	(*DeleteAllJobsRequest)(nil),        // 12: joblet.DeleteAllJobsRequest
+	(*DeleteAllJobsResponse)(nil),       // 13: joblet.DeleteAllJobsResponse
+	(*GetJobLogsRequest)(nil),           // 14: joblet.GetJobLogsRequest
 	(*DataChunk)(nil),                   // 15: joblet.DataChunk
 	(*BuildRuntimeRequest)(nil),         // 16: joblet.BuildRuntimeRequest
 	(*BuildRuntimeProgress)(nil),        // 17: joblet.BuildRuntimeProgress
@@ -6721,21 +6705,21 @@ var file_joblet_proto_goTypes = []any{
 	(*ValidateRuntimeYAMLRequest)(nil),  // 21: joblet.ValidateRuntimeYAMLRequest
 	(*ValidateRuntimeYAMLResponse)(nil), // 22: joblet.ValidateRuntimeYAMLResponse
 	(*RuntimeYAMLInfo)(nil),             // 23: joblet.RuntimeYAMLInfo
-	(*CreateNetworkReq)(nil),            // 24: joblet.CreateNetworkReq
-	(*CreateNetworkRes)(nil),            // 25: joblet.CreateNetworkRes
-	(*RemoveNetworkReq)(nil),            // 26: joblet.RemoveNetworkReq
-	(*RemoveNetworkRes)(nil),            // 27: joblet.RemoveNetworkRes
+	(*CreateNetworkRequest)(nil),        // 24: joblet.CreateNetworkRequest
+	(*CreateNetworkResponse)(nil),       // 25: joblet.CreateNetworkResponse
+	(*RemoveNetworkRequest)(nil),        // 26: joblet.RemoveNetworkRequest
+	(*RemoveNetworkResponse)(nil),       // 27: joblet.RemoveNetworkResponse
 	(*Network)(nil),                     // 28: joblet.Network
 	(*Networks)(nil),                    // 29: joblet.Networks
-	(*CreateVolumeReq)(nil),             // 30: joblet.CreateVolumeReq
-	(*CreateVolumeRes)(nil),             // 31: joblet.CreateVolumeRes
-	(*RemoveVolumeReq)(nil),             // 32: joblet.RemoveVolumeReq
-	(*RemoveVolumeRes)(nil),             // 33: joblet.RemoveVolumeRes
+	(*CreateVolumeRequest)(nil),         // 30: joblet.CreateVolumeRequest
+	(*CreateVolumeResponse)(nil),        // 31: joblet.CreateVolumeResponse
+	(*RemoveVolumeRequest)(nil),         // 32: joblet.RemoveVolumeRequest
+	(*RemoveVolumeResponse)(nil),        // 33: joblet.RemoveVolumeResponse
 	(*Volume)(nil),                      // 34: joblet.Volume
 	(*Volumes)(nil),                     // 35: joblet.Volumes
-	(*SystemStatusRes)(nil),             // 36: joblet.SystemStatusRes
-	(*SystemMetricsRes)(nil),            // 37: joblet.SystemMetricsRes
-	(*StreamMetricsReq)(nil),            // 38: joblet.StreamMetricsReq
+	(*SystemStatusResponse)(nil),        // 36: joblet.SystemStatusResponse
+	(*SystemMetricsResponse)(nil),       // 37: joblet.SystemMetricsResponse
+	(*StreamMetricsRequest)(nil),        // 38: joblet.StreamMetricsRequest
 	(*HostInfo)(nil),                    // 39: joblet.HostInfo
 	(*CPUMetrics)(nil),                  // 40: joblet.CPUMetrics
 	(*MemoryMetrics)(nil),               // 41: joblet.MemoryMetrics
@@ -6747,19 +6731,19 @@ var file_joblet_proto_goTypes = []any{
 	(*ProcessInfo)(nil),                 // 47: joblet.ProcessInfo
 	(*CloudInfo)(nil),                   // 48: joblet.CloudInfo
 	(*ServerVersionInfo)(nil),           // 49: joblet.ServerVersionInfo
-	(*RuntimesRes)(nil),                 // 50: joblet.RuntimesRes
+	(*ListRuntimesResponse)(nil),        // 50: joblet.ListRuntimesResponse
 	(*RuntimeInfo)(nil),                 // 51: joblet.RuntimeInfo
 	(*RuntimeBuildInfo)(nil),            // 52: joblet.RuntimeBuildInfo
 	(*RuntimeRequirements)(nil),         // 53: joblet.RuntimeRequirements
-	(*RuntimeInfoReq)(nil),              // 54: joblet.RuntimeInfoReq
-	(*RuntimeInfoRes)(nil),              // 55: joblet.RuntimeInfoRes
-	(*RuntimeTestReq)(nil),              // 56: joblet.RuntimeTestReq
-	(*RuntimeTestRes)(nil),              // 57: joblet.RuntimeTestRes
+	(*GetRuntimeInfoRequest)(nil),       // 54: joblet.GetRuntimeInfoRequest
+	(*GetRuntimeInfoResponse)(nil),      // 55: joblet.GetRuntimeInfoResponse
+	(*TestRuntimeRequest)(nil),          // 56: joblet.TestRuntimeRequest
+	(*TestRuntimeResponse)(nil),         // 57: joblet.TestRuntimeResponse
 	(*RunJobRequest)(nil),               // 58: joblet.RunJobRequest
 	(*RunJobResponse)(nil),              // 59: joblet.RunJobResponse
 	(*Timestamp)(nil),                   // 60: joblet.Timestamp
-	(*RuntimeRemoveReq)(nil),            // 61: joblet.RuntimeRemoveReq
-	(*RuntimeRemoveRes)(nil),            // 62: joblet.RuntimeRemoveRes
+	(*RemoveRuntimeRequest)(nil),        // 61: joblet.RemoveRuntimeRequest
+	(*RemoveRuntimeResponse)(nil),       // 62: joblet.RemoveRuntimeResponse
 	(*StreamJobMetricsRequest)(nil),     // 63: joblet.StreamJobMetricsRequest
 	(*GetJobMetricsRequest)(nil),        // 64: joblet.GetJobMetricsRequest
 	(*JobMetricsEvent)(nil),             // 65: joblet.JobMetricsEvent
@@ -6775,8 +6759,8 @@ var file_joblet_proto_goTypes = []any{
 	(*TelematicsSocketDataData)(nil),    // 75: joblet.TelematicsSocketDataData
 	nil,                                 // 76: joblet.Job.EnvironmentEntry
 	nil,                                 // 77: joblet.Job.SecretEnvironmentEntry
-	nil,                                 // 78: joblet.GetJobStatusRes.EnvironmentEntry
-	nil,                                 // 79: joblet.GetJobStatusRes.SecretEnvironmentEntry
+	nil,                                 // 78: joblet.GetJobStatusResponse.EnvironmentEntry
+	nil,                                 // 79: joblet.GetJobStatusResponse.SecretEnvironmentEntry
 	nil,                                 // 80: joblet.CloudInfo.MetadataEntry
 	nil,                                 // 81: joblet.RuntimeInfo.EnvironmentEntry
 	nil,                                 // 82: joblet.RunJobRequest.EnvironmentEntry
@@ -6786,40 +6770,40 @@ var file_joblet_proto_depIdxs = []int32{
 	1,  // 0: joblet.Jobs.jobs:type_name -> joblet.Job
 	76, // 1: joblet.Job.environment:type_name -> joblet.Job.EnvironmentEntry
 	77, // 2: joblet.Job.secret_environment:type_name -> joblet.Job.SecretEnvironmentEntry
-	78, // 3: joblet.GetJobStatusRes.environment:type_name -> joblet.GetJobStatusRes.EnvironmentEntry
-	79, // 4: joblet.GetJobStatusRes.secret_environment:type_name -> joblet.GetJobStatusRes.SecretEnvironmentEntry
+	78, // 3: joblet.GetJobStatusResponse.environment:type_name -> joblet.GetJobStatusResponse.EnvironmentEntry
+	79, // 4: joblet.GetJobStatusResponse.secret_environment:type_name -> joblet.GetJobStatusResponse.SecretEnvironmentEntry
 	18, // 5: joblet.BuildRuntimeProgress.phase:type_name -> joblet.BuildPhaseProgress
 	19, // 6: joblet.BuildRuntimeProgress.log:type_name -> joblet.BuildLogLine
 	20, // 7: joblet.BuildRuntimeProgress.result:type_name -> joblet.BuildResult
 	23, // 8: joblet.ValidateRuntimeYAMLResponse.spec_info:type_name -> joblet.RuntimeYAMLInfo
 	28, // 9: joblet.Networks.networks:type_name -> joblet.Network
 	34, // 10: joblet.Volumes.volumes:type_name -> joblet.Volume
-	39, // 11: joblet.SystemStatusRes.host:type_name -> joblet.HostInfo
-	40, // 12: joblet.SystemStatusRes.cpu:type_name -> joblet.CPUMetrics
-	41, // 13: joblet.SystemStatusRes.memory:type_name -> joblet.MemoryMetrics
-	42, // 14: joblet.SystemStatusRes.disks:type_name -> joblet.DiskMetrics
-	43, // 15: joblet.SystemStatusRes.networks:type_name -> joblet.NetworkMetrics
-	44, // 16: joblet.SystemStatusRes.io:type_name -> joblet.IOMetrics
-	46, // 17: joblet.SystemStatusRes.processes:type_name -> joblet.ProcessMetrics
-	48, // 18: joblet.SystemStatusRes.cloud:type_name -> joblet.CloudInfo
-	49, // 19: joblet.SystemStatusRes.server_version:type_name -> joblet.ServerVersionInfo
-	39, // 20: joblet.SystemMetricsRes.host:type_name -> joblet.HostInfo
-	40, // 21: joblet.SystemMetricsRes.cpu:type_name -> joblet.CPUMetrics
-	41, // 22: joblet.SystemMetricsRes.memory:type_name -> joblet.MemoryMetrics
-	42, // 23: joblet.SystemMetricsRes.disks:type_name -> joblet.DiskMetrics
-	43, // 24: joblet.SystemMetricsRes.networks:type_name -> joblet.NetworkMetrics
-	44, // 25: joblet.SystemMetricsRes.io:type_name -> joblet.IOMetrics
-	46, // 26: joblet.SystemMetricsRes.processes:type_name -> joblet.ProcessMetrics
-	48, // 27: joblet.SystemMetricsRes.cloud:type_name -> joblet.CloudInfo
-	45, // 28: joblet.IOMetrics.diskIO:type_name -> joblet.DiskIOMetrics
-	47, // 29: joblet.ProcessMetrics.topByCPU:type_name -> joblet.ProcessInfo
-	47, // 30: joblet.ProcessMetrics.topByMemory:type_name -> joblet.ProcessInfo
+	39, // 11: joblet.SystemStatusResponse.host:type_name -> joblet.HostInfo
+	40, // 12: joblet.SystemStatusResponse.cpu:type_name -> joblet.CPUMetrics
+	41, // 13: joblet.SystemStatusResponse.memory:type_name -> joblet.MemoryMetrics
+	42, // 14: joblet.SystemStatusResponse.disks:type_name -> joblet.DiskMetrics
+	43, // 15: joblet.SystemStatusResponse.networks:type_name -> joblet.NetworkMetrics
+	44, // 16: joblet.SystemStatusResponse.io:type_name -> joblet.IOMetrics
+	46, // 17: joblet.SystemStatusResponse.processes:type_name -> joblet.ProcessMetrics
+	48, // 18: joblet.SystemStatusResponse.cloud:type_name -> joblet.CloudInfo
+	49, // 19: joblet.SystemStatusResponse.server_version:type_name -> joblet.ServerVersionInfo
+	39, // 20: joblet.SystemMetricsResponse.host:type_name -> joblet.HostInfo
+	40, // 21: joblet.SystemMetricsResponse.cpu:type_name -> joblet.CPUMetrics
+	41, // 22: joblet.SystemMetricsResponse.memory:type_name -> joblet.MemoryMetrics
+	42, // 23: joblet.SystemMetricsResponse.disks:type_name -> joblet.DiskMetrics
+	43, // 24: joblet.SystemMetricsResponse.networks:type_name -> joblet.NetworkMetrics
+	44, // 25: joblet.SystemMetricsResponse.io:type_name -> joblet.IOMetrics
+	46, // 26: joblet.SystemMetricsResponse.processes:type_name -> joblet.ProcessMetrics
+	48, // 27: joblet.SystemMetricsResponse.cloud:type_name -> joblet.CloudInfo
+	45, // 28: joblet.IOMetrics.disk_io:type_name -> joblet.DiskIOMetrics
+	47, // 29: joblet.ProcessMetrics.top_by_cpu:type_name -> joblet.ProcessInfo
+	47, // 30: joblet.ProcessMetrics.top_by_memory:type_name -> joblet.ProcessInfo
 	80, // 31: joblet.CloudInfo.metadata:type_name -> joblet.CloudInfo.MetadataEntry
-	51, // 32: joblet.RuntimesRes.runtimes:type_name -> joblet.RuntimeInfo
+	51, // 32: joblet.ListRuntimesResponse.runtimes:type_name -> joblet.RuntimeInfo
 	53, // 33: joblet.RuntimeInfo.requirements:type_name -> joblet.RuntimeRequirements
 	81, // 34: joblet.RuntimeInfo.environment:type_name -> joblet.RuntimeInfo.EnvironmentEntry
 	52, // 35: joblet.RuntimeInfo.build_info:type_name -> joblet.RuntimeBuildInfo
-	51, // 36: joblet.RuntimeInfoRes.runtime:type_name -> joblet.RuntimeInfo
+	51, // 36: joblet.GetRuntimeInfoResponse.runtime:type_name -> joblet.RuntimeInfo
 	3,  // 37: joblet.RunJobRequest.uploads:type_name -> joblet.FileUpload
 	82, // 38: joblet.RunJobRequest.environment:type_name -> joblet.RunJobRequest.EnvironmentEntry
 	83, // 39: joblet.RunJobRequest.secret_environment:type_name -> joblet.RunJobRequest.SecretEnvironmentEntry
@@ -6831,55 +6815,55 @@ var file_joblet_proto_depIdxs = []int32{
 	74, // 45: joblet.TelematicsEvent.mprotect:type_name -> joblet.TelematicsMprotectData
 	75, // 46: joblet.TelematicsEvent.socket_data:type_name -> joblet.TelematicsSocketDataData
 	58, // 47: joblet.JobService.RunJob:input_type -> joblet.RunJobRequest
-	4,  // 48: joblet.JobService.GetJobStatus:input_type -> joblet.GetJobStatusReq
-	6,  // 49: joblet.JobService.StopJob:input_type -> joblet.StopJobReq
-	8,  // 50: joblet.JobService.CancelJob:input_type -> joblet.CancelJobReq
-	10, // 51: joblet.JobService.DeleteJob:input_type -> joblet.DeleteJobReq
-	12, // 52: joblet.JobService.DeleteAllJobs:input_type -> joblet.DeleteAllJobsReq
-	14, // 53: joblet.JobService.GetJobLogs:input_type -> joblet.GetJobLogsReq
+	4,  // 48: joblet.JobService.GetJobStatus:input_type -> joblet.GetJobStatusRequest
+	6,  // 49: joblet.JobService.StopJob:input_type -> joblet.StopJobRequest
+	8,  // 50: joblet.JobService.CancelJob:input_type -> joblet.CancelJobRequest
+	10, // 51: joblet.JobService.DeleteJob:input_type -> joblet.DeleteJobRequest
+	12, // 52: joblet.JobService.DeleteAllJobs:input_type -> joblet.DeleteAllJobsRequest
+	14, // 53: joblet.JobService.GetJobLogs:input_type -> joblet.GetJobLogsRequest
 	2,  // 54: joblet.JobService.ListJobs:input_type -> joblet.EmptyRequest
 	63, // 55: joblet.JobService.StreamJobMetrics:input_type -> joblet.StreamJobMetricsRequest
 	64, // 56: joblet.JobService.GetJobMetrics:input_type -> joblet.GetJobMetricsRequest
 	66, // 57: joblet.JobService.StreamJobTelematics:input_type -> joblet.StreamJobTelematicsRequest
 	67, // 58: joblet.JobService.GetJobTelematics:input_type -> joblet.GetJobTelematicsRequest
-	24, // 59: joblet.NetworkService.CreateNetwork:input_type -> joblet.CreateNetworkReq
+	24, // 59: joblet.NetworkService.CreateNetwork:input_type -> joblet.CreateNetworkRequest
 	2,  // 60: joblet.NetworkService.ListNetworks:input_type -> joblet.EmptyRequest
-	26, // 61: joblet.NetworkService.RemoveNetwork:input_type -> joblet.RemoveNetworkReq
-	30, // 62: joblet.VolumeService.CreateVolume:input_type -> joblet.CreateVolumeReq
+	26, // 61: joblet.NetworkService.RemoveNetwork:input_type -> joblet.RemoveNetworkRequest
+	30, // 62: joblet.VolumeService.CreateVolume:input_type -> joblet.CreateVolumeRequest
 	2,  // 63: joblet.VolumeService.ListVolumes:input_type -> joblet.EmptyRequest
-	32, // 64: joblet.VolumeService.RemoveVolume:input_type -> joblet.RemoveVolumeReq
+	32, // 64: joblet.VolumeService.RemoveVolume:input_type -> joblet.RemoveVolumeRequest
 	2,  // 65: joblet.MonitoringService.GetSystemStatus:input_type -> joblet.EmptyRequest
-	38, // 66: joblet.MonitoringService.StreamSystemMetrics:input_type -> joblet.StreamMetricsReq
+	38, // 66: joblet.MonitoringService.StreamSystemMetrics:input_type -> joblet.StreamMetricsRequest
 	2,  // 67: joblet.RuntimeService.ListRuntimes:input_type -> joblet.EmptyRequest
-	54, // 68: joblet.RuntimeService.GetRuntimeInfo:input_type -> joblet.RuntimeInfoReq
-	56, // 69: joblet.RuntimeService.TestRuntime:input_type -> joblet.RuntimeTestReq
-	61, // 70: joblet.RuntimeService.RemoveRuntime:input_type -> joblet.RuntimeRemoveReq
+	54, // 68: joblet.RuntimeService.GetRuntimeInfo:input_type -> joblet.GetRuntimeInfoRequest
+	56, // 69: joblet.RuntimeService.TestRuntime:input_type -> joblet.TestRuntimeRequest
+	61, // 70: joblet.RuntimeService.RemoveRuntime:input_type -> joblet.RemoveRuntimeRequest
 	16, // 71: joblet.RuntimeService.BuildRuntime:input_type -> joblet.BuildRuntimeRequest
 	21, // 72: joblet.RuntimeService.ValidateRuntimeYAML:input_type -> joblet.ValidateRuntimeYAMLRequest
 	59, // 73: joblet.JobService.RunJob:output_type -> joblet.RunJobResponse
-	5,  // 74: joblet.JobService.GetJobStatus:output_type -> joblet.GetJobStatusRes
-	7,  // 75: joblet.JobService.StopJob:output_type -> joblet.StopJobRes
-	9,  // 76: joblet.JobService.CancelJob:output_type -> joblet.CancelJobRes
-	11, // 77: joblet.JobService.DeleteJob:output_type -> joblet.DeleteJobRes
-	13, // 78: joblet.JobService.DeleteAllJobs:output_type -> joblet.DeleteAllJobsRes
+	5,  // 74: joblet.JobService.GetJobStatus:output_type -> joblet.GetJobStatusResponse
+	7,  // 75: joblet.JobService.StopJob:output_type -> joblet.StopJobResponse
+	9,  // 76: joblet.JobService.CancelJob:output_type -> joblet.CancelJobResponse
+	11, // 77: joblet.JobService.DeleteJob:output_type -> joblet.DeleteJobResponse
+	13, // 78: joblet.JobService.DeleteAllJobs:output_type -> joblet.DeleteAllJobsResponse
 	15, // 79: joblet.JobService.GetJobLogs:output_type -> joblet.DataChunk
 	0,  // 80: joblet.JobService.ListJobs:output_type -> joblet.Jobs
 	65, // 81: joblet.JobService.StreamJobMetrics:output_type -> joblet.JobMetricsEvent
 	65, // 82: joblet.JobService.GetJobMetrics:output_type -> joblet.JobMetricsEvent
 	68, // 83: joblet.JobService.StreamJobTelematics:output_type -> joblet.TelematicsEvent
 	68, // 84: joblet.JobService.GetJobTelematics:output_type -> joblet.TelematicsEvent
-	25, // 85: joblet.NetworkService.CreateNetwork:output_type -> joblet.CreateNetworkRes
+	25, // 85: joblet.NetworkService.CreateNetwork:output_type -> joblet.CreateNetworkResponse
 	29, // 86: joblet.NetworkService.ListNetworks:output_type -> joblet.Networks
-	27, // 87: joblet.NetworkService.RemoveNetwork:output_type -> joblet.RemoveNetworkRes
-	31, // 88: joblet.VolumeService.CreateVolume:output_type -> joblet.CreateVolumeRes
+	27, // 87: joblet.NetworkService.RemoveNetwork:output_type -> joblet.RemoveNetworkResponse
+	31, // 88: joblet.VolumeService.CreateVolume:output_type -> joblet.CreateVolumeResponse
 	35, // 89: joblet.VolumeService.ListVolumes:output_type -> joblet.Volumes
-	33, // 90: joblet.VolumeService.RemoveVolume:output_type -> joblet.RemoveVolumeRes
-	36, // 91: joblet.MonitoringService.GetSystemStatus:output_type -> joblet.SystemStatusRes
-	37, // 92: joblet.MonitoringService.StreamSystemMetrics:output_type -> joblet.SystemMetricsRes
-	50, // 93: joblet.RuntimeService.ListRuntimes:output_type -> joblet.RuntimesRes
-	55, // 94: joblet.RuntimeService.GetRuntimeInfo:output_type -> joblet.RuntimeInfoRes
-	57, // 95: joblet.RuntimeService.TestRuntime:output_type -> joblet.RuntimeTestRes
-	62, // 96: joblet.RuntimeService.RemoveRuntime:output_type -> joblet.RuntimeRemoveRes
+	33, // 90: joblet.VolumeService.RemoveVolume:output_type -> joblet.RemoveVolumeResponse
+	36, // 91: joblet.MonitoringService.GetSystemStatus:output_type -> joblet.SystemStatusResponse
+	37, // 92: joblet.MonitoringService.StreamSystemMetrics:output_type -> joblet.SystemMetricsResponse
+	50, // 93: joblet.RuntimeService.ListRuntimes:output_type -> joblet.ListRuntimesResponse
+	55, // 94: joblet.RuntimeService.GetRuntimeInfo:output_type -> joblet.GetRuntimeInfoResponse
+	57, // 95: joblet.RuntimeService.TestRuntime:output_type -> joblet.TestRuntimeResponse
+	62, // 96: joblet.RuntimeService.RemoveRuntime:output_type -> joblet.RemoveRuntimeResponse
 	17, // 97: joblet.RuntimeService.BuildRuntime:output_type -> joblet.BuildRuntimeProgress
 	22, // 98: joblet.RuntimeService.ValidateRuntimeYAML:output_type -> joblet.ValidateRuntimeYAMLResponse
 	73, // [73:99] is the sub-list for method output_type

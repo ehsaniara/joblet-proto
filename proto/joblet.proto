@@ -8,12 +8,12 @@ package joblet;
 service JobService {
   // Job operations
   rpc RunJob(RunJobRequest) returns (RunJobResponse){}
-  rpc GetJobStatus(GetJobStatusReq) returns (GetJobStatusRes){}
-  rpc StopJob(StopJobReq) returns (StopJobRes){}
-  rpc CancelJob(CancelJobReq) returns (CancelJobRes){}
-  rpc DeleteJob(DeleteJobReq) returns (DeleteJobRes){}
-  rpc DeleteAllJobs(DeleteAllJobsReq) returns (DeleteAllJobsRes){}
-  rpc GetJobLogs(GetJobLogsReq) returns (stream DataChunk);
+  rpc GetJobStatus(GetJobStatusRequest) returns (GetJobStatusResponse){}
+  rpc StopJob(StopJobRequest) returns (StopJobResponse){}
+  rpc CancelJob(CancelJobRequest) returns (CancelJobResponse){}
+  rpc DeleteJob(DeleteJobRequest) returns (DeleteJobResponse){}
+  rpc DeleteAllJobs(DeleteAllJobsRequest) returns (DeleteAllJobsResponse){}
+  rpc GetJobLogs(GetJobLogsRequest) returns (stream DataChunk);
   rpc ListJobs(EmptyRequest) returns (Jobs){}
 
   // Job Metrics (resource usage from cgroups - sampled every 5s)
@@ -31,30 +31,30 @@ service JobService {
 
 // Network service
 service NetworkService {
-  rpc CreateNetwork(CreateNetworkReq) returns (CreateNetworkRes){}
+  rpc CreateNetwork(CreateNetworkRequest) returns (CreateNetworkResponse){}
   rpc ListNetworks(EmptyRequest) returns (Networks){}
-  rpc RemoveNetwork(RemoveNetworkReq) returns (RemoveNetworkRes){}
+  rpc RemoveNetwork(RemoveNetworkRequest) returns (RemoveNetworkResponse){}
 }
 
 // Volume service
 service VolumeService {
-  rpc CreateVolume(CreateVolumeReq) returns (CreateVolumeRes){}
+  rpc CreateVolume(CreateVolumeRequest) returns (CreateVolumeResponse){}
   rpc ListVolumes(EmptyRequest) returns (Volumes){}
-  rpc RemoveVolume(RemoveVolumeReq) returns (RemoveVolumeRes){}
+  rpc RemoveVolume(RemoveVolumeRequest) returns (RemoveVolumeResponse){}
 }
 
 // Monitoring service
 service MonitoringService {
-  rpc GetSystemStatus(EmptyRequest) returns (SystemStatusRes){}
-  rpc StreamSystemMetrics(StreamMetricsReq) returns (stream SystemMetricsRes){}
+  rpc GetSystemStatus(EmptyRequest) returns (SystemStatusResponse){}
+  rpc StreamSystemMetrics(StreamMetricsRequest) returns (stream SystemMetricsResponse){}
 }
 
 // Runtime service for managing execution environments
 service RuntimeService {
-  rpc ListRuntimes(EmptyRequest) returns (RuntimesRes){}
-  rpc GetRuntimeInfo(RuntimeInfoReq) returns (RuntimeInfoRes){}
-  rpc TestRuntime(RuntimeTestReq) returns (RuntimeTestRes){}
-  rpc RemoveRuntime(RuntimeRemoveReq) returns (RuntimeRemoveRes){}
+  rpc ListRuntimes(EmptyRequest) returns (ListRuntimesResponse){}
+  rpc GetRuntimeInfo(GetRuntimeInfoRequest) returns (GetRuntimeInfoResponse){}
+  rpc TestRuntime(TestRuntimeRequest) returns (TestRuntimeResponse){}
+  rpc RemoveRuntime(RemoveRuntimeRequest) returns (RemoveRuntimeResponse){}
 
   // BuildRuntime builds a runtime from a YAML specification
   // The build process runs on the server and streams progress back to the client
@@ -70,18 +70,17 @@ message Jobs{
 
 message Job{
   string uuid = 1;                         // Job UUID
-  string name = 2;                         // Job name (optional for individual jobs)
   string command = 3;
   repeated string args = 4;
-  int32 maxCPU = 5;
-  string cpuCores = 6;
-  int32 maxMemory = 7;
-  int32 maxIOBPS = 8;
+  int32 max_cpu = 5;
+  string cpu_cores = 6;
+  int32 max_memory = 7;
+  int32 max_io_bps = 8;
   string status = 9;
-  string startTime = 10;
-  string endTime = 11;
-  int32 exitCode = 12;
-  string scheduledTime = 13;    // Schedule time (RFC3339, empty = immediate)
+  string start_time = 10;
+  string end_time = 11;
+  int32 exit_code = 12;
+  string scheduled_time = 13;    // Schedule time (RFC3339, empty = immediate)
   string runtime = 14;          // Runtime spec
   map<string, string> environment = 15;       // Environment variables
   map<string, string> secret_environment = 16; // Secret env vars (masked in logs)
@@ -92,41 +91,42 @@ message Job{
   int32 gpu_memory_mb = 19;                // GPU memory requirement (MB)
 
   // Node identification
-  string nodeId = 20;                      // Unique identifier of the Joblet node that executed this job
+  string node_id = 20;                      // Unique identifier of the Joblet node that executed this job
 }
 
 message EmptyRequest {}
+
 message FileUpload {
   string path = 1;           // Path in workspace
   bytes content = 2;         // Content
   uint32 mode = 3;           // Unix permissions
-  bool isDirectory = 4;      // Is directory
+  bool is_directory = 4;      // Is directory
 }
+
 // GetJobStatus
-message GetJobStatusReq{
+message GetJobStatusRequest{
   string uuid = 1;                         // Job UUID identifier
 }
 
-message GetJobStatusRes{
+message GetJobStatusResponse{
   string uuid = 1;                         // Job UUID identifier
-  string name = 2;                         // Human-readable job name (optional)
   string command = 3;
   repeated string args = 4;
-  int32 maxCPU = 5;
-  string cpuCores = 6;
-  int32 maxMemory = 7;
-  int32 maxIOBPS = 8;
+  int32 max_cpu = 5;
+  string cpu_cores = 6;
+  int32 max_memory = 7;
+  int32 max_io_bps = 8;
   string status = 9;
-  string startTime = 10;
-  string endTime = 11;
-  int32 exitCode = 12;
-  string scheduledTime = 13;    // When the job should execute (empty if immediate)
+  string start_time = 10;
+  string end_time = 11;
+  int32 exit_code = 12;
+  string scheduled_time = 13;    // When the job should execute (empty if immediate)
   map<string, string> environment = 14;       // Regular environment variables (visible)
   map<string, string> secret_environment = 15; // Secret environment variables (masked)
   string network = 16;                     // Network configuration
   repeated string volumes = 17;            // Mounted volumes
   string runtime = 18;                     // Runtime environment
-  string workDir = 19;                     // Working directory
+  string work_dir = 19;                     // Working directory
   repeated string uploads = 20;            // Uploaded files/directories
 
   // GPU allocation info
@@ -135,48 +135,48 @@ message GetJobStatusRes{
   int32 gpu_memory_mb = 25;                // GPU memory requirement (MB)
 
   // Node identification
-  string nodeId = 26;                      // Unique identifier of the Joblet node that executed this job
+  string node_id = 26;                      // Unique identifier of the Joblet node that executed this job
 }
 
 // StopJob
-message StopJobReq{
+message StopJobRequest{
   string uuid = 1;                         // Job UUID identifier
 }
 
-message StopJobRes{
+message StopJobResponse{
   string uuid = 1;                         // Job UUID identifier
   string status = 2;
-  string endTime = 3;
-  int32 exitCode = 4;
+  string end_time = 3;
+  int32 exit_code = 4;
 }
 
 // CancelJob - for canceling scheduled jobs only
-message CancelJobReq{
+message CancelJobRequest{
   string uuid = 1;                         // Job UUID identifier
 }
 
-message CancelJobRes{
+message CancelJobResponse{
   string uuid = 1;                         // Job UUID identifier
   string status = 2;                       // Should be "CANCELED"
 }
 
 // DeleteJob
-message DeleteJobReq{
+message DeleteJobRequest{
   string uuid = 1;                         // Job UUID identifier
 }
 
-message DeleteJobRes{
+message DeleteJobResponse{
   string uuid = 1;                         // Job UUID identifier
   bool success = 2;
   string message = 3;
 }
 
 // DeleteAllJobs
-message DeleteAllJobsReq{
+message DeleteAllJobsRequest{
   // Empty - deletes all non-running jobs
 }
 
-message DeleteAllJobsRes{
+message DeleteAllJobsResponse{
   bool success = 1;
   string message = 2;
   int32 deleted_count = 3;                 // Jobs deleted
@@ -184,7 +184,7 @@ message DeleteAllJobsRes{
 }
 
 // GetJobLogs
-message GetJobLogsReq{
+message GetJobLogsRequest{
   string uuid = 1;                         // Job UUID identifier
 }
 
@@ -258,22 +258,22 @@ message RuntimeYAMLInfo {
   bool requires_gpu = 9;           // Requires GPU
 }
 
-message CreateNetworkReq {
+message CreateNetworkRequest {
   string name = 1;
   string cidr = 2;
 }
 
-message CreateNetworkRes {
+message CreateNetworkResponse {
   string name = 1;
   string cidr = 2;
   string bridge = 3;
 }
 
-message RemoveNetworkReq {
+message RemoveNetworkRequest {
   string name = 1;
 }
 
-message RemoveNetworkRes {
+message RemoveNetworkResponse {
   bool success = 1;
   string message = 2;
 }
@@ -282,31 +282,31 @@ message Network {
   string name = 1;
   string cidr = 2;
   string bridge = 3;
-  int32 jobCount = 4;
+  int32 job_count = 4;
 }
 
 message Networks {
   repeated Network networks = 1;
 }
 
-message CreateVolumeReq {
+message CreateVolumeRequest {
   string name = 1;
   string size = 2;        // Size (e.g., "1GB", "500MB")
   string type = 3;        // Type: filesystem or memory
 }
 
-message CreateVolumeRes {
+message CreateVolumeResponse {
   string name = 1;
   string size = 2;
   string type = 3;
   string path = 4;        // Host path
 }
 
-message RemoveVolumeReq {
+message RemoveVolumeRequest {
   string name = 1;
 }
 
-message RemoveVolumeRes {
+message RemoveVolumeResponse {
   bool success = 1;
   string message = 2;
 }
@@ -316,8 +316,8 @@ message Volume {
   string size = 2;
   string type = 3;
   string path = 4;
-  string createdTime = 5;
-  int32 jobCount = 6;     // Jobs using this volume
+  string created_time = 5;
+  int32 job_count = 6;     // Jobs using this volume
 }
 
 message Volumes {
@@ -326,7 +326,7 @@ message Volumes {
 
 // System monitoring messages
 
-message SystemStatusRes {
+message SystemStatusResponse {
   string timestamp = 1;
   bool available = 2;
   HostInfo host = 3;
@@ -340,7 +340,7 @@ message SystemStatusRes {
   ServerVersionInfo server_version = 11;
 }
 
-message SystemMetricsRes {
+message SystemMetricsResponse {
   string timestamp = 1;
   HostInfo host = 2;
   CPUMetrics cpu = 3;
@@ -352,9 +352,9 @@ message SystemMetricsRes {
   CloudInfo cloud = 9;
 }
 
-message StreamMetricsReq {
-  int32 intervalSeconds = 1; // How often to send updates (default: 5)
-  repeated string metricTypes = 2; // Optional: filter by types
+message StreamMetricsRequest {
+  int32 interval_seconds = 1; // How often to send updates (default: 5)
+  repeated string metric_types = 2; // Optional: filter by types
 }
 
 // Monitoring data structures
@@ -363,106 +363,106 @@ message HostInfo {
   string hostname = 1;
   string os = 2;
   string platform = 3;
-  string platformFamily = 4;
-  string platformVersion = 5;
-  string kernelVersion = 6;
-  string kernelArch = 7;
+  string platform_family = 4;
+  string platform_version = 5;
+  string kernel_version = 6;
+  string kernel_arch = 7;
   string architecture = 8;
-  int32 cpuCount = 9;
-  int64 totalMemory = 10;
-  string bootTime = 11;
+  int32 cpu_count = 9;
+  int64 total_memory = 10;
+  string boot_time = 11;
   int64 uptime = 12;
-  string nodeId = 13;                  // Unique node identifier (UUID)
-  repeated string serverIPs = 14;      // Server IP addresses (can have multiple interfaces)
-  repeated string macAddresses = 15;   // MAC addresses for network interfaces
+  string node_id = 13;                  // Unique node identifier (UUID)
+  repeated string server_ips = 14;      // Server IP addresses (can have multiple interfaces)
+  repeated string mac_addresses = 15;   // MAC addresses for network interfaces
 }
 
 message CPUMetrics {
   int32 cores = 1;
-  double usagePercent = 2;
-  double userTime = 3;
-  double systemTime = 4;
-  double idleTime = 5;
-  double ioWaitTime = 6;
-  double stealTime = 7;
-  repeated double loadAverage = 8; // 1, 5, 15 min load
-  repeated double perCoreUsage = 9;
+  double usage_percent = 2;
+  double user_time = 3;
+  double system_time = 4;
+  double idle_time = 5;
+  double io_wait_time = 6;
+  double steal_time = 7;
+  repeated double load_average = 8; // 1, 5, 15 min load
+  repeated double per_core_usage = 9;
 }
 
 message MemoryMetrics {
-  int64 totalBytes = 1;
-  int64 usedBytes = 2;
-  int64 freeBytes = 3;
-  int64 availableBytes = 4;
-  double usagePercent = 5;
-  int64 cachedBytes = 6;
-  int64 bufferedBytes = 7;
-  int64 swapTotal = 8;
-  int64 swapUsed = 9;
-  int64 swapFree = 10;
+  int64 total_bytes = 1;
+  int64 used_bytes = 2;
+  int64 free_bytes = 3;
+  int64 available_bytes = 4;
+  double usage_percent = 5;
+  int64 cached_bytes = 6;
+  int64 buffered_bytes = 7;
+  int64 swap_total = 8;
+  int64 swap_used = 9;
+  int64 swap_free = 10;
 }
 
 message DiskMetrics {
   string device = 1;
-  string mountPoint = 2;
+  string mount_point = 2;
   string filesystem = 3;
-  int64 totalBytes = 4;
-  int64 usedBytes = 5;
-  int64 freeBytes = 6;
-  double usagePercent = 7;
-  int64 inodesTotal = 8;
-  int64 inodesUsed = 9;
-  int64 inodesFree = 10;
-  double inodesUsagePercent = 11;
+  int64 total_bytes = 4;
+  int64 used_bytes = 5;
+  int64 free_bytes = 6;
+  double usage_percent = 7;
+  int64 inodes_total = 8;
+  int64 inodes_used = 9;
+  int64 inodes_free = 10;
+  double inodes_usage_percent = 11;
 }
 
 message NetworkMetrics {
   string interface = 1;
-  int64 bytesReceived = 2;
-  int64 bytesSent = 3;
-  int64 packetsReceived = 4;
-  int64 packetsSent = 5;
-  int64 errorsIn = 6;
-  int64 errorsOut = 7;
-  int64 dropsIn = 8;
-  int64 dropsOut = 9;
-  double receiveRate = 10; // bytes/sec
-  double transmitRate = 11; // bytes/sec
-  repeated string ipAddresses = 12; // IP addresses assigned to this interface (e.g., ["192.168.1.10", "fe80::1"])
-  string macAddress = 13; // Hardware MAC address (e.g., "00:1a:2b:3c:4d:5e")
+  int64 bytes_received = 2;
+  int64 bytes_sent = 3;
+  int64 packets_received = 4;
+  int64 packets_sent = 5;
+  int64 errors_in = 6;
+  int64 errors_out = 7;
+  int64 drops_in = 8;
+  int64 drops_out = 9;
+  double receive_rate = 10; // bytes/sec
+  double transmit_rate = 11; // bytes/sec
+  repeated string ip_addresses = 12; // IP addresses assigned to this interface (e.g., ["192.168.1.10", "fe80::1"])
+  string mac_address = 13; // Hardware MAC address (e.g., "00:1a:2b:3c:4d:5e")
 }
 
 message IOMetrics {
-  int64 totalReads = 1;
-  int64 totalWrites = 2;
-  int64 readBytes = 3;
-  int64 writeBytes = 4;
-  double readRate = 5;  // bytes/sec
-  double writeRate = 6; // bytes/sec
-  repeated DiskIOMetrics diskIO = 7;
+  int64 total_reads = 1;
+  int64 total_writes = 2;
+  int64 read_bytes = 3;
+  int64 write_bytes = 4;
+  double read_rate = 5;  // bytes/sec
+  double write_rate = 6; // bytes/sec
+  repeated DiskIOMetrics disk_io = 7;
 }
 
 message DiskIOMetrics {
   string device = 1;
-  int64 readsCompleted = 2;
-  int64 writesCompleted = 3;
-  int64 readBytes = 4;
-  int64 writeBytes = 5;
-  int64 readTime = 6;  // ms
-  int64 writeTime = 7; // ms
-  int64 ioTime = 8;    // ms
+  int64 reads_completed = 2;
+  int64 writes_completed = 3;
+  int64 read_bytes = 4;
+  int64 write_bytes = 5;
+  int64 read_time = 6;  // ms
+  int64 write_time = 7; // ms
+  int64 io_time = 8;    // ms
   double utilization = 9; // percent
 }
 
 message ProcessMetrics {
-  int32 totalProcesses = 1;
-  int32 runningProcesses = 2;
-  int32 sleepingProcesses = 3;
-  int32 stoppedProcesses = 4;
-  int32 zombieProcesses = 5;
-  int32 totalThreads = 6;
-  repeated ProcessInfo topByCPU = 7;
-  repeated ProcessInfo topByMemory = 8;
+  int32 total_processes = 1;
+  int32 running_processes = 2;
+  int32 sleeping_processes = 3;
+  int32 stopped_processes = 4;
+  int32 zombie_processes = 5;
+  int32 total_threads = 6;
+  repeated ProcessInfo top_by_cpu = 7;
+  repeated ProcessInfo top_by_memory = 8;
 }
 
 message ProcessInfo {
@@ -470,11 +470,11 @@ message ProcessInfo {
   int32 ppid = 2;
   string name = 3;
   string command = 4;
-  double cpuPercent = 5;
-  double memoryPercent = 6;
-  int64 memoryBytes = 7;
+  double cpu_percent = 5;
+  double memory_percent = 6;
+  int64 memory_bytes = 7;
   string status = 8;
-  string startTime = 9;
+  string start_time = 9;
   string user = 10;
 }
 
@@ -482,9 +482,9 @@ message CloudInfo {
   string provider = 1;
   string region = 2;
   string zone = 3;
-  string instanceID = 4;
-  string instanceType = 5;
-  string hypervisorType = 6;
+  string instance_id = 4;
+  string instance_type = 5;
+  string hypervisor_type = 6;
   map<string, string> metadata = 7;
 }
 
@@ -501,7 +501,7 @@ message ServerVersionInfo {
 }
 
 // Runtime management messages
-message RuntimesRes {
+message ListRuntimesResponse {
   repeated RuntimeInfo runtimes = 1;
 }
 
@@ -510,7 +510,7 @@ message RuntimeInfo {
   string language = 2;              // Language (e.g., "python")
   string version = 3;               // Runtime version (e.g., "1.0.0")
   string description = 4;           // Description
-  int64 sizeBytes = 5;              // Size in bytes
+  int64 size_bytes = 5;              // Size in bytes
   repeated string packages = 6;     // Installed packages (pip, npm, etc.)
   bool available = 7;               // Ready to use
   RuntimeRequirements requirements = 8;
@@ -532,42 +532,41 @@ message RuntimeRequirements {
   bool gpu = 2;                      // Needs GPU
 }
 
-message RuntimeInfoReq {
+message GetRuntimeInfoRequest {
   string runtime = 1;               // e.g., "python-3.11-ml"
 }
 
-message RuntimeInfoRes {
+message GetRuntimeInfoResponse {
   RuntimeInfo runtime = 1;
   bool found = 2;
 }
 
-message RuntimeTestReq {
+message TestRuntimeRequest {
   string runtime = 1;               // e.g., "python-3.11-ml"
 }
 
-message RuntimeTestRes {
+message TestRuntimeResponse {
   bool success = 2;
   string output = 3;
   string error = 4;
-  int32 exitCode = 5;
+  int32 exit_code = 5;
 }
 
 // Job messages
 
 message RunJobRequest {
-  string name = 1;                         // Job name
   string command = 2;
   repeated string args = 3;
-  int32 maxCpu = 4;
-  string cpuCores = 5;
-  int32 maxMemory = 6;
-  int32 maxIobps = 7;
+  int32 max_cpu = 4;
+  string cpu_cores = 5;
+  int32 max_memory = 6;
+  int32 max_io_bps = 7;
   repeated FileUpload uploads = 8;
   string schedule = 9;
   string network = 10;
   repeated string volumes = 11;
   string runtime = 12;
-  string workDir = 13;
+  string work_dir = 13;
   map<string, string> environment = 14;
   map<string, string> secret_environment = 18; // Secret env vars
 
@@ -577,18 +576,18 @@ message RunJobRequest {
 }
 
 message RunJobResponse {
-  string jobUuid = 1;               // Job UUID identifier
+  string job_uuid = 1;               // Job UUID identifier
   string status = 2;
   string command = 3;
   repeated string args = 4;
-  int32 maxCpu = 5;
-  string cpuCores = 6;
-  int32 maxMemory = 7;
-  int32 maxIobps = 8;
-  string startTime = 9;
-  string endTime = 10;
-  int32 exitCode = 11;
-  string scheduledTime = 12;    // Schedule time
+  int32 max_cpu = 5;
+  string cpu_cores = 6;
+  int32 max_memory = 7;
+  int32 max_io_bps = 8;
+  string start_time = 9;
+  string end_time = 10;
+  int32 exit_code = 11;
+  string scheduled_time = 12;    // Schedule time
 }
 
 message Timestamp {
@@ -597,14 +596,14 @@ message Timestamp {
 }
 
 
-message RuntimeRemoveReq {
+message RemoveRuntimeRequest {
   string runtime = 1;              // Runtime to remove
 }
 
-message RuntimeRemoveRes {
+message RemoveRuntimeResponse {
   bool success = 1;                // Success
   string message = 2;              // Message
-  int64 freedSpaceBytes = 3;       // Space freed
+  int64 freed_space_bytes = 3;       // Space freed
 }
 
 // =============================================================================
