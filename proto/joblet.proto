@@ -627,7 +627,7 @@ message GetJobMetricsRequest {
 // Job metrics event (resource usage from cgroups v2)
 message JobMetricsEvent {
   int64 timestamp = 1;             // Unix timestamp in nanoseconds
-  string job_id = 2;               // Job UUID
+  string job_uuid = 2;               // Job UUID
   double cpu_percent = 3;          // CPU usage percentage
   int64 memory_bytes = 4;          // Current memory usage in bytes
   int64 memory_limit = 5;          // Memory limit in bytes
@@ -661,7 +661,7 @@ message GetJobTelematicsRequest {
 // Telematics event from eBPF tracing
 message TelematicsEvent {
   int64 timestamp = 1;             // Unix timestamp in nanoseconds
-  string job_id = 2;               // Job UUID
+  string job_uuid = 2;               // Job UUID
   string type = 3;                 // Event type: "exec", "connect", "accept", "file", "mmap", "mprotect"
 
   oneof data {

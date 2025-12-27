@@ -5065,7 +5065,7 @@ func (x *GetJobMetricsRequest) GetLimit() int32 {
 type JobMetricsEvent struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	Timestamp      int64                  `protobuf:"varint,1,opt,name=timestamp,proto3" json:"timestamp,omitempty"`                                    // Unix timestamp in nanoseconds
-	JobId          string                 `protobuf:"bytes,2,opt,name=job_id,json=jobId,proto3" json:"job_id,omitempty"`                                // Job UUID
+	JobUuid        string                 `protobuf:"bytes,2,opt,name=job_uuid,json=jobUuid,proto3" json:"job_uuid,omitempty"`                          // Job UUID
 	CpuPercent     float64                `protobuf:"fixed64,3,opt,name=cpu_percent,json=cpuPercent,proto3" json:"cpu_percent,omitempty"`               // CPU usage percentage
 	MemoryBytes    int64                  `protobuf:"varint,4,opt,name=memory_bytes,json=memoryBytes,proto3" json:"memory_bytes,omitempty"`             // Current memory usage in bytes
 	MemoryLimit    int64                  `protobuf:"varint,5,opt,name=memory_limit,json=memoryLimit,proto3" json:"memory_limit,omitempty"`             // Memory limit in bytes
@@ -5116,9 +5116,9 @@ func (x *JobMetricsEvent) GetTimestamp() int64 {
 	return 0
 }
 
-func (x *JobMetricsEvent) GetJobId() string {
+func (x *JobMetricsEvent) GetJobUuid() string {
 	if x != nil {
-		return x.JobId
+		return x.JobUuid
 	}
 	return ""
 }
@@ -5319,9 +5319,9 @@ func (x *GetJobTelematicsRequest) GetLimit() int32 {
 // Telematics event from eBPF tracing
 type TelematicsEvent struct {
 	state     protoimpl.MessageState `protogen:"open.v1"`
-	Timestamp int64                  `protobuf:"varint,1,opt,name=timestamp,proto3" json:"timestamp,omitempty"`     // Unix timestamp in nanoseconds
-	JobId     string                 `protobuf:"bytes,2,opt,name=job_id,json=jobId,proto3" json:"job_id,omitempty"` // Job UUID
-	Type      string                 `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`                // Event type: "exec", "connect", "accept", "file", "mmap", "mprotect"
+	Timestamp int64                  `protobuf:"varint,1,opt,name=timestamp,proto3" json:"timestamp,omitempty"`           // Unix timestamp in nanoseconds
+	JobUuid   string                 `protobuf:"bytes,2,opt,name=job_uuid,json=jobUuid,proto3" json:"job_uuid,omitempty"` // Job UUID
+	Type      string                 `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`                      // Event type: "exec", "connect", "accept", "file", "mmap", "mprotect"
 	// Types that are valid to be assigned to Data:
 	//
 	//	*TelematicsEvent_Exec
@@ -5373,9 +5373,9 @@ func (x *TelematicsEvent) GetTimestamp() int64 {
 	return 0
 }
 
-func (x *TelematicsEvent) GetJobId() string {
+func (x *TelematicsEvent) GetJobUuid() string {
 	if x != nil {
-		return x.JobId
+		return x.JobUuid
 	}
 	return ""
 }
@@ -6562,10 +6562,10 @@ const file_joblet_proto_rawDesc = "" +
 	"\n" +
 	"start_time\x18\x02 \x01(\x03R\tstartTime\x12\x19\n" +
 	"\bend_time\x18\x03 \x01(\x03R\aendTime\x12\x14\n" +
-	"\x05limit\x18\x04 \x01(\x05R\x05limit\"\x96\x03\n" +
+	"\x05limit\x18\x04 \x01(\x05R\x05limit\"\x9a\x03\n" +
 	"\x0fJobMetricsEvent\x12\x1c\n" +
-	"\ttimestamp\x18\x01 \x01(\x03R\ttimestamp\x12\x15\n" +
-	"\x06job_id\x18\x02 \x01(\tR\x05jobId\x12\x1f\n" +
+	"\ttimestamp\x18\x01 \x01(\x03R\ttimestamp\x12\x19\n" +
+	"\bjob_uuid\x18\x02 \x01(\tR\ajobUuid\x12\x1f\n" +
 	"\vcpu_percent\x18\x03 \x01(\x01R\n" +
 	"cpuPercent\x12!\n" +
 	"\fmemory_bytes\x18\x04 \x01(\x03R\vmemoryBytes\x12!\n" +
@@ -6587,10 +6587,10 @@ const file_joblet_proto_rawDesc = "" +
 	"\n" +
 	"start_time\x18\x03 \x01(\x03R\tstartTime\x12\x19\n" +
 	"\bend_time\x18\x04 \x01(\x03R\aendTime\x12\x14\n" +
-	"\x05limit\x18\x05 \x01(\x05R\x05limit\"\xee\x03\n" +
+	"\x05limit\x18\x05 \x01(\x05R\x05limit\"\xf2\x03\n" +
 	"\x0fTelematicsEvent\x12\x1c\n" +
-	"\ttimestamp\x18\x01 \x01(\x03R\ttimestamp\x12\x15\n" +
-	"\x06job_id\x18\x02 \x01(\tR\x05jobId\x12\x12\n" +
+	"\ttimestamp\x18\x01 \x01(\x03R\ttimestamp\x12\x19\n" +
+	"\bjob_uuid\x18\x02 \x01(\tR\ajobUuid\x12\x12\n" +
 	"\x04type\x18\x03 \x01(\tR\x04type\x120\n" +
 	"\x04exec\x18\n" +
 	" \x01(\v2\x1a.joblet.TelematicsExecDataH\x00R\x04exec\x129\n" +
