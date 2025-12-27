@@ -362,14 +362,8 @@ message StreamMetricsRequest {
 message HostInfo {
   string hostname = 1;
   string os = 2;
-  string platform = 3;
-  string platform_family = 4;
-  string platform_version = 5;
   string kernel_version = 6;
-  string kernel_arch = 7;
   string architecture = 8;
-  int32 cpu_count = 9;
-  int64 total_memory = 10;
   string boot_time = 11;
   int64 uptime = 12;
   string node_id = 13;                  // Unique node identifier (UUID)
@@ -454,6 +448,7 @@ message DiskIOMetrics {
   double utilization = 9; // percent
 }
 
+
 message ProcessMetrics {
   int32 total_processes = 1;
   int32 running_processes = 2;
@@ -475,7 +470,6 @@ message ProcessInfo {
   int64 memory_bytes = 7;
   string status = 8;
   string start_time = 9;
-  string user = 10;
 }
 
 message CloudInfo {
@@ -577,17 +571,7 @@ message RunJobRequest {
 
 message RunJobResponse {
   string job_uuid = 1;               // Job UUID identifier
-  string status = 2;
-  string command = 3;
-  repeated string args = 4;
-  int32 max_cpu = 5;
-  string cpu_cores = 6;
-  int32 max_memory = 7;
-  int32 max_io_bps = 8;
-  string start_time = 9;
-  string end_time = 10;
-  int32 exit_code = 11;
-  string scheduled_time = 12;    // Schedule time
+  string status = 2;                 // Job status (RUNNING, SCHEDULED, etc.)
 }
 
 message Timestamp {

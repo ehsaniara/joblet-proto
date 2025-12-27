@@ -2706,24 +2706,18 @@ func (x *StreamMetricsRequest) GetMetricTypes() []string {
 }
 
 type HostInfo struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	Hostname        string                 `protobuf:"bytes,1,opt,name=hostname,proto3" json:"hostname,omitempty"`
-	Os              string                 `protobuf:"bytes,2,opt,name=os,proto3" json:"os,omitempty"`
-	Platform        string                 `protobuf:"bytes,3,opt,name=platform,proto3" json:"platform,omitempty"`
-	PlatformFamily  string                 `protobuf:"bytes,4,opt,name=platform_family,json=platformFamily,proto3" json:"platform_family,omitempty"`
-	PlatformVersion string                 `protobuf:"bytes,5,opt,name=platform_version,json=platformVersion,proto3" json:"platform_version,omitempty"`
-	KernelVersion   string                 `protobuf:"bytes,6,opt,name=kernel_version,json=kernelVersion,proto3" json:"kernel_version,omitempty"`
-	KernelArch      string                 `protobuf:"bytes,7,opt,name=kernel_arch,json=kernelArch,proto3" json:"kernel_arch,omitempty"`
-	Architecture    string                 `protobuf:"bytes,8,opt,name=architecture,proto3" json:"architecture,omitempty"`
-	CpuCount        int32                  `protobuf:"varint,9,opt,name=cpu_count,json=cpuCount,proto3" json:"cpu_count,omitempty"`
-	TotalMemory     int64                  `protobuf:"varint,10,opt,name=total_memory,json=totalMemory,proto3" json:"total_memory,omitempty"`
-	BootTime        string                 `protobuf:"bytes,11,opt,name=boot_time,json=bootTime,proto3" json:"boot_time,omitempty"`
-	Uptime          int64                  `protobuf:"varint,12,opt,name=uptime,proto3" json:"uptime,omitempty"`
-	NodeId          string                 `protobuf:"bytes,13,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"`                   // Unique node identifier (UUID)
-	ServerIps       []string               `protobuf:"bytes,14,rep,name=server_ips,json=serverIps,proto3" json:"server_ips,omitempty"`          // Server IP addresses (can have multiple interfaces)
-	MacAddresses    []string               `protobuf:"bytes,15,rep,name=mac_addresses,json=macAddresses,proto3" json:"mac_addresses,omitempty"` // MAC addresses for network interfaces
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Hostname      string                 `protobuf:"bytes,1,opt,name=hostname,proto3" json:"hostname,omitempty"`
+	Os            string                 `protobuf:"bytes,2,opt,name=os,proto3" json:"os,omitempty"`
+	KernelVersion string                 `protobuf:"bytes,6,opt,name=kernel_version,json=kernelVersion,proto3" json:"kernel_version,omitempty"`
+	Architecture  string                 `protobuf:"bytes,8,opt,name=architecture,proto3" json:"architecture,omitempty"`
+	BootTime      string                 `protobuf:"bytes,11,opt,name=boot_time,json=bootTime,proto3" json:"boot_time,omitempty"`
+	Uptime        int64                  `protobuf:"varint,12,opt,name=uptime,proto3" json:"uptime,omitempty"`
+	NodeId        string                 `protobuf:"bytes,13,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"`                   // Unique node identifier (UUID)
+	ServerIps     []string               `protobuf:"bytes,14,rep,name=server_ips,json=serverIps,proto3" json:"server_ips,omitempty"`          // Server IP addresses (can have multiple interfaces)
+	MacAddresses  []string               `protobuf:"bytes,15,rep,name=mac_addresses,json=macAddresses,proto3" json:"mac_addresses,omitempty"` // MAC addresses for network interfaces
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *HostInfo) Reset() {
@@ -2770,37 +2764,9 @@ func (x *HostInfo) GetOs() string {
 	return ""
 }
 
-func (x *HostInfo) GetPlatform() string {
-	if x != nil {
-		return x.Platform
-	}
-	return ""
-}
-
-func (x *HostInfo) GetPlatformFamily() string {
-	if x != nil {
-		return x.PlatformFamily
-	}
-	return ""
-}
-
-func (x *HostInfo) GetPlatformVersion() string {
-	if x != nil {
-		return x.PlatformVersion
-	}
-	return ""
-}
-
 func (x *HostInfo) GetKernelVersion() string {
 	if x != nil {
 		return x.KernelVersion
-	}
-	return ""
-}
-
-func (x *HostInfo) GetKernelArch() string {
-	if x != nil {
-		return x.KernelArch
 	}
 	return ""
 }
@@ -2810,20 +2776,6 @@ func (x *HostInfo) GetArchitecture() string {
 		return x.Architecture
 	}
 	return ""
-}
-
-func (x *HostInfo) GetCpuCount() int32 {
-	if x != nil {
-		return x.CpuCount
-	}
-	return 0
-}
-
-func (x *HostInfo) GetTotalMemory() int64 {
-	if x != nil {
-		return x.TotalMemory
-	}
-	return 0
 }
 
 func (x *HostInfo) GetBootTime() string {
@@ -3660,7 +3612,6 @@ type ProcessInfo struct {
 	MemoryBytes   int64                  `protobuf:"varint,7,opt,name=memory_bytes,json=memoryBytes,proto3" json:"memory_bytes,omitempty"`
 	Status        string                 `protobuf:"bytes,8,opt,name=status,proto3" json:"status,omitempty"`
 	StartTime     string                 `protobuf:"bytes,9,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
-	User          string                 `protobuf:"bytes,10,opt,name=user,proto3" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3754,13 +3705,6 @@ func (x *ProcessInfo) GetStatus() string {
 func (x *ProcessInfo) GetStartTime() string {
 	if x != nil {
 		return x.StartTime
-	}
-	return ""
-}
-
-func (x *ProcessInfo) GetUser() string {
-	if x != nil {
-		return x.User
 	}
 	return ""
 }
@@ -4638,17 +4582,7 @@ func (x *RunJobRequest) GetGpuMemoryMb() int32 {
 type RunJobResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	JobUuid       string                 `protobuf:"bytes,1,opt,name=job_uuid,json=jobUuid,proto3" json:"job_uuid,omitempty"` // Job UUID identifier
-	Status        string                 `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
-	Command       string                 `protobuf:"bytes,3,opt,name=command,proto3" json:"command,omitempty"`
-	Args          []string               `protobuf:"bytes,4,rep,name=args,proto3" json:"args,omitempty"`
-	MaxCpu        int32                  `protobuf:"varint,5,opt,name=max_cpu,json=maxCpu,proto3" json:"max_cpu,omitempty"`
-	CpuCores      string                 `protobuf:"bytes,6,opt,name=cpu_cores,json=cpuCores,proto3" json:"cpu_cores,omitempty"`
-	MaxMemory     int32                  `protobuf:"varint,7,opt,name=max_memory,json=maxMemory,proto3" json:"max_memory,omitempty"`
-	MaxIoBps      int32                  `protobuf:"varint,8,opt,name=max_io_bps,json=maxIoBps,proto3" json:"max_io_bps,omitempty"`
-	StartTime     string                 `protobuf:"bytes,9,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
-	EndTime       string                 `protobuf:"bytes,10,opt,name=end_time,json=endTime,proto3" json:"end_time,omitempty"`
-	ExitCode      int32                  `protobuf:"varint,11,opt,name=exit_code,json=exitCode,proto3" json:"exit_code,omitempty"`
-	ScheduledTime string                 `protobuf:"bytes,12,opt,name=scheduled_time,json=scheduledTime,proto3" json:"scheduled_time,omitempty"` // Schedule time
+	Status        string                 `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`                  // Job status (RUNNING, SCHEDULED, etc.)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4693,76 +4627,6 @@ func (x *RunJobResponse) GetJobUuid() string {
 func (x *RunJobResponse) GetStatus() string {
 	if x != nil {
 		return x.Status
-	}
-	return ""
-}
-
-func (x *RunJobResponse) GetCommand() string {
-	if x != nil {
-		return x.Command
-	}
-	return ""
-}
-
-func (x *RunJobResponse) GetArgs() []string {
-	if x != nil {
-		return x.Args
-	}
-	return nil
-}
-
-func (x *RunJobResponse) GetMaxCpu() int32 {
-	if x != nil {
-		return x.MaxCpu
-	}
-	return 0
-}
-
-func (x *RunJobResponse) GetCpuCores() string {
-	if x != nil {
-		return x.CpuCores
-	}
-	return ""
-}
-
-func (x *RunJobResponse) GetMaxMemory() int32 {
-	if x != nil {
-		return x.MaxMemory
-	}
-	return 0
-}
-
-func (x *RunJobResponse) GetMaxIoBps() int32 {
-	if x != nil {
-		return x.MaxIoBps
-	}
-	return 0
-}
-
-func (x *RunJobResponse) GetStartTime() string {
-	if x != nil {
-		return x.StartTime
-	}
-	return ""
-}
-
-func (x *RunJobResponse) GetEndTime() string {
-	if x != nil {
-		return x.EndTime
-	}
-	return ""
-}
-
-func (x *RunJobResponse) GetExitCode() int32 {
-	if x != nil {
-		return x.ExitCode
-	}
-	return 0
-}
-
-func (x *RunJobResponse) GetScheduledTime() string {
-	if x != nil {
-		return x.ScheduledTime
 	}
 	return ""
 }
@@ -6282,20 +6146,12 @@ const file_joblet_proto_rawDesc = "" +
 	"\x05cloud\x18\t \x01(\v2\x11.joblet.CloudInfoR\x05cloud\"d\n" +
 	"\x14StreamMetricsRequest\x12)\n" +
 	"\x10interval_seconds\x18\x01 \x01(\x05R\x0fintervalSeconds\x12!\n" +
-	"\fmetric_types\x18\x02 \x03(\tR\vmetricTypes\"\xe4\x03\n" +
+	"\fmetric_types\x18\x02 \x03(\tR\vmetricTypes\"\x93\x02\n" +
 	"\bHostInfo\x12\x1a\n" +
 	"\bhostname\x18\x01 \x01(\tR\bhostname\x12\x0e\n" +
-	"\x02os\x18\x02 \x01(\tR\x02os\x12\x1a\n" +
-	"\bplatform\x18\x03 \x01(\tR\bplatform\x12'\n" +
-	"\x0fplatform_family\x18\x04 \x01(\tR\x0eplatformFamily\x12)\n" +
-	"\x10platform_version\x18\x05 \x01(\tR\x0fplatformVersion\x12%\n" +
-	"\x0ekernel_version\x18\x06 \x01(\tR\rkernelVersion\x12\x1f\n" +
-	"\vkernel_arch\x18\a \x01(\tR\n" +
-	"kernelArch\x12\"\n" +
+	"\x02os\x18\x02 \x01(\tR\x02os\x12%\n" +
+	"\x0ekernel_version\x18\x06 \x01(\tR\rkernelVersion\x12\"\n" +
 	"\farchitecture\x18\b \x01(\tR\farchitecture\x12\x1b\n" +
-	"\tcpu_count\x18\t \x01(\x05R\bcpuCount\x12!\n" +
-	"\ftotal_memory\x18\n" +
-	" \x01(\x03R\vtotalMemory\x12\x1b\n" +
 	"\tboot_time\x18\v \x01(\tR\bbootTime\x12\x16\n" +
 	"\x06uptime\x18\f \x01(\x03R\x06uptime\x12\x17\n" +
 	"\anode_id\x18\r \x01(\tR\x06nodeId\x12\x1d\n" +
@@ -6405,7 +6261,7 @@ const file_joblet_proto_rawDesc = "" +
 	"\rtotal_threads\x18\x06 \x01(\x05R\ftotalThreads\x121\n" +
 	"\n" +
 	"top_by_cpu\x18\a \x03(\v2\x13.joblet.ProcessInfoR\btopByCpu\x127\n" +
-	"\rtop_by_memory\x18\b \x03(\v2\x13.joblet.ProcessInfoR\vtopByMemory\"\x97\x02\n" +
+	"\rtop_by_memory\x18\b \x03(\v2\x13.joblet.ProcessInfoR\vtopByMemory\"\x83\x02\n" +
 	"\vProcessInfo\x12\x10\n" +
 	"\x03pid\x18\x01 \x01(\x05R\x03pid\x12\x12\n" +
 	"\x04ppid\x18\x02 \x01(\x05R\x04ppid\x12\x12\n" +
@@ -6417,9 +6273,7 @@ const file_joblet_proto_rawDesc = "" +
 	"\fmemory_bytes\x18\a \x01(\x03R\vmemoryBytes\x12\x16\n" +
 	"\x06status\x18\b \x01(\tR\x06status\x12\x1d\n" +
 	"\n" +
-	"start_time\x18\t \x01(\tR\tstartTime\x12\x12\n" +
-	"\x04user\x18\n" +
-	" \x01(\tR\x04user\"\xbc\x02\n" +
+	"start_time\x18\t \x01(\tR\tstartTime\"\xbc\x02\n" +
 	"\tCloudInfo\x12\x1a\n" +
 	"\bprovider\x18\x01 \x01(\tR\bprovider\x12\x16\n" +
 	"\x06region\x18\x02 \x01(\tR\x06region\x12\x12\n" +
@@ -6512,24 +6366,10 @@ const file_joblet_proto_rawDesc = "" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\x1aD\n" +
 	"\x16SecretEnvironmentEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xe2\x02\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"C\n" +
 	"\x0eRunJobResponse\x12\x19\n" +
 	"\bjob_uuid\x18\x01 \x01(\tR\ajobUuid\x12\x16\n" +
-	"\x06status\x18\x02 \x01(\tR\x06status\x12\x18\n" +
-	"\acommand\x18\x03 \x01(\tR\acommand\x12\x12\n" +
-	"\x04args\x18\x04 \x03(\tR\x04args\x12\x17\n" +
-	"\amax_cpu\x18\x05 \x01(\x05R\x06maxCpu\x12\x1b\n" +
-	"\tcpu_cores\x18\x06 \x01(\tR\bcpuCores\x12\x1d\n" +
-	"\n" +
-	"max_memory\x18\a \x01(\x05R\tmaxMemory\x12\x1c\n" +
-	"\n" +
-	"max_io_bps\x18\b \x01(\x05R\bmaxIoBps\x12\x1d\n" +
-	"\n" +
-	"start_time\x18\t \x01(\tR\tstartTime\x12\x19\n" +
-	"\bend_time\x18\n" +
-	" \x01(\tR\aendTime\x12\x1b\n" +
-	"\texit_code\x18\v \x01(\x05R\bexitCode\x12%\n" +
-	"\x0escheduled_time\x18\f \x01(\tR\rscheduledTime\";\n" +
+	"\x06status\x18\x02 \x01(\tR\x06status\";\n" +
 	"\tTimestamp\x12\x18\n" +
 	"\aseconds\x18\x01 \x01(\x03R\aseconds\x12\x14\n" +
 	"\x05nanos\x18\x02 \x01(\x05R\x05nanos\"0\n" +
